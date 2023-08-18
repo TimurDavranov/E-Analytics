@@ -457,3 +457,4 @@ baseline.json
 # Husky
 .husky/_
 aio/content/examples/.DS_Store
+src/Api/Shop.ClientApi/appsettings.Development.json
