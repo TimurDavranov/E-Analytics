@@ -9,6 +9,6 @@ namespace Domain.Abstraction.Repositories.Olcha
 {
     public interface IOlchaConnectionService
     {
-        Task<OlchaBaseResponse<OlchaResponse<OlchaCategoriesDto>>> GetCategories();
+        Task<OlchaBaseResponse<OlchaCategoryResponse<OlchaCategoriesDto>>> GetCategories();
     }
 }
