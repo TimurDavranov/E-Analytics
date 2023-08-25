@@ -1,4 +1,5 @@
-using Infrastructure.Repositories.Olcha.uz;
+using Application.Abstractions;
+using Infrastructure.Repositories.Olcha;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Shop.ClientApi.Controllers
@@ -8,18 +9,18 @@ namespace Shop.ClientApi.Controllers
     public class WeatherForecastController : ControllerBase
     {
 
-        private readonly OlchaParserRepository olchaParserRepository;
+        private readonly IOlchaParserRepository _olchaParserRepository;
 
-        public WeatherForecastController()
+        public WeatherForecastController(IOlchaParserRepository olchaParserRepository)
         {
-            olchaParserRepository = new();
+            _olchaParserRepository = olchaParserRepository;
         }
 
         [HttpGet]
-        public IActionResult Parser() 
+        public async Task<IActionResult> Parser() 
         {
-            olchaParserRepository.ParseCategories();
-            return Ok();
+            var result = await _olchaParserRepository.ParseCategories();
+            return Ok(result);
         }
     }
 }
