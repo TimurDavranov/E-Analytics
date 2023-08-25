@@ -1,21 +1,22 @@
 ﻿using Application.Abstractions;
-using Application.Constants;
-using Domain.Abstraction.Repositories;
+using Application.Configurations;
+using Domain.Abstraction.Repositories.Olcha;
 using Domain.DTOs.Responses.Olcha;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Services
 {
     public class OlchaConnectionService : ApiClient, IOlchaConnectionService
     {
-        private readonly AppConfig _config;
-        public OlchaConnectionService(IHttpClientFactory httpClientFactory, AppConfig config) : base(config.OlchaBaseUrl, httpClientFactory)
+        private readonly IOptionsSnapshot<AppConfig> _config;
+        public OlchaConnectionService(IHttpClientFactory httpClientFactory, IOptionsSnapshot<AppConfig> config) : base(config.Value.OlchaBaseUrl, httpClientFactory)
         {
             _config = config;
         }
 
-        public Task<OlchaBaseResponse<OlchaResponse<OlchaCategoriesDto>>> GetCategories()
+        public Task<OlchaBaseResponse<OlchaCategoryResponse<OlchaCategoriesDto>>> GetCategories()
         {
-            return GetAsync<OlchaBaseResponse<OlchaResponse<OlchaCategoriesDto>>>(_config.OlchaGetCategoriesUrl);
+            return GetAsync<OlchaBaseResponse<OlchaCategoryResponse<OlchaCategoriesDto>>>(_config.Value.OlchaGetCategoriesUrl);
         }
     }
 }

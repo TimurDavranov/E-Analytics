@@ -1,5 +1,4 @@
 using Application.Abstractions;
-using Infrastructure.Repositories.Olcha;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Shop.ClientApi.Controllers
@@ -19,8 +18,8 @@ namespace Shop.ClientApi.Controllers
         [HttpGet]
         public async Task<IActionResult> Parser() 
         {
-            var result = await _olchaParserRepository.ParseCategories();
-            return Ok(result);
+            await _olchaParserRepository.ParseCategories();
+            return Ok();
         }
     }
 }

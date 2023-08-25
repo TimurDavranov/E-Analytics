@@ -1,9 +1,8 @@
 ﻿using Application.Abstractions;
 using Domain.Abstraction.Repositories.Olcha;
-using Domain.DTOs.Responses.Olcha;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.Olcha
+namespace Application.Shops.Queries.Olcha
 {
     public class OlchaParserRepository : IOlchaParserRepository
     {
@@ -34,13 +33,13 @@ namespace Infrastructure.Repositories.Olcha
 
             categories.ToList().ForEach(cat =>
             {
-                if(response.Data.Categories.Any(s=>s.Id != cat.Id))
+                if (response.Data.Categories.Any(s => s.Id != cat.Id))
                 {
                     // to remove
                 }
             });
 
-            if(_repositroy.HasChanges())
+            if (_repositroy.HasChanges())
             {
                 // save changes
             }

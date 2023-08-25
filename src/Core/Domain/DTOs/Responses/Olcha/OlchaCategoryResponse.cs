@@ -2,7 +2,7 @@
 
 namespace Domain.DTOs.Responses.Olcha
 {
-    public class OlchaResponse<T>
+    public class OlchaCategoryResponse<T>
     {
         [JsonPropertyName("categories")]
         public ICollection<T> Categories { get; set; }

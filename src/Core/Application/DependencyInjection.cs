@@ -1,20 +1,22 @@
-﻿using Application.Constants;
+﻿using Application.Abstractions;
+using Application.Shops.Queries.Olcha;
+using Domain.Abstraction.Repositories.Olcha;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application
+namespace Application;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddApplication(this IServiceCollection service)
     {
-        public static IServiceCollection AddApplication(this IServiceCollection service)
-        {
-            return service
-                .AddHttpClient();
-        }
-            
+        return service
+            .AddServices()
+            .AddHttpClient();
     }
+
+    private static IServiceCollection AddServices(this IServiceCollection services) =>
+        services
+        .AddScoped<IOlchaParserRepository, OlchaParserRepository>()
+        .AddScoped<IOlchaCategoryReadRepository, OlchaCategoryReadRepository>();
+
 }

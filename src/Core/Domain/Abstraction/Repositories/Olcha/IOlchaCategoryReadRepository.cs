@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Abstraction.Repositories.Olcha
 {
-    public interface IOlchaCategoryReadRepository
+    public interface IOlchaCategoryReadRepository : IReadRepository<OlchaCategory>
     {
         Task<OlchaCategory?> GetByOlchaIdAsync(long id, Func<IQueryable<OlchaCategory>, IIncludableQueryable<OlchaCategory, object>>? include = null);
     }

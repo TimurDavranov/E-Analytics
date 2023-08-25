@@ -15,10 +15,7 @@ namespace Parser.Worker.Jobs
             _repository = repository;
         }
 
-        public async Task Run()
-        {
-            var categories = await _repository.ParseCategories();
-            
-        }
+        public Task Run() =>
+            _repository.ParseCategories();
     }
 }
