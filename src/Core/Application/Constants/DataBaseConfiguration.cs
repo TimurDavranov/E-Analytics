@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Abstraction
+namespace Application.Constants
 {
-    public interface IRepository
+    public class DataBaseConfiguration
     {
+        
     }
 }

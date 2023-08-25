@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Abstractions;
+using Application.Constants;
+using Domain.Abstraction.Repositories;
+using Domain.DTOs.Responses.Olcha;
 
 namespace Infrastructure.Services
 {
-    public class OlchaConnectionService
+    public class OlchaConnectionService : ApiClient, IOlchaConnectionService
     {
-        private const string url = "https://olcha.uz/ru";
-        private const string categoryUrl = "https://mobile.olcha.uz/api/v2/categories?is_sale=true";
-
-        public OlchaConnectionService()
+        private readonly AppConfig _config;
+        public OlchaConnectionService(IHttpClientFactory httpClientFactory, AppConfig config) : base(config.OlchaBaseUrl, httpClientFactory)
         {
-
+            _config = config;
         }
 
-        
+        public Task<OlchaBaseResponse<OlchaResponse<OlchaCategoriesDto>>> GetCategories()
+        {
+            return GetAsync<OlchaBaseResponse<OlchaResponse<OlchaCategoriesDto>>>(_config.OlchaGetCategoriesUrl);
+        }
     }
 }

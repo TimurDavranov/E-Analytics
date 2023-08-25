@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Constants;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,9 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection service)
         {
-            service.AddHttpClient();
-            return service;
+            return service
+                .AddHttpClient();
         }
+            
     }
 }
