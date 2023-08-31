@@ -5,7 +5,7 @@ using Domain.Entities.Olcha;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace Application.Shops.Queries.Olcha;
+namespace Application.Queries.Olcha;
 
 public sealed class OlchaCategoryReadRepository : ReadRepository<OlchaCategory>, IOlchaCategoryReadRepository
 {

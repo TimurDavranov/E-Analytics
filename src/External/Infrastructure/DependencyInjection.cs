@@ -1,8 +1,8 @@
-﻿using Application.Abstractions;
-using Application.Configurations;
-using Application.Shops.Queries.Olcha;
+﻿using Application.Configurations;
+using Application.Queries.Olcha;
 using Domain.Abstraction;
 using Domain.Abstraction.Repositories.Olcha;
+using Domain.Abstraction.Services;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +20,7 @@ namespace Infrastructure
 
         private static IServiceCollection AddRepositories(this IServiceCollection service) =>
             service
-                .AddScoped<IOlchaParserRepository, OlchaParserRepository>();
+                .AddScoped<IOlchaCategoryWriteRepository, OlchaCategoryWriteRepository>();
 
         private static IServiceCollection AddServices(this IServiceCollection service) =>
             service
@@ -38,25 +38,6 @@ namespace Infrastructure
                 {
                     opt.UseNpgsql(configuration!.GetConnectionString("DefaultConnection"));
                 }, ServiceLifetime.Scoped);
-
-            return service;
-        }
-
-        public static IServiceCollection ConfigureAppSettings(this IServiceCollection service)
-        {
-            var configuration = service
-                .BuildServiceProvider()
-                .GetService<IConfiguration>();
-
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(IConfiguration), "Wrong configurations!");
-
-            service
-                .Configure<AppConfig>(configuration.GetSection("Config"))
-                .Configure<DataBaseConfiguration>(opt =>
-                {
-                    configuration.GetSection("DBConfig");
-                });
 
             return service;
         }

@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Configurations;
-using Domain.Abstraction.Repositories.Olcha;
+using Domain.Abstraction.Services;
 using Domain.DTOs.Responses.Olcha;
 using Microsoft.Extensions.Options;
 
@@ -8,8 +8,8 @@ namespace Infrastructure.Services
 {
     public class OlchaConnectionService : ApiClient, IOlchaConnectionService
     {
-        private readonly IOptionsSnapshot<AppConfig> _config;
-        public OlchaConnectionService(IHttpClientFactory httpClientFactory, IOptionsSnapshot<AppConfig> config) : base(config.Value.OlchaBaseUrl, httpClientFactory)
+        private readonly IOptions<AppConfig> _config;
+        public OlchaConnectionService(IHttpClientFactory httpClientFactory, IOptions<AppConfig> config) : base(config.Value.OlchaBaseUrl, httpClientFactory)
         {
             _config = config;
         }

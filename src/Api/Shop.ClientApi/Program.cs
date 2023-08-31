@@ -1,4 +1,5 @@
 using Application;
+using Application.Configurations;
 using Infrastructure;
 using Presentation;
 
@@ -12,8 +13,11 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddApplication()
     .AddInfrastructure()
-    .AddPresentation()
-    .ConfigureAppSettings();
+    .AddPresentation();
+builder.Services
+    .AddOptions<AppConfig>(builder, nameof(AppConfig));
+builder.Services
+    .AddOptions<DataBaseConfiguration>(builder, nameof(DataBaseConfiguration));
 
 var app = builder.Build();
 

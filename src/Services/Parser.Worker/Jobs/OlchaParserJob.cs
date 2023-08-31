@@ -1,4 +1,4 @@
-﻿using Application.Abstractions;
+﻿using Domain.Abstraction.Repositories.Olcha;
 
 namespace Parser.Worker.Jobs
 {
@@ -9,8 +9,8 @@ namespace Parser.Worker.Jobs
 
     public class OlchaParserJob : IOlchaParserJob
     {
-        private readonly IOlchaParserRepository _repository;
-        public OlchaParserJob(IOlchaParserRepository repository)
+        private readonly IOlchaCategoryWriteRepository _repository;
+        public OlchaParserJob(IOlchaCategoryWriteRepository repository)
         {
             _repository = repository;
         }

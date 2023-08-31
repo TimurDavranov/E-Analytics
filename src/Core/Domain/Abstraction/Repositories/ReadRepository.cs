@@ -7,7 +7,6 @@ namespace Domain.Abstraction.Repositories
     {
         abstract Task<T?> GetByIdAsync(long id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null);
         abstract IQueryable<T> GetQueryable();
-        bool HasChanges();
     }
 
     public abstract class ReadRepository<T> : IReadRepository<T> where T : class
@@ -20,8 +19,5 @@ namespace Domain.Abstraction.Repositories
 
         public abstract Task<T?> GetByIdAsync(long id, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null);
         public abstract IQueryable<T> GetQueryable();
-        public bool HasChanges() =>
-            _context.ChangeTracker.HasChanges();
-
     }
 }

@@ -7,10 +7,11 @@ namespace Domain.Abstraction;
 
 public interface IApplicationDbContext : IDisposable
 {
+    DbSet<T> Set<T>() where T : class;
     void BeginTransaction();
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);
-    Task SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
-    void SaveChanges(bool acceptAllChangesOnSuccess);
+    Task SaveChangesAsync(bool acceptAllChangesOnSuccess = true, CancellationToken cancellationToken = default);
+    void SaveChanges(bool acceptAllChangesOnSuccess = true);
     void RollbackTransaction();
     Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
     void CommitTransaction();
