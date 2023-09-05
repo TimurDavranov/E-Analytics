@@ -1,7 +1,5 @@
 ﻿using Application.Configurations;
-using Application.Queries.Olcha;
 using Domain.Abstraction;
-using Domain.Abstraction.Repositories.Olcha;
 using Domain.Abstraction.Services;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +17,7 @@ namespace Infrastructure
                 .AddDatabases();
 
         private static IServiceCollection AddRepositories(this IServiceCollection service) =>
-            service
-                .AddScoped<IOlchaCategoryWriteRepository, OlchaCategoryWriteRepository>();
+            service;
 
         private static IServiceCollection AddServices(this IServiceCollection service) =>
             service
