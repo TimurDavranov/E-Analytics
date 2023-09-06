@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Abstraction.Repositories.Olcha
+namespace Domain.Abstraction.Services
 {
     public interface IOlchaConnectionService
     {

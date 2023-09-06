@@ -1,4 +1,3 @@
-using Application.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Shop.ClientApi.Controllers
@@ -7,19 +6,8 @@ namespace Shop.ClientApi.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-
-        private readonly IOlchaParserRepository _olchaParserRepository;
-
-        public WeatherForecastController(IOlchaParserRepository olchaParserRepository)
+        public WeatherForecastController()
         {
-            _olchaParserRepository = olchaParserRepository;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Parser() 
-        {
-            await _olchaParserRepository.ParseCategories();
-            return Ok();
         }
     }
 }

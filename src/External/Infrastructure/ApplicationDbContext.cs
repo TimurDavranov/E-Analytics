@@ -40,11 +40,11 @@ namespace Infrastructure
             return base.Database.BeginTransactionAsync(cancellationToken);
         }
 
-        public Task SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        public Task SaveChangesAsync(bool acceptAllChangesOnSuccess = true, CancellationToken cancellationToken = default)
         {
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
-        public void SaveChanges(bool acceptAllChangesOnSuccess)
+        public void SaveChanges(bool acceptAllChangesOnSuccess = true)
         {
             base.SaveChanges(acceptAllChangesOnSuccess);
         }

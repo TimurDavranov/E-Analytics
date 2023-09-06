@@ -1,6 +1,5 @@
-﻿using Application.Abstractions;
-using Application.Shops.Queries.Olcha;
-using Domain.Abstraction.Repositories.Olcha;
+﻿using Application.Repositories;
+using Domain.Abstraction.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -16,7 +15,6 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-        .AddScoped<IOlchaParserRepository, OlchaParserRepository>()
-        .AddScoped<IOlchaCategoryReadRepository, OlchaCategoryReadRepository>();
+        .AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 }
