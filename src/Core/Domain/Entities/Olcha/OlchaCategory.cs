@@ -10,7 +10,7 @@ using System.Transactions;
 namespace Domain.Entities.Olcha;
 
 [Table("olcha_categories")]
-public class OlchaCategory : Base
+public class OlchaCategory : BaseEntity<Guid>
 {
     public OlchaCategory(long categoryId, bool isActive, long? parrentId, List<OlchaCategory> childs, List<Transaction> transactions)
     {

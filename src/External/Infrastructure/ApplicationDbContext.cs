@@ -74,13 +74,13 @@ namespace Infrastructure
         }
 
         private void AddSoftDeleteFilter(ModelBuilder modelBuilder) =>
-            ((List<IMutableEntityType>)modelBuilder.Model.GetEntityTypes().Where(x => typeof(ISoftDelete).IsAssignableFrom(x.ClrType))).ForEach(softDeletableTypeBuilder =>
+            ((List<IMutableEntityType>)modelBuilder.Model.GetEntityTypes().Where(x => typeof(IBaseEntity).IsAssignableFrom(x.ClrType))).ForEach(softDeletableTypeBuilder =>
             {
                 var parameter = Expression.Parameter(softDeletableTypeBuilder.ClrType, "p");
                 softDeletableTypeBuilder.SetQueryFilter(
                     Expression.Lambda(
                         Expression.Equal(
-                            Expression.Property(parameter, nameof(ISoftDelete.Deleted)),
+                            Expression.Property(parameter, nameof(IBaseEntity.IsDeleted)),
                             Expression.Constant(false)),
                         parameter)
                 );

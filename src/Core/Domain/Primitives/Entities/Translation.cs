@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 namespace Domain.Primitives.Entities
 {
     [Table("translations")]
-    public class Translation : Base
+    public class Translation : BaseEntity<Guid>
     {
         [MaxLength(10), MinLength(10), NotNull]
-        public required string LanguageCode { get; set; }
+        public string LanguageCode { get; set; }
         [MinLength(3), MaxLength(255)]
-        public required string Title { get; set; }
-        public required string Description { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+
     }
 }
