@@ -1,5 +1,5 @@
 using EA.Domain.DTOs;
-using EA.Domain.Primitives.Base;
+using EAnalytics.Common.Events;
 
 namespace EA.Domain.Events
 {

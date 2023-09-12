@@ -1,5 +1,4 @@
-using EA.Domain.Primitives;
-using EA.Domain.Primitives.Base;
+using EAnalytics.Common.Commands;
 
 namespace EA.Infrastructure.Dispatchers
 {

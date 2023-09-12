@@ -1,6 +1,7 @@
 ﻿using EA.Domain.Abstraction;
 using EA.Domain.Primitives;
 using EA.Infrastructure.Dispatchers;
+using EAnalytics.Common.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

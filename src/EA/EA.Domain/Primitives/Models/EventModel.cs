@@ -1,4 +1,4 @@
-using EA.Domain.Primitives.Base;
+using EAnalytics.Common.Events;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 

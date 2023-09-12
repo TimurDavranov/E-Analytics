@@ -1,6 +1,7 @@
-using EA.Domain.Primitives.Base;
 
-namespace EA.Infrastructure.Producers;
+using EAnalytics.Common.Events;
+
+namespace EAnalytics.Common.Producers;
 
 public interface IEventProducer
 {

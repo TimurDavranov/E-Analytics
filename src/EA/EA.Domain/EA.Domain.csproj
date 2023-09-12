@@ -4,7 +4,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10"/>
-    <PackageReference Include="MongoDB.Driver" Version="2.21.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Primitives\Base" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\EAnalytics.Common\EAnalytics.Common.csproj" />
   </ItemGroup>
 </Project>

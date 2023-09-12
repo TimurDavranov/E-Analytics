@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EA.Domain.Primitives.Base
+namespace EAnalytics.Common.Events
 {
     public class BaseEvent
     {

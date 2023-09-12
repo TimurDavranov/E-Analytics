@@ -1,4 +1,4 @@
-﻿namespace EA.Domain.Abstraction;
+﻿namespace EAnalytics.Common.Entities;
 
 public interface IBaseEntity
 {
