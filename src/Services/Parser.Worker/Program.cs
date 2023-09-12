@@ -1,6 +1,5 @@
-
-using Application.Configurations;
-using Infrastructure;
+using EA.Application.Configurations;
+using EA.Infrastructure;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((builder, services) =>

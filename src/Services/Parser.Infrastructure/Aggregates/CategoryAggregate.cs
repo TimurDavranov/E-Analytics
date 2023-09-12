@@ -1,4 +1,4 @@
-﻿using Domain.Primitives;
+﻿using EA.Domain.Primitives;
 
 namespace Parser.Infrastructure.Aggregates;
 

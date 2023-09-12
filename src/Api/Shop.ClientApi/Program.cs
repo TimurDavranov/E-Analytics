@@ -1,7 +1,7 @@
-using Application;
-using Application.Configurations;
-using Infrastructure;
-using Presentation;
+using EA.Application;
+using EA.Application.Configurations;
+using EA.Infrastructure;
+using EA.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
