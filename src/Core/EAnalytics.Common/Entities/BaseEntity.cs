@@ -1,6 +1,4 @@
-﻿using EA.Domain.Abstraction;
-
-namespace EA.Domain.Primitives
+﻿namespace EAnalytics.Common.Entities
 {
     public abstract class BaseEntity<T> : IBaseEntity
     {

@@ -1,6 +1,4 @@
-using EA.Domain.Primitives.Base;
-
-namespace EA.Domain.Primitives
+namespace EAnalytics.Common.Commands
 {
     public interface ICommandDispatcher
     {

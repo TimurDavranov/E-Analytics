@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using EAnalytics.Common.Entities;
 
 namespace EA.Domain.Primitives.Entities
 {

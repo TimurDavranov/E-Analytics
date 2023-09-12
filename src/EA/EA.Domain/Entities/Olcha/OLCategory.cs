@@ -1,6 +1,7 @@
 ﻿using EA.Domain.Primitives;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Transactions;
+using EAnalytics.Common.Entities;
 
 namespace EA.Domain.Entities.Olcha;
 

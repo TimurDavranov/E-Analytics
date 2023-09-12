@@ -1,9 +1,9 @@
 using Application.Repositories;
 using EA.Application.Aggregates;
 using EA.Application.Exceptions;
-using EA.Domain.Primitives.Base;
 using EA.Domain.Primitives.Models;
-using EA.Infrastructure.Producers;
+using EAnalytics.Common.Events;
+using EAnalytics.Common.Producers;
 
 namespace EA.Infrastructure.Stores
 {

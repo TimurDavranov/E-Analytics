@@ -18,4 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EA.Application\EA.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Producers" />
+  </ItemGroup>
 </Project>
