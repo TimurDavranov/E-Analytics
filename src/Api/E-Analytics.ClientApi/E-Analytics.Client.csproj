@@ -1,17 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-Parser.Worker-a3248912-3ee5-43dc-a75c-aaf3a831343c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\EA\EA.Application\EA.Application.csproj" />
     <ProjectReference Include="..\..\EA\EA.Infrastructure\EA.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\EA\EA.Presentation\EA.Presentation.csproj" />
   </ItemGroup>
 </Project>
