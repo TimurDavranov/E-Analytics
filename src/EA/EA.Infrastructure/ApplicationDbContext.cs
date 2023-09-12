@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq.Expressions;
+using EAnalytics.Common.Entities;
 
 namespace EA.Infrastructure
 {

@@ -1,6 +1,7 @@
-﻿using EA.Domain.Primitives.Base;
+﻿using EAnalytics.Common.Entities;
+using EAnalytics.Common.Events;
 
-namespace EA.Domain.Primitives;
+namespace EAnalytics.Common.Aggregates;
 
 public abstract class AggregateRootSimple : BaseEntity<Guid>
 {

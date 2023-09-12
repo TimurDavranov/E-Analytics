@@ -1,4 +1,5 @@
 ﻿using EA.Domain.Primitives;
+using EAnalytics.Common.Aggregates;
 
 namespace Parser.Infrastructure.Aggregates;
 
