@@ -1,17 +1,26 @@
-
 using EAnalytics.Common.Events;
+using EAnalytics.Common.Helpers.RabbitAgent;
 
-namespace EAnalytics.Common.Producers;
+namespace EA.Infrastructure.Producers;
 
 public interface IEventProducer
 {
-    Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent;
+    void Produce<T>(string exchange, string route, T @event) where T : BaseEvent;
 }
 
 public class EventProducer : IEventProducer
 {
-    public Task ProduceAsync<T>(string topic, T @event) where T : BaseEvent
+    private readonly IRabbitMessageProducer _rabbitProducer;
+    public EventProducer(IRabbitMessageProducer rabbitProducer)
     {
-        throw new NotImplementedException();
+        _rabbitProducer = rabbitProducer;
+    }
+
+    public void Produce<T>(string exchange, string route, T @event) where T : BaseEvent
+    {
+        if (@event is null)
+            throw new ArgumentNullException(nameof(@event), "Event is null");
+
+        _rabbitProducer.Publish(exchange, route, @event);
     }
 }

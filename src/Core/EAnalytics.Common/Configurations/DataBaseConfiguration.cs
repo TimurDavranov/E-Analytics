@@ -1,4 +1,4 @@
-﻿namespace EA.Application.Configurations;
+﻿namespace EAnalytics.Common.Configurations;
 
 public class DataBaseConfiguration
 {

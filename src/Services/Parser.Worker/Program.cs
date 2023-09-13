@@ -1,5 +1,5 @@
-using EA.Application.Configurations;
 using EA.Infrastructure;
+using EAnalytics.Common.Configurations;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((builder, services) =>

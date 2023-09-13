@@ -1,5 +1,5 @@
-using EA.Application;
 using EA.Domain.Primitives.Models;
+using EAnalytics.Common.Configurations;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
