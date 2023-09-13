@@ -1,15 +1,16 @@
 using Application.Repositories;
-using EA.Application.Aggregates;
+using EA.Application;
 using EA.Application.Exceptions;
 using EA.Domain.Primitives.Models;
+using EA.Infrastructure.Producers;
 using EAnalytics.Common.Events;
-using EAnalytics.Common.Producers;
+using EAnalytics.Common.Exceptions;
 
 namespace EA.Infrastructure.Stores
 {
     public interface IEventStore
     {
-        Task SaveEventsAsync(Guid aggregateId, IEnumerable<BaseEvent> events, int expectedVersion);
+        Task SaveEventsAsync(Guid aggregateId, IEnumerable<BaseEvent> events, string aggregateTypeName, int expectedVersion);
         Task<List<BaseEvent>> GetEventsAsync(Guid aggregateId);
         Task<List<Guid>> GetAggregateIdsAsync();
     }
@@ -24,17 +25,27 @@ namespace EA.Infrastructure.Stores
             _eventStoreRepository = eventStoreRepository;
         }
 
-        public Task<List<Guid>> GetAggregateIdsAsync()
+        public async Task<List<Guid>> GetAggregateIdsAsync()
         {
-            throw new NotImplementedException();
+            var eventStream = await _eventStoreRepository.FindAllAsync();
+
+            if (eventStream == null || !eventStream.Any())
+                throw new ArgumentNullException(nameof(eventStream), "Could not retrieve event stream from the event store!");
+
+            return eventStream.Select(x => x.AggregateIdentifier).Distinct().ToList();
         }
 
-        public Task<List<BaseEvent>> GetEventsAsync(Guid aggregateId)
+        public async Task<List<BaseEvent>> GetEventsAsync(Guid aggregateId)
         {
-            throw new NotImplementedException();
+            var eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
+
+            if (eventStream == null || !eventStream.Any())
+                throw new AggregateNotFoundException("Incorrect aggregate ID provided!");
+
+            return eventStream.OrderBy(x => x.Version).Select(x => x.EventData).ToList();
         }
 
-        public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<BaseEvent> events, int expectedVersion)
+        public async Task SaveEventsAsync(Guid aggregateId, IEnumerable<BaseEvent> events, string aggregateTypeName, int expectedVersion)
         {
             var eventStream = await _eventStoreRepository.FindByAggregateId(aggregateId);
 
@@ -52,7 +63,7 @@ namespace EA.Infrastructure.Stores
                 {
                     TimeStamp = DateTime.Now,
                     AggregateIdentifier = aggregateId,
-                    AggregateType = nameof(CategoryAggregateRoot),
+                    AggregateType = aggregateTypeName,
                     Version = version,
                     EventType = eventType,
                     EventData = @event
@@ -60,7 +71,7 @@ namespace EA.Infrastructure.Stores
 
                 await _eventStoreRepository.SaveAsync(eventModel);
 
-                //await _eventProducer.ProduceAsync(topic, @event);
+                _eventProducer.Produce(RabbitMQKeys.EventExchange, RabbitMQKeys.EventQueueRoute, @event);
             }
         }
     }

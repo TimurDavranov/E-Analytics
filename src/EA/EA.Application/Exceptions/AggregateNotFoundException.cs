@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace EA.Application.Exceptions
 {
-    public class ConnectionRefusedException : Exception
+    public class AggregateNotFoundException : Exception
     {
-        public ConnectionRefusedException(string message) : base(message)
+        public AggregateNotFoundException(string message) : base(message)
         {
         }
     }

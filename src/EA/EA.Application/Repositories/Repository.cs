@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace EA.Application.Repositories;
 
-public abstract class Repository<T> : IRepository<T> where T : class
+public class Repository<T> : IRepository<T> where T : class
 {
     private readonly IApplicationDbContext _context;
     protected Repository(IApplicationDbContext context)

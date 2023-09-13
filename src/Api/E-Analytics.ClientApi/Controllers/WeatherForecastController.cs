@@ -1,13 +1,24 @@
+using EA.Infrastructure.Commands.Categories;
+using EA.Infrastructure.Handlers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class WeatherForecastController : ControllerBase
     {
-        public WeatherForecastController()
+        private readonly ICommandHandler _handler;
+        public WeatherForecastController(ICommandHandler handler)
         {
+            _handler = handler;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HandleTest([FromBody] AddCategoryCommand command)
+        {
+            await _handler.HandleAsync(command);
+            return Ok();
         }
     }
 }

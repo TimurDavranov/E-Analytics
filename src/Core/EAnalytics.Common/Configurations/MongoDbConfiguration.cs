@@ -1,4 +1,4 @@
-﻿namespace EA.Application;
+﻿namespace EAnalytics.Common.Configurations;
 
 public class MongoDbConfiguration
 {

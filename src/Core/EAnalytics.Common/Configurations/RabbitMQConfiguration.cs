@@ -1,4 +1,4 @@
-namespace EA.Application.Configurations;
+namespace EAnalytics.Common.Configurations;
 
 public class RabbitMQConfiguration
 {
@@ -7,4 +7,5 @@ public class RabbitMQConfiguration
     public string RabbitMQPassword { get; set; }
     public int? RabbitMQPort { get; set; }
     public string RabbitMQVirtualHost { get; set; }
+    public string RabbitMQUrl { get; set; }
 }

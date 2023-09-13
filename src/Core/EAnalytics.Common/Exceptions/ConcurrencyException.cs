@@ -1,4 +1,4 @@
-﻿namespace EA.Application.Exceptions;
+﻿namespace EAnalytics.Common.Exceptions;
 
 public class ConcurrencyException : Exception
 {
