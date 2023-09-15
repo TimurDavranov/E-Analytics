@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using EA.Domain.Abstraction;
+using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -8,8 +8,8 @@ namespace EA.Application.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    private readonly IApplicationDbContext _context;
-    protected Repository(IApplicationDbContext context)
+    private readonly IEADbContext _context;
+    protected Repository(IEADbContext context)
     {
         _context = context;
     }

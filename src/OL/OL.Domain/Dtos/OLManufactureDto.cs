@@ -1,5 +1,5 @@
-﻿using EA.Domain.Primitives.DTOs;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using EAnalytics.Common.Primitives.DTOs;
 
 namespace OL.Domain.Dtos
 {

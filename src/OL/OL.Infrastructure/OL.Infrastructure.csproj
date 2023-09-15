@@ -1,14 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\EA\EA.Application\EA.Application.csproj" />
-    <ProjectReference Include="..\OL.Domain\OL.Domain.csproj" />
+    <ProjectReference Include="..\OL.Domain\OL.Domain.csproj"/>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.11"/>
+  </ItemGroup>
 </Project>
