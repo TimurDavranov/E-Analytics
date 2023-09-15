@@ -1,23 +1,18 @@
-﻿using EA.Domain.Abstraction;
-using EA.Domain.Entities.Olcha;
-using EA.Domain.Primitives.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Linq.Expressions;
-using EAnalytics.Common.Entities;
+using EA.Domain;
+using EAnalytics.Common.Primitives;
+using EA.Domain.Primitives.Entities;
+using EA.Domain.Entities;
 
 namespace EA.Infrastructure
 {
-    public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
+    public sealed class EADbContext : DbContext, IEADbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public EADbContext(DbContextOptions options) : base(options)
         {
         }
 
-        public DbSet<OLCategory> OLCategories { get; set; }
-
-        public DbSet<Translation> Translations { get; set; }
         private ChangeTracker ChangeTracker
         {
             get
@@ -25,6 +20,9 @@ namespace EA.Infrastructure
                 return ChangeTracker;
             }
         }
+
+        public DbSet<EATranslation> Translations { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public void BeginTransaction()
         {
@@ -47,7 +45,8 @@ namespace EA.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            AddSoftDeleteFilter(modelBuilder);
+            modelBuilder.HasDefaultSchema("ea");
+            // AddSoftDeleteFilter(modelBuilder);
         }
         public void RollbackTransaction()
         {
@@ -69,17 +68,17 @@ namespace EA.Infrastructure
             return Database.CommitTransactionAsync(cancellationToken);
         }
 
-        private void AddSoftDeleteFilter(ModelBuilder modelBuilder) =>
-            ((List<IMutableEntityType>)modelBuilder.Model.GetEntityTypes().Where(x => typeof(IBaseEntity).IsAssignableFrom(x.ClrType))).ForEach(softDeletableTypeBuilder =>
-            {
-                var parameter = Expression.Parameter(softDeletableTypeBuilder.ClrType, "p");
-                softDeletableTypeBuilder.SetQueryFilter(
-                    Expression.Lambda(
-                        Expression.Equal(
-                            Expression.Property(parameter, nameof(IBaseEntity.IsDeleted)),
-                            Expression.Constant(false)),
-                        parameter)
-                );
-            });
+        // private void AddSoftDeleteFilter(ModelBuilder modelBuilder) =>
+        //     ((List<IMutableEntityType>)modelBuilder.Model.GetEntityTypes().Where(x => typeof(IBaseEntity).IsAssignableFrom(x.ClrType))).ForEach(softDeletableTypeBuilder =>
+        //     {
+        //         var parameter = Expression.Parameter(softDeletableTypeBuilder.ClrType, "p");
+        //         softDeletableTypeBuilder.SetQueryFilter(
+        //             Expression.Lambda(
+        //                 Expression.Equal(
+        //                     Expression.Property(parameter, nameof(IBaseEntity.IsDeleted)),
+        //                     Expression.Constant(false)),
+        //                 parameter)
+        //         );
+        //     });
     }
 }

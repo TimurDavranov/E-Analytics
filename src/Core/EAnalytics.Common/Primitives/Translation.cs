@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using EAnalytics.Common.Entities;
 
-namespace EA.Domain.Primitives.Entities
+namespace EAnalytics.Common.Primitives
 {
-    [Table("translations")]
     public class Translation : BaseEntity<Guid>
     {
         [MaxLength(10), MinLength(2), NotNull]

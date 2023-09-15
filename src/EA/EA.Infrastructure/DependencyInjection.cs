@@ -1,9 +1,8 @@
 ﻿using EA.Application.Aggregates;
 using EA.Application.Repositories;
-using EA.Domain.Abstraction;
+using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Events;
-using EA.Domain.Primitives;
 using EA.Infrastructure.Commands.Categories;
 using EA.Infrastructure.Dispatchers;
 using EA.Infrastructure.Handlers;
@@ -53,7 +52,7 @@ namespace EA.Infrastructure
                 .GetService<IConfiguration>();
 
             service
-                .AddDbContext<IApplicationDbContext, ApplicationDbContext>(opt =>
+                .AddDbContext<IEADbContext, EADbContext>(opt =>
                 {
                     opt.UseNpgsql(configuration!.GetConnectionString("DefaultConnection"));
                 }, ServiceLifetime.Scoped);

@@ -1,11 +1,11 @@
-﻿using EA.Domain.Entities.Olcha;
+﻿using EA.Domain.Entities;
 using EA.Domain.Primitives.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace EA.Domain.Abstraction;
+namespace EA.Domain;
 
-public interface IApplicationDbContext : IDisposable
+public interface IEADbContext : IDisposable
 {
     DbSet<T> Set<T>() where T : class;
     void BeginTransaction();
@@ -17,8 +17,8 @@ public interface IApplicationDbContext : IDisposable
     void CommitTransaction();
     Task CommitTransactionAsync(CancellationToken cancellationToken = default);
 
-    DbSet<OLCategory> OLCategories { get; set; }
-    DbSet<Translation> Translations { get; set; }
+    DbSet<EATranslation> Translations { get; set; }
+    DbSet<Category> Categories { get; set; }
 
     ChangeTracker ChangeTracker { get; }
 }
