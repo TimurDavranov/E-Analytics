@@ -5,12 +5,12 @@ on:
     paths:
       - 'src/UI/E-Analytics.UI/**'
     branches:
-      - main
+      - dev
   pull_request:
     paths:
       - 'src/UI/E-Analytics.UI/**'
     branches:
-      - main
+      - dev
 
 jobs:
   build_and_test:
