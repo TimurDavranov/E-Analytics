@@ -15,7 +15,14 @@ namespace Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> HandleTest([FromBody] AddCategoryCommand command)
+        public async Task<IActionResult> HandleCreate([FromBody] AddCategoryCommand command)
+        {
+            await _handler.HandleAsync(command);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HandleEdit([FromBody] EditCategoryCommand command)
         {
             await _handler.HandleAsync(command);
             return Ok();

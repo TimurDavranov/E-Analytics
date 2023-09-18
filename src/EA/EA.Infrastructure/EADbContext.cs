@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using EA.Domain;
-using EAnalytics.Common.Primitives;
 using EA.Domain.Primitives.Entities;
 using EA.Domain.Entities;
 

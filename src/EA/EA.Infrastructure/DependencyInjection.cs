@@ -41,6 +41,7 @@ namespace EA.Infrastructure
             var commandHandler = service.BuildServiceProvider().GetRequiredService<ICommandHandler>();
             var dispatcher = new CommandDispatcher();
             dispatcher.RegisterHandler<AddCategoryCommand>(commandHandler.HandleAsync);
+            dispatcher.RegisterHandler<EditCategoryCommand>(commandHandler.HandleAsync);
             service.AddSingleton<ICommandDispatcher>(_ => dispatcher);
             return service;
         }

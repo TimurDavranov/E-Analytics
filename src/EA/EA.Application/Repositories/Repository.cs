@@ -9,7 +9,7 @@ namespace EA.Application.Repositories;
 public class Repository<T> : IRepository<T> where T : class
 {
     private readonly IEADbContext _context;
-    protected Repository(IEADbContext context)
+    public Repository(IEADbContext context)
     {
         _context = context;
     }
@@ -59,6 +59,12 @@ public class Repository<T> : IRepository<T> where T : class
     public Task Update(T model)
     {
         _context.Set<T>().Update(model);
+        return _context.SaveChangesAsync();
+    }
+
+    public Task Attach(T model)
+    {
+        _context.Set<T>().Attach(model);
         return _context.SaveChangesAsync();
     }
 

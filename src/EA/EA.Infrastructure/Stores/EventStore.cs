@@ -3,8 +3,10 @@ using EA.Application;
 using EA.Application.Exceptions;
 using EA.Domain.Primitives.Models;
 using EA.Infrastructure.Producers;
+using EAnalytics.Common.Configurations;
 using EAnalytics.Common.Events;
 using EAnalytics.Common.Exceptions;
+using Microsoft.Extensions.Options;
 
 namespace EA.Infrastructure.Stores
 {
@@ -19,10 +21,12 @@ namespace EA.Infrastructure.Stores
     {
         private readonly IEventProducer _eventProducer;
         private readonly IEventStoreRepository _eventStoreRepository;
-        public EventStore(IEventProducer eventProducer, IEventStoreRepository eventStoreRepository)
+        private readonly AppConfig _config;
+        public EventStore(IEventProducer eventProducer, IEventStoreRepository eventStoreRepository, IOptions<AppConfig> options)
         {
             _eventProducer = eventProducer;
             _eventStoreRepository = eventStoreRepository;
+            _config = options.Value;
         }
 
         public async Task<List<Guid>> GetAggregateIdsAsync()
@@ -71,7 +75,7 @@ namespace EA.Infrastructure.Stores
 
                 await _eventStoreRepository.SaveAsync(eventModel);
 
-                _eventProducer.Produce(RabbitMQKeys.EventExchange, RabbitMQKeys.EventQueueRoute, @event);
+                _eventProducer.Produce(_config.ExchangeKey, _config.RouteKey, @event);
             }
         }
     }

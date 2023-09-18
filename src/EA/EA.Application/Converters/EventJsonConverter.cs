@@ -34,6 +34,7 @@ namespace EA.Application.Converters
             return typeDiscriminator switch
             {
                 nameof(AddCategoryEvent) => JsonSerializer.Deserialize<AddCategoryEvent>(json, options),
+                nameof(EditCategoryEvent) => JsonSerializer.Deserialize<EditCategoryEvent>(json, options),
                 _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
             };
         }
