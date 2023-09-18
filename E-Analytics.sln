@@ -33,8 +33,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OL.Domain", "src\OL\OL.Doma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OL.Infrastructure", "src\OL\OL.Infrastructure\OL.Infrastructure.csproj", "{4DBA1762-B672-4A6A-82C5-2CCFAA07C30E}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "E-Analytics.UI", "src\UI\E-Analytics.UI\E-Analytics.UI.esproj", "{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EAnalytics.Client", "src\Api\E-Analytics.ClientApi\EAnalytics.Client.csproj", "{C2E318AF-48D5-4433-8553-1DDBB7182C85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{57D0CFBA-B142-4D70-B5CA-CEDB55ED8794}"
