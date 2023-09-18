@@ -23,7 +23,7 @@ jobs:
     #- name: Add Nuget source
     #  run: dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget
     - name: Install Microsoft.VisualStudio.JavaScript.Sdk
-      run: dotnet add package Microsoft.VisualStudio.JavaScript.Sdk --version 0.5.94-alpha
+      run: cd ~/src/UI/E-Analytics.UI && dotnet add package Microsoft.VisualStudio.JavaScript.Sdk --version 0.5.94-alpha
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
