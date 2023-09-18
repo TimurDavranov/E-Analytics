@@ -9,7 +9,7 @@ namespace EA.Infrastructure.Handlers
     {
         Task SaveAsync(AggregateRootSimple aggregate);
         Task<T> GetByIdAsync(Guid aggregateId);
-        Task RepublishEventsAsync();
+        Task RepublishEventsAsync(string exchangeKey, string routeKey);
     }
 
     public class EventSourcingHandler<T> : IEventSourcingHandler<T> where T : AggregateRootSimple
@@ -36,7 +36,7 @@ namespace EA.Infrastructure.Handlers
             return (T)aggregate;
         }
 
-        public async Task RepublishEventsAsync()
+        public async Task RepublishEventsAsync(string exchangeKey, string routeKey)
         {
             var aggregateIds = await _eventStore.GetAggregateIdsAsync();
 
@@ -53,7 +53,7 @@ namespace EA.Infrastructure.Handlers
                 foreach (var @event in events)
                 {
                     var topic = Environment.GetEnvironmentVariable("KAFKA_TOPIC");
-                    _eventProducer.Produce(RabbitMQKeys.EventExchange, RabbitMQKeys.EventQueueRoute, @event);
+                    _eventProducer.Produce(exchangeKey, routeKey, @event);
                 }
             }
         }

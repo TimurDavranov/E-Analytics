@@ -10,6 +10,7 @@ public interface IRepository<T> where T : class
 
     abstract Task<T> CreateAsync(T model);
     abstract Task Update(T model);
+    abstract Task Attach(T model);
     abstract Task Delete(T model);
     abstract Task Delete(Expression<Func<T, bool>> expression);
 

@@ -29,4 +29,19 @@ public class CategoryAggregateRoot : AggregateRootSimple
         _active = true;
     }
 
+    public void EditCategory(long categoryId, List<TranslationDto> translations)
+    {
+        RaiseEvent(new EditCategoryEvent()
+        {
+            Id = Id,
+            CategoryId = categoryId,
+            Translations = translations
+        });
+    }
+
+    public void Apply(EditCategoryEvent @event)
+    {
+        _id = @event.Id;
+        _active = true;
+    }
 }
