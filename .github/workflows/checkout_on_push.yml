@@ -20,6 +20,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+    - name: .NetFramework Action Template
+      uses: auycro/netframework-action-template@v0.0.2
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
