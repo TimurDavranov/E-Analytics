@@ -1,35 +1,25 @@
-name: .NET and Angular CI
+name: Angular Frontend CI
 
 on:
   push:
-    branches: [ main ]
+    paths:
+      - 'src/UI/E-Analytics.UI/**'
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    paths:
+      - 'src/UI/E-Analytics.UI/**'
+    branches:
+      - main
 
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
     steps:
-    # Backend Operations
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.x'
-
-    - name: Restore dependencies
-      run: dotnet restore src/E-Analytics.sln
-
-    - name: Build solution
-      run: dotnet build src/E-Analytics.sln --no-restore
-
-    - name: Run Backend Tests
-      run: dotnet test src/E-Analytics.sln --no-build --verbosity normal
-
-    # Frontend Operations
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:

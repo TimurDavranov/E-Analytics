@@ -7,6 +7,6 @@
     <!-- Command to create an optimized build of the project that's ready for publishing -->
     <ProductionBuildCommand>npm run build</ProductionBuildCommand>
     <!-- Folder where production build objects will be placed -->
-    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\Shop.UI</BuildOutputFolder>
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\E-Analytics.UI</BuildOutputFolder>
   </PropertyGroup>
 </Project>
