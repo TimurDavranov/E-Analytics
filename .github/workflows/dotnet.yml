@@ -1,0 +1,63 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  git_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+  install:
+    needs: git_check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: List files
+        run: ls -R
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Install dependencies
+        run: dotnet restore "./src/Api/EAnalytics.Client.csproj"      
+        
+  build:
+    needs: install
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: List files
+        run: ls -R
+
+      - name: Build project
+        run: dotnet build "./src/Api/EAnalytics.Client.csproj" -c Release
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: List files
+        run: ls -R
+
+      - name: Run tests
+        run: dotnet test "./src/RaqamliAvlod.Api/EAnalytics.Client.csproj" --no-restore
