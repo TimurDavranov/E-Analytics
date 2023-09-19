@@ -55,11 +55,10 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
             if (IsConnected)
             {
                 Channel.ExchangeDeclare(exchange, ExchangeType.Direct);
-                var options = new JsonSerializerOptions()
-                {
-                    IncludeFields = true
-                };
-                var json = JsonSerializer.Serialize(message, options);
+                if (message is null)
+                    throw new ArgumentNullException(nameof(message), "Message must have a value!");
+
+                var json = JsonSerializer.Serialize(message, message.GetType());
                 var body = Encoding.UTF8.GetBytes(json);
 
                 var properties = Channel.CreateBasicProperties();

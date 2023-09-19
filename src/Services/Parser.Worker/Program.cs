@@ -29,7 +29,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services
             .AddDbContext<IEADbContext, EADbContext>(opt =>
             {
-                opt.UseNpgsql(configuration!.GetConnectionString("DefaultConnection"));
+                opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
             }, ServiceLifetime.Scoped);
 
         services
