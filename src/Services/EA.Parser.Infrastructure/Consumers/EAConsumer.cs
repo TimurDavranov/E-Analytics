@@ -5,9 +5,9 @@ using EAnalytics.Common.Configurations;
 using EAnalytics.Common.Events;
 using EAnalytics.Common.Helpers.RabbitAgent;
 using Microsoft.Extensions.Options;
-using Parser.Worker.Handlers;
+using Parser.Infrastructure.Handlers;
 
-namespace Parser.Worker.Consumers
+namespace Parser.Infrastructure.Consumers
 {
     public interface IEAConsumer
     {

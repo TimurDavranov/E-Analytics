@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Entities;
 using EA.Domain.Events;
 using EA.Domain.Primitives.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Parser.Worker.Handlers
+namespace Parser.Infrastructure.Handlers
 {
     public interface IEventHandler
     {
