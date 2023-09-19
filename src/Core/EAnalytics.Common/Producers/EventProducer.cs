@@ -5,7 +5,7 @@ namespace EA.Infrastructure.Producers;
 
 public interface IEventProducer
 {
-    void Produce<T>(string exchange, string route, T @event) where T : BaseEvent;
+    void Produce<T>(string exchange, string route, string queue, T @event) where T : BaseEvent;
 }
 
 public class EventProducer : IEventProducer
@@ -16,11 +16,11 @@ public class EventProducer : IEventProducer
         _rabbitProducer = rabbitProducer;
     }
 
-    public void Produce<T>(string exchange, string route, T @event) where T : BaseEvent
+    public void Produce<T>(string exchange, string route, string queue, T @event) where T : BaseEvent
     {
         if (@event is null)
             throw new ArgumentNullException(nameof(@event), "Event is null");
 
-        _rabbitProducer.Publish(exchange, route, @event);
+        _rabbitProducer.Publish(exchange, route, queue, @event);
     }
 }

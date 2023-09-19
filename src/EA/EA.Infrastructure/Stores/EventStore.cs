@@ -75,7 +75,7 @@ namespace EA.Infrastructure.Stores
 
                 await _eventStoreRepository.SaveAsync(eventModel);
 
-                _eventProducer.Produce(_config.ExchangeKey, _config.RouteKey, @event);
+                _eventProducer.Produce(_config.ExchangeKey, _config.RouteKey, _config.QueueKey, @event);
             }
         }
     }
