@@ -55,7 +55,7 @@ namespace EA.Infrastructure
             service
                 .AddDbContext<IEADbContext, EADbContext>(opt =>
                 {
-                    opt.UseNpgsql(configuration!.GetConnectionString("DefaultConnection"));
+                    opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
                 }, ServiceLifetime.Scoped);
 
             service
