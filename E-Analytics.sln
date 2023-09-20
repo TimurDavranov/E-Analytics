@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B400DD63-F0B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{83422FFD-5864-4721-827A-E9520FD45220}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parser.Worker", "src\Services\Parser.Worker\Parser.Worker.csproj", "{7E070543-9B11-4EC5-BF0F-AA876BBF3CB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EA.Parser.Worker", "src\Services\EA.Parser.Worker\EA.Parser.Worker.csproj", "{7E070543-9B11-4EC5-BF0F-AA876BBF3CB3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{C73199F0-5DAA-4B5E-9445-567AE9624506}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backends", "Backends", "{60892F57-A84D-4A23-BB1C-DFE983FA3879}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parser.Infrastructure", "src\Services\Parser.Infrastructure\Parser.Infrastructure.csproj", "{BF4BD7BF-3865-4FB8-9E62-B022360C9141}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EA.Parser.Infrastructure", "src\Services\EA.Parser.Infrastructure\EA.Parser.Infrastructure.csproj", "{BF4BD7BF-3865-4FB8-9E62-B022360C9141}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EA", "EA", "{78CC3DDC-DA6D-41D7-9343-ABD51E7A289A}"
 EndProject
@@ -37,11 +37,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EAnalytics.Client", "src\Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{57D0CFBA-B142-4D70-B5CA-CEDB55ED8794}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EAnalytics.Common", "src\Core\EAnalytics.Common\EAnalytics.Common.csproj", "{48C56897-62A5-4D4A-BF9B-67A74CC573C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EAnalytics.Common", "src\Core\EAnalytics.Common\EAnalytics.Common.csproj", "{48C56897-62A5-4D4A-BF9B-67A74CC573C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Migrator", "src\EA\EA.Migrator\EA.Migrator.csproj", "{00F0E279-91EC-448D-930C-104849D5C553}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EA.Migrator", "src\EA\EA.Migrator\EA.Migrator.csproj", "{00F0E279-91EC-448D-930C-104849D5C553}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OL.Migrator", "src\OL\OL.Migrator\OL.Migrator.csproj", "{524F4A83-A606-408F-B353-903272AAE59C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OL.Migrator", "src\OL\OL.Migrator\OL.Migrator.csproj", "{524F4A83-A606-408F-B353-903272AAE59C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OL.Parser.Infrastructure", "src\Services\OL.Parser.Infrastructure\OL.Parser.Infrastructure.csproj", "{BC5FF31D-10C5-49DB-871E-4992F85D010E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OL.Parser.Worker", "src\Services\OL.Parser.Worker\OL.Parser.Worker.csproj", "{A0EF17C4-B72B-4973-BF11-48EECB5E037C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,12 +89,6 @@ Global
 		{4DBA1762-B672-4A6A-82C5-2CCFAA07C30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DBA1762-B672-4A6A-82C5-2CCFAA07C30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DBA1762-B672-4A6A-82C5-2CCFAA07C30E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB06744E-9C5D-4027-8B3E-EC6D31B8FBAD}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{C2E318AF-48D5-4433-8553-1DDBB7182C85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2E318AF-48D5-4433-8553-1DDBB7182C85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2E318AF-48D5-4433-8553-1DDBB7182C85}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,6 +105,14 @@ Global
 		{524F4A83-A606-408F-B353-903272AAE59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{524F4A83-A606-408F-B353-903272AAE59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{524F4A83-A606-408F-B353-903272AAE59C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC5FF31D-10C5-49DB-871E-4992F85D010E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC5FF31D-10C5-49DB-871E-4992F85D010E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC5FF31D-10C5-49DB-871E-4992F85D010E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC5FF31D-10C5-49DB-871E-4992F85D010E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +137,8 @@ Global
 		{48C56897-62A5-4D4A-BF9B-67A74CC573C4} = {57D0CFBA-B142-4D70-B5CA-CEDB55ED8794}
 		{00F0E279-91EC-448D-930C-104849D5C553} = {78CC3DDC-DA6D-41D7-9343-ABD51E7A289A}
 		{524F4A83-A606-408F-B353-903272AAE59C} = {06C70713-1E2B-4A47-B77F-8282CCA818D0}
+		{BC5FF31D-10C5-49DB-871E-4992F85D010E} = {83422FFD-5864-4721-827A-E9520FD45220}
+		{A0EF17C4-B72B-4973-BF11-48EECB5E037C} = {83422FFD-5864-4721-827A-E9520FD45220}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49B3C395-DE7F-43DE-B235-30EB8755F8D8}
