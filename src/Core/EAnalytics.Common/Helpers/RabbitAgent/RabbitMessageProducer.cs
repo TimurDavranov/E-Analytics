@@ -13,7 +13,7 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
         bool IsConnected { get; set; }
         IModel Channel { get; set; }
 
-        void Publish<T>(string exchange, string route, T message);
+        void Publish<T>(string exchange, string route, string queue, T message);
     }
 
     public class RabbitMessageProducer : IRabbitMessageProducer, IDisposable
@@ -50,7 +50,7 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
             else throw new ConnectionRefusedException("Can't connect to RabbitMQ service");
         }
 
-        public void Publish<T>(string exchange, string route, T message)
+        public void Publish<T>(string exchange, string route, string queue, T message)
         {
             if (IsConnected)
             {
@@ -63,6 +63,9 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
 
                 var properties = Channel.CreateBasicProperties();
                 properties.Persistent = true;
+
+                var queueName = Channel.QueueDeclare(queue, false, false, true).QueueName;
+                Channel.QueueBind(queueName, exchange, route);
 
                 Channel.BasicPublish(exchange, route, properties, body);
             }
