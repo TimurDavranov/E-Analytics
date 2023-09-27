@@ -12,8 +12,8 @@ using OL.Infrastructure;
 namespace OL.Migrator.Migrations
 {
     [DbContext(typeof(OLDbContext))]
-    [Migration("20230914140137_14-09-2023_fix-relations")]
-    partial class _14092023_fixrelations
+    [Migration("20230927060738_db_init_27092023")]
+    partial class db_init_27092023
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

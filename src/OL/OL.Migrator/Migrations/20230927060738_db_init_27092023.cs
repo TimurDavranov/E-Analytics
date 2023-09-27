@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OL.Migrator.Migrations
 {
     /// <inheritdoc />
-    public partial class _14092023_init : Migration
+    public partial class db_init_27092023 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,21 +20,12 @@ namespace OL.Migrator.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    ParrentId = table.Column<long>(type: "bigint", nullable: true),
-                    OLCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ol_categories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ol_categories_ol_categories_OLCategoryId",
-                        column: x => x.OLCategoryId,
-                        principalSchema: "ol",
-                        principalTable: "ol_categories",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -60,17 +51,43 @@ namespace OL.Migrator.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ol_categories_OLCategoryId",
+            migrationBuilder.CreateTable(
+                name: "OLCategoryOLCategory",
                 schema: "ol",
-                table: "ol_categories",
-                column: "OLCategoryId");
+                columns: table => new
+                {
+                    ChildsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParrentsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OLCategoryOLCategory", x => new { x.ChildsId, x.ParrentsId });
+                    table.ForeignKey(
+                        name: "FK_OLCategoryOLCategory_ol_categories_ChildsId",
+                        column: x => x.ChildsId,
+                        principalSchema: "ol",
+                        principalTable: "ol_categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OLCategoryOLCategory_ol_categories_ParrentsId",
+                        column: x => x.ParrentsId,
+                        principalSchema: "ol",
+                        principalTable: "ol_categories",
+                        principalColumn: "Id");
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ol_translations_OLCategoryId",
                 schema: "ol",
                 table: "ol_translations",
                 column: "OLCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OLCategoryOLCategory_ParrentsId",
+                schema: "ol",
+                table: "OLCategoryOLCategory",
+                column: "ParrentsId");
         }
 
         /// <inheritdoc />
@@ -78,6 +95,10 @@ namespace OL.Migrator.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ol_translations",
+                schema: "ol");
+
+            migrationBuilder.DropTable(
+                name: "OLCategoryOLCategory",
                 schema: "ol");
 
             migrationBuilder.DropTable(

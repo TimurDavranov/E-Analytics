@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EAnalytics.Common.Primitives.DTOs;
 
-namespace EA.Domain.DTOs
+namespace EAnalytics.Common.Dtos
 {
     public class TranslationDto : BaseDto<long>
     {
