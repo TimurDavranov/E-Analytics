@@ -1,5 +1,5 @@
-using EA.Domain.DTOs;
 using EAnalytics.Common.Commands;
+using EAnalytics.Common.Dtos;
 
 namespace EA.Infrastructure.Commands.Categories
 {

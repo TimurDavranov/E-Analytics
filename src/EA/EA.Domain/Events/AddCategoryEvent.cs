@@ -1,4 +1,4 @@
-using EA.Domain.DTOs;
+using EAnalytics.Common.Dtos;
 using EAnalytics.Common.Events;
 
 namespace EA.Domain.Events
