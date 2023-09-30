@@ -1,5 +1,7 @@
 using EA.Application.Aggregates;
+using EA.Domain.Events;
 using EA.Infrastructure.Commands.Categories;
+using EA.Infrastructure.Commands.Products;
 
 namespace EA.Infrastructure.Handlers
 {
@@ -7,6 +9,8 @@ namespace EA.Infrastructure.Handlers
     {
         Task HandleAsync(AddCategoryCommand command);
         Task HandleAsync(EditCategoryCommand command);
+        Task HandleAsync(AddProductCommand command);
+        Task HandleAsync(EditProductCommand command);
     }
 
     public class CommandHandler : ICommandHandler
@@ -33,6 +37,24 @@ namespace EA.Infrastructure.Handlers
             aggregate.EditCategory(command.CategoryId, command.Translations);
 
             await _eventSourcingHandler.SaveAsync(aggregate);
+        }
+
+        public async Task HandleAsync(AddProductCommand command)
+        {
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+            
+            if (aggregate is null)
+                throw new ArgumentNullException($"Aggregate with this ID: {command.Id} not found!");
+            
+            aggregate.AddProduct(command.Name,command.ServiceName, command.Price);
+
+            await _eventSourcingHandler.SaveAsync(aggregate);
+
+        }
+
+        public Task HandleAsync(EditProductCommand command)
+        {
+            throw new NotImplementedException();
         }
     }
 }

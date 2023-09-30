@@ -5,21 +5,21 @@
     <LangVersion>11</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.51"/>
-    <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0"/>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.51" />
+    <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.11"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.11" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EA.Application\EA.Application.csproj"/>
+    <ProjectReference Include="..\EA.Application\EA.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Producers"/>
+    <Folder Include="Producers" />
   </ItemGroup>
 </Project>

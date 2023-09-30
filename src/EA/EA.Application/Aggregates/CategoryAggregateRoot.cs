@@ -44,4 +44,24 @@ public class CategoryAggregateRoot : AggregateRootSimple
         _id = @event.Id;
         _active = true;
     }
+
+    public void AddProduct(string name, string serviceName, decimal price)
+    {
+        RaiseEvent(new AddProductEvent()
+        {
+            Id = _id,
+            ProductId = Guid.NewGuid(),
+            ProductSystemId = Guid.NewGuid(),
+            Name = name,
+            Price = price,
+            ServiceName = serviceName,
+            
+        });
+    }
+
+    public void Apply(AddProductEvent @event)
+    {
+        _id = @event.Id;
+        _active = true;
+    }
 }
