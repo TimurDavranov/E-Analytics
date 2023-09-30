@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EA.Domain.DTOs;
+using EAnalytics.Common.Dtos;
 using EAnalytics.Common.Events;
 
 namespace EA.Domain.Events

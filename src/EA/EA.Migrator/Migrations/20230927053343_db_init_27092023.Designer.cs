@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EA.Migrator.Migrations
 {
     [DbContext(typeof(EADbContext))]
-    [Migration("20230914135631_14-09-2023_fix_relations")]
-    partial class _14092023_fix_relations
+    [Migration("20230927053343_db_init_27092023")]
+    partial class db_init_27092023
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

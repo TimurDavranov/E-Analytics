@@ -1,7 +1,7 @@
-using EA.Domain.DTOs;
 using EA.Domain.Events;
 using EA.Domain.Primitives;
 using EAnalytics.Common.Aggregates;
+using EAnalytics.Common.Dtos;
 
 namespace EA.Application.Aggregates;
 
