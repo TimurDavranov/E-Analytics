@@ -1,6 +1,7 @@
 using EA.Infrastructure.Commands.Categories;
 using EA.Infrastructure.Commands.Products;
 using EA.Infrastructure.Handlers;
+using EAnalytics.Common.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controllers
@@ -18,7 +19,12 @@ namespace Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] AddCategoryCommand command)
         {
-            await _handler.HandleAsync(command);
+            var categoryCommand = new AddCategoryCommand()
+            {
+                Id = Guid.NewGuid(),
+                Translations = command.Translations
+            };
+            await _handler.HandleAsync(categoryCommand);
             return Ok();
         }
 

@@ -1,4 +1,3 @@
-using EA.Domain.DTOs;
 using EAnalytics.Common.Events;
 using Microsoft.EntityFrameworkCore;
 

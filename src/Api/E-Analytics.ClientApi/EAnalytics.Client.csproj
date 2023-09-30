@@ -20,6 +20,9 @@
     <ProjectReference Include="..\..\EA\EA.Presentation\EA.Presentation.csproj" />
     <ProjectReference Include="..\..\OL\OL.Application\OL.Application.csproj" />
     <ProjectReference Include="..\..\OL\OL.Infrastructure\OL.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\OL\OL.Presentation\OL.Presentation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\OlController.cs" />
   </ItemGroup>
 </Project>
