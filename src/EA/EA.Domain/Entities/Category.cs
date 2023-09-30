@@ -10,5 +10,6 @@ namespace EA.Domain.Entities
         public virtual List<Category> Parent { get; set; }
         public virtual List<Category> Childs { get; set; }
         public virtual List<EATranslation> Translations { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

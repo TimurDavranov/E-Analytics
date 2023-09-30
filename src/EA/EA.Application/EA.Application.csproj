@@ -10,7 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Domain\EA.Domain.csproj" />
-    <ProjectReference Include="..\..\Core\EAnalytics.Infrastructure\EAnalytics.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extentions\RabbitAgent\" />

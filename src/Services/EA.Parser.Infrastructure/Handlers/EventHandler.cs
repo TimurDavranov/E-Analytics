@@ -9,6 +9,7 @@ namespace Parser.Infrastructure.Handlers
     public interface IEventHandler
     {
         Task On(AddCategoryEvent @event);
+        Task On(AddProductEvent @event);
     }
 
     public class EventHandler : IEventHandler
@@ -72,6 +73,19 @@ namespace Parser.Infrastructure.Handlers
             });
 
             await _categoryRepository.Attach(category);
+        }
+
+        public async Task On(AddProductEvent @event)
+        {
+            if(@event.ProductId == Guid.Empty)
+                throw new InvalidDataException("Incorrect Product Id is sended!");
+            
+            if(@event.ProductSystemId == Guid.Empty)
+                throw new InvalidDataException("Incorrect System Product Id is sended!");
+            
+            
+            
+            
         }
     }
 }
