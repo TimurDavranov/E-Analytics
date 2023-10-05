@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OL.Parser.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OL.Parser.Worker", "src\Services\OL.Parser.Worker\OL.Parser.Worker.csproj", "{A0EF17C4-B72B-4973-BF11-48EECB5E037C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EA.Parser.Application", "src\Services\EA.Parser.Application\EA.Parser.Application.csproj", "{C55248B7-CEB4-4F91-B83F-0BE61CDEFD4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0EF17C4-B72B-4973-BF11-48EECB5E037C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C55248B7-CEB4-4F91-B83F-0BE61CDEFD4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C55248B7-CEB4-4F91-B83F-0BE61CDEFD4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C55248B7-CEB4-4F91-B83F-0BE61CDEFD4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C55248B7-CEB4-4F91-B83F-0BE61CDEFD4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +145,7 @@ Global
 		{524F4A83-A606-408F-B353-903272AAE59C} = {06C70713-1E2B-4A47-B77F-8282CCA818D0}
 		{BC5FF31D-10C5-49DB-871E-4992F85D010E} = {83422FFD-5864-4721-827A-E9520FD45220}
 		{A0EF17C4-B72B-4973-BF11-48EECB5E037C} = {83422FFD-5864-4721-827A-E9520FD45220}
+		{C55248B7-CEB4-4F91-B83F-0BE61CDEFD4D} = {83422FFD-5864-4721-827A-E9520FD45220}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49B3C395-DE7F-43DE-B235-30EB8755F8D8}
