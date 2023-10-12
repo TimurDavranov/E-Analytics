@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EA.Domain;
 
-public interface IEADbContext : IDisposable
+public interface IEADbContext
 {
     DbSet<T> Set<T>() where T : class;
     void BeginTransaction();

@@ -1,17 +1,21 @@
-using Parser.Infrastructure.Consumers;
+using EA.Parser.Infrastructure.Consumers;
 
-namespace Parser.Worker.HostedServices
+namespace EA.Parser.Worker.HostedServices
 {
     public class EventHostedService : IHostedService
     {
-        private readonly IEAConsumer _consumer;
-        public EventHostedService(IEAConsumer consumer)
+        private readonly IServiceProvider _serviceProvider;
+        public EventHostedService(IServiceProvider serviceProvider)
         {
-            _consumer = consumer;
+            _serviceProvider = serviceProvider;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _consumer.Consume();
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var consumer = scope.ServiceProvider.GetRequiredService<IEAConsumer>();
+                consumer.Consume();
+            }
             return Task.CompletedTask;
         }
 

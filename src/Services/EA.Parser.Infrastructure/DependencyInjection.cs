@@ -2,14 +2,15 @@ using EA.Application.Repositories;
 using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
 using EA.Infrastructure;
+using EA.Infrastructure.Producers;
+using EA.Parser.Infrastructure.Consumers;
+using EA.Parser.Infrastructure.Handlers;
 using EAnalytics.Common.Helpers.RabbitAgent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Parser.Infrastructure.Consumers;
-using Parser.Infrastructure.Handlers;
 
-namespace Parser.Infrastructure
+namespace EA.Parser.Infrastructure
 {
     public static class DependencyInjection
     {
@@ -26,12 +27,11 @@ namespace Parser.Infrastructure
 
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IEAConsumer, EAConsumer>();
-            services.AddScoped<IRabbitMessageConsumer, RabbitMessageConsumer>();
-            services.AddScoped<IEventHandler, Handlers.EventHandler>();
-
             services.AddSingleton<IRabbitMessageProducer, RabbitMessageProducer>();
-
+            services.AddSingleton<IRabbitMessageConsumer, RabbitMessageConsumer>();
+            services.AddScoped<IEAConsumer, EAConsumer>();
+            services.AddScoped<IEventHandler, Handlers.EventHandler>();
+            services.AddScoped<IEventProducer, EventProducer>();
             return services;
         }
 

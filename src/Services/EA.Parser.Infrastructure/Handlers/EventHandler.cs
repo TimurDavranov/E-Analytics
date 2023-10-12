@@ -4,7 +4,7 @@ using EA.Domain.Events;
 using EA.Domain.Primitives.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Parser.Infrastructure.Handlers
+namespace EA.Parser.Infrastructure.Handlers
 {
     public interface IEventHandler
     {
@@ -21,7 +21,7 @@ namespace Parser.Infrastructure.Handlers
             _categoryRepository = categoryRepository;
         }
 
-        public Task On(AddCategoryEvent @event)
+        public async Task On(AddCategoryEvent @event)
         {
             var category = new Category()
             {
@@ -33,7 +33,7 @@ namespace Parser.Infrastructure.Handlers
                 }).ToList()
             };
 
-            return _categoryRepository.CreateAsync(category);
+            await _categoryRepository.CreateAsync(category);
         }
 
         public async Task On(EditCategoryEvent @event)
@@ -77,15 +77,15 @@ namespace Parser.Infrastructure.Handlers
 
         public async Task On(AddProductEvent @event)
         {
-            if(@event.ProductId == Guid.Empty)
+            if (@event.ProductId == Guid.Empty)
                 throw new InvalidDataException("Incorrect Product Id is sended!");
-            
-            if(@event.ProductSystemId == Guid.Empty)
+
+            if (@event.ProductSystemId == Guid.Empty)
                 throw new InvalidDataException("Incorrect System Product Id is sended!");
-            
-            
-            
-            
+
+
+
+
         }
     }
 }
