@@ -58,9 +58,9 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
             {
                 Channel.ExchangeDeclare(exchangeKey, ExchangeType.Direct);
 
-                var queueName = Channel.QueueDeclare(queueKey, false, false, true).QueueName;
+                Channel.QueueDeclare(queueKey, false, false, true);
 
-                Channel.QueueBind(queueName, exchangeKey, routeKey);
+                Channel.QueueBind(queueKey, exchangeKey, routeKey);
 
                 var consumer = new EventingBasicConsumer(Channel);
                 consumer.Received += (sender, args) =>
@@ -69,7 +69,7 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
                     Channel.BasicAck(deliveryTag: args.DeliveryTag, multiple: true);
                 };
                 Channel.BasicQos(prefetchSize: prefetchSize, prefetchCount: prefetchCount, false);
-                Channel.BasicConsume(queueName, false, consumer);
+                Channel.BasicConsume(queueKey, false, consumer);
             }
             else throw new ConnectionRefusedException("Connection to RabbitMQ service is closed");
         }
