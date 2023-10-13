@@ -1,7 +1,7 @@
 ﻿using Application.Repositories;
 using EA.Application.Repositories;
 using EA.Domain.Abstraction.Repositories;
-using EA.Infrastructure.Producers;
+using EAnalytics.Common.Producers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EA.Application;
@@ -17,7 +17,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-            .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+            .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
             .AddScoped<IEventStoreRepository, EventStoreRepository>()
             .AddScoped<IEventProducer, EventProducer>();
 
