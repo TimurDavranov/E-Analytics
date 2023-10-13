@@ -4,6 +4,7 @@ using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Events;
 using EA.Infrastructure.Commands.Categories;
+using EA.Infrastructure.Commands.Products;
 using EA.Infrastructure.Dispatchers;
 using EA.Infrastructure.Handlers;
 using EA.Infrastructure.Stores;
@@ -34,7 +35,8 @@ namespace EA.Infrastructure
             service
                 .AddScoped<IEventStore, EventStore>()
                 .AddScoped<IEventSourcingHandler<CategoryAggregateRoot>, EventSourcingHandler<CategoryAggregateRoot>>()
-                .AddScoped<ICommandHandler, CommandHandler>();
+                .AddScoped<ICommandHandler, CommandHandler>()
+                .AddHandlers();
 
         private static IServiceCollection AddHandlers(this IServiceCollection service)
         {
@@ -42,6 +44,7 @@ namespace EA.Infrastructure
             var dispatcher = new CommandDispatcher();
             dispatcher.RegisterHandler<AddCategoryCommand>(commandHandler.HandleAsync);
             dispatcher.RegisterHandler<EditCategoryCommand>(commandHandler.HandleAsync);
+            dispatcher.RegisterHandler<AddProductCommand>(commandHandler.HandleAsync);
             service.AddSingleton<ICommandDispatcher>(_ => dispatcher);
             return service;
         }
