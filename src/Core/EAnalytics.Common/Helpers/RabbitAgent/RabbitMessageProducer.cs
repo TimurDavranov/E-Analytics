@@ -64,8 +64,8 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
                 var properties = Channel.CreateBasicProperties();
                 properties.Persistent = true;
 
-                var queueName = Channel.QueueDeclare(queue, false, false, true).QueueName;
-                Channel.QueueBind(queueName, exchange, route);
+                Channel.QueueDeclare(queue, false, false, true);
+                Channel.QueueBind(queue, exchange, route);
 
                 Channel.BasicPublish(exchange, route, properties, body);
             }

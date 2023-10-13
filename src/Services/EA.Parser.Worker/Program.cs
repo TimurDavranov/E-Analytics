@@ -1,20 +1,19 @@
-using EA.Domain;
-using EA.Infrastructure;
+using EA.Parser.Infrastructure;
+using EA.Parser.Worker.HostedServices;
 using EAnalytics.Common.Configurations;
-using EAnalytics.Common.Helpers.RabbitAgent;
-using Microsoft.EntityFrameworkCore;
-using Parser.Worker.HostedServices;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((builder, services) =>
     {
-        services.AddOptions<AppConfig>(builder, nameof(AppConfig));
-        services.AddOptions<DataBaseConfiguration>(builder, nameof(DataBaseConfiguration));
-        services.AddOptions<RabbitMQConfiguration>(builder, nameof(RabbitMQConfiguration));
+
+        EA.Infrastructure.ConfigureOptions.AddOptions<AppConfig>(services, builder, nameof(AppConfig));
+        EA.Infrastructure.ConfigureOptions.AddOptions<DataBaseConfiguration>(services, builder, nameof(DataBaseConfiguration));
+        EA.Infrastructure.ConfigureOptions.AddOptions<RabbitMQConfiguration>(services, builder, nameof(RabbitMQConfiguration));
+
+        services.AddInfrastructure();
 
         services.AddHostedService<EventHostedService>();
 
-        services.AddInfrastructure();
     })
     .Build();
 host.Run();

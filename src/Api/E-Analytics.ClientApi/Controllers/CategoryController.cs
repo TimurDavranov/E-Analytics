@@ -1,6 +1,7 @@
 using EA.Infrastructure.Commands.Categories;
 using EA.Infrastructure.Commands.Products;
 using EA.Infrastructure.Handlers;
+using EAnalytics.Common.Commands;
 using EAnalytics.Common.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,10 @@ namespace Controllers
     [Route("[controller]/[action]")]
     public class CategoryController : ControllerBase
     {
-        private readonly ICommandHandler _handler;
-        public CategoryController(ICommandHandler handler)
+        private readonly ICommandDispatcher _commandDispatcher;
+        public CategoryController(ICommandDispatcher commandDispatcher)
         {
-            _handler = handler;
+            _commandDispatcher = commandDispatcher;
         }
 
         [HttpPost]
@@ -24,21 +25,21 @@ namespace Controllers
                 Id = Guid.NewGuid(),
                 Translations = command.Translations
             };
-            await _handler.HandleAsync(categoryCommand);
+            await _commandDispatcher.SendAsync(categoryCommand);
             return Ok();
         }
 
         [HttpPost]
         public async Task<IActionResult> EditCategory([FromBody] EditCategoryCommand command)
         {
-            await _handler.HandleAsync(command);
+            await _commandDispatcher.SendAsync(command);
             return Ok();
         }
         
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command)
         {
-            await _handler.HandleAsync(command);
+            await _commandDispatcher.SendAsync(command);
             return Ok();
         }
         
