@@ -2,10 +2,10 @@ using Application.Repositories;
 using EA.Application;
 using EA.Application.Exceptions;
 using EA.Domain.Primitives.Models;
-using EA.Infrastructure.Producers;
 using EAnalytics.Common.Configurations;
 using EAnalytics.Common.Events;
 using EAnalytics.Common.Exceptions;
+using EAnalytics.Common.Producers;
 using Microsoft.Extensions.Options;
 
 namespace EA.Infrastructure.Stores

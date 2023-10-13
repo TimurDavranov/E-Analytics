@@ -1,6 +1,7 @@
 using EA.Infrastructure.Commands.Categories;
 using EA.Infrastructure.Commands.Products;
 using EA.Infrastructure.Handlers;
+using EAnalytics.Common.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controllers
@@ -9,10 +10,10 @@ namespace Controllers
     [Route("[controller]/[action]")]
     public class ProductController : ControllerBase
     {
-        private readonly ICommandHandler _handler;
-        public ProductController(ICommandHandler handler)
+        private readonly ICommandDispatcher _commandDispatcher;
+        public ProductController(ICommandDispatcher commandDispatcher)
         {
-            _handler = handler;
+            _commandDispatcher = commandDispatcher;
         }
 
         
@@ -22,7 +23,7 @@ namespace Controllers
         {
             command.Id = id;
             
-            await _handler.HandleAsync(command);
+            await _commandDispatcher.SendAsync(command);
             return Ok();
         }
         

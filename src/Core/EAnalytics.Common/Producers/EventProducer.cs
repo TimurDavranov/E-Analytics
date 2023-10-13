@@ -1,7 +1,7 @@
 using EAnalytics.Common.Events;
 using EAnalytics.Common.Helpers.RabbitAgent;
 
-namespace EA.Infrastructure.Producers;
+namespace EAnalytics.Common.Producers;
 
 public interface IEventProducer
 {

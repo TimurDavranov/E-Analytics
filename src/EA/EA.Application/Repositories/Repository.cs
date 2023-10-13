@@ -1,22 +1,26 @@
 using System.Linq.Expressions;
 using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
+using EAnalytics.Common.Factories;
+using EAnalytics.Common.Producers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace EA.Application.Repositories;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T, D> : IRepository<T, D> where T : class where D : DbContext
 {
-    private readonly IEADbContext _context;
-    public Repository(IEADbContext context)
+    private readonly DatabaseContextFactory<D> _contextFactory;
+    public Repository(DatabaseContextFactory<D> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
     }
 
     public Task<T> GetAsync(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+
+        var _db = context.Set<T>();
 
         if (expression is null)
             throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
@@ -31,61 +35,91 @@ public class Repository<T> : IRepository<T> where T : class
 
     public IQueryable<T> GetQueryable()
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
         return _db.AsQueryable();
     }
 
     public async Task<T> CreateAsync(T model)
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
         var entry = await _db.AddAsync(model);
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
         return entry.Entity;
     }
 
     public async Task Delete(Expression<Func<T, bool>> expression)
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
         var entity = await _db.FirstOrDefaultAsync(expression);
 
         if (entity is null) throw new ArgumentNullException(nameof(T), $"Data with this condition not found!");
 
         _db.Remove(entity);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public Task Delete(T model)
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
         _db.Remove(model);
-        return _context.SaveChangesAsync();
+        return context.SaveChangesAsync();
     }
 
     public Task Update(T model)
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
         _db.Update(model);
-        return _context.SaveChangesAsync();
+        return context.SaveChangesAsync();
     }
 
     public Task Attach(T model)
     {
-        var _db = _context.Set<T>();
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
         _db.Attach(model);
-        return _context.SaveChangesAsync();
+        return context.SaveChangesAsync();
     }
 
 
-    public void BeginTransaction() => _context.BeginTransaction();
+    public void BeginTransaction()
+    {
+        using var context = _contextFactory.CreateContext();
+        context.Database.BeginTransaction();
+    }
 
-    public Task BeginTransactionAsync(CancellationToken cancellationToken = default) => _context.BeginTransactionAsync(cancellationToken);
+    public Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        using var context = _contextFactory.CreateContext();
+        return context.Database.BeginTransactionAsync(cancellationToken);
+    }
 
-    public void RollbackTransaction() => _context.RollbackTransaction();
+    public void RollbackTransaction()
+    {
+        using var context = _contextFactory.CreateContext();
+        context.Database.RollbackTransaction();
+    }
 
-    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default) => _context.RollbackTransactionAsync(cancellationToken);
+    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        using var context = _contextFactory.CreateContext();
+        return context.Database.RollbackTransactionAsync(cancellationToken);
+    }
 
-    public void CommitTransaction() => _context.CommitTransaction();
+    public void CommitTransaction()
+    {
+        using var context = _contextFactory.CreateContext();
+        context.Database.CommitTransaction();
+    }
 
-    public Task CommitTransactionAsync(CancellationToken cancellationToken = default) => _context.CommitTransactionAsync(cancellationToken);
+    public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        using var context = _contextFactory.CreateContext();
+        return context.Database.CommitTransactionAsync(cancellationToken);
+    }
 }
