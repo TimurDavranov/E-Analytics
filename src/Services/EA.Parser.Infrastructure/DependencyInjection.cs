@@ -2,10 +2,11 @@ using EA.Application.Repositories;
 using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
 using EA.Infrastructure;
-using EA.Infrastructure.Producers;
 using EA.Parser.Infrastructure.Consumers;
 using EA.Parser.Infrastructure.Handlers;
+using EAnalytics.Common.Factories;
 using EAnalytics.Common.Helpers.RabbitAgent;
+using EAnalytics.Common.Producers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace EA.Parser.Infrastructure
                 .AddServices();
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
             return services;
         }
 
@@ -40,11 +41,12 @@ namespace EA.Parser.Infrastructure
             var configuration = services
                 .BuildServiceProvider()
                 .GetService<IConfiguration>();
+
+            Action<DbContextOptionsBuilder> dbOptions = opt => opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
+
             services
-                .AddDbContext<IEADbContext, EADbContext>(opt =>
-                {
-                    opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
-                }, ServiceLifetime.Scoped);
+                .AddDbContext<IEADbContext, EADbContext>(dbOptions, ServiceLifetime.Scoped);
+            services.AddSingleton(new DatabaseContextFactory<EADbContext>(dbOptions));
 
             return services;
         }

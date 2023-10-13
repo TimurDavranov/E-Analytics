@@ -1,9 +1,10 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace EA.Domain.Abstraction.Repositories;
 
-public interface IRepository<T> where T : class
+public interface IRepository<T, D> where T : class where D : DbContext
 {
     Task<T> GetAsync(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
     IQueryable<T> GetQueryable();

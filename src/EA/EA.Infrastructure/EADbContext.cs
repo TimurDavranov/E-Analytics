@@ -12,14 +12,6 @@ namespace EA.Infrastructure
         {
         }
 
-        private ChangeTracker ChangeTracker
-        {
-            get
-            {
-                return base.ChangeTracker;
-            }
-        }
-
         public DbSet<EATranslation> Translations { get; set; }
         public DbSet<Category> Categories { get; set; }
 
@@ -45,7 +37,6 @@ namespace EA.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("ea");
-            // AddSoftDeleteFilter(modelBuilder);
         }
         public void RollbackTransaction()
         {

@@ -2,6 +2,7 @@ using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Entities;
 using EA.Domain.Events;
 using EA.Domain.Primitives.Entities;
+using EA.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace EA.Parser.Infrastructure.Handlers
@@ -14,9 +15,9 @@ namespace EA.Parser.Infrastructure.Handlers
 
     public class EventHandler : IEventHandler
     {
-        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<Category, EADbContext> _categoryRepository;
 
-        public EventHandler(IRepository<Category> categoryRepository)
+        public EventHandler(IRepository<Category, EADbContext> categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }

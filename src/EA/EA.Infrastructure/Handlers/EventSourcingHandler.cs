@@ -1,7 +1,7 @@
 using EA.Application;
-using EA.Infrastructure.Producers;
 using EA.Infrastructure.Stores;
 using EAnalytics.Common.Aggregates;
+using EAnalytics.Common.Producers;
 
 namespace EA.Infrastructure.Handlers
 {
