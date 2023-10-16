@@ -17,7 +17,7 @@ public interface IEADbContext
     //void CommitTransaction();
     //Task CommitTransactionAsync(CancellationToken cancellationToken = default);
 
-    DbSet<EATranslation> Translations { get; set; }
+    DbSet<EACategoryTranslation> Translations { get; set; }
     DbSet<Category> Categories { get; set; }
 
     ChangeTracker ChangeTracker { get; }

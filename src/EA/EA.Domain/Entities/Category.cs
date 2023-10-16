@@ -5,11 +5,11 @@ using EAnalytics.Common.Entities;
 namespace EA.Domain.Entities
 {
     [Table("ea_categories")]
-    public class Category : BaseEntity<long>
+    public class Category : BaseEntity<Guid>
     {
         public virtual List<Category> Parent { get; set; }
         public virtual List<Category> Childs { get; set; }
-        public virtual List<EATranslation> Translations { get; set; }
+        public virtual List<EACategoryTranslation> Translations { get; set; }
         public virtual ICollection<Product> Products { get; set; }
     }
 }

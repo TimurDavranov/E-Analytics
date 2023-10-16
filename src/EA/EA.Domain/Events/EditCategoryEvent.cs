@@ -12,7 +12,7 @@ namespace EA.Domain.Events
         public EditCategoryEvent() : base(nameof(EditCategoryEvent))
         {
         }
-        public long CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public List<TranslationDto> Translations { get; set; }
     }
 }

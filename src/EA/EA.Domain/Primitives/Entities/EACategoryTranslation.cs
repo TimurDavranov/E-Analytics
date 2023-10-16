@@ -3,8 +3,8 @@ using EAnalytics.Common.Primitives;
 
 namespace EA.Domain.Primitives.Entities
 {
-    [Table("ea_translations")]
-    public class EATranslation : Translation
+    [Table("ea_category_translations")]
+    public class EACategoryTranslation : Translation
     {
 
     }
