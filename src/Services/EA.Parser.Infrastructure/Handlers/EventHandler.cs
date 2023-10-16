@@ -26,7 +26,7 @@ namespace EA.Parser.Infrastructure.Handlers
         {
             var category = new Category()
             {
-                
+                Id = @event.Id,
                 Translations = @event.Translations.Select(s => new EACategoryTranslation
                 {
                     LanguageCode = s.LanguageCode,

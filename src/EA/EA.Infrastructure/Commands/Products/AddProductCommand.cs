@@ -10,7 +10,7 @@ public class AddProductCommand : BaseCommand
     public string Name { get; set; }
     
     [JsonInclude]
-    public long CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
     
     [JsonInclude]
     public decimal Price { get; set; }
