@@ -4,6 +4,7 @@ using EA.Domain;
 using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Events;
 using EA.Infrastructure.Commands.Categories;
+using EA.Infrastructure.Commands.Products;
 using EA.Infrastructure.Dispatchers;
 using EA.Infrastructure.Handlers;
 using EA.Infrastructure.Stores;
@@ -43,6 +44,7 @@ namespace EA.Infrastructure
             var dispatcher = new CommandDispatcher();
             dispatcher.RegisterHandler<AddCategoryCommand>(commandHandler.HandleAsync);
             dispatcher.RegisterHandler<EditCategoryCommand>(commandHandler.HandleAsync);
+            dispatcher.RegisterHandler<AddProductCommand>(commandHandler.HandleAsync);
             services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
             return services;
         }
