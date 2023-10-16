@@ -26,7 +26,8 @@ namespace EA.Parser.Infrastructure.Handlers
         {
             var category = new Category()
             {
-                Translations = @event.Translations.Select(s => new EATranslation
+                
+                Translations = @event.Translations.Select(s => new EACategoryTranslation
                 {
                     LanguageCode = s.LanguageCode,
                     Description = s.Description,
@@ -39,7 +40,7 @@ namespace EA.Parser.Infrastructure.Handlers
 
         public async Task On(EditCategoryEvent @event)
         {
-            if (@event.CategoryId is 0)
+            if (@event.CategoryId == Guid.Empty)
                 throw new InvalidDataException("Incorrect category Id is sended!");
 
             var category = await _categoryRepository.GetAsync(s => s.Id == @event.CategoryId, i => i.Include(s => s.Translations));
@@ -56,7 +57,7 @@ namespace EA.Parser.Infrastructure.Handlers
                 }
                 else
                 {
-                    category.Translations.Add(new EATranslation
+                    category.Translations.Add(new EACategoryTranslation
                     {
                         LanguageCode = c.LanguageCode,
                         Title = c.Title,

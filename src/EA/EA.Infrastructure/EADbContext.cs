@@ -12,7 +12,7 @@ namespace EA.Infrastructure
         {
         }
 
-        public DbSet<EATranslation> Translations { get; set; }
+        public DbSet<EACategoryTranslation> Translations { get; set; }
         public DbSet<Category> Categories { get; set; }
 
         public void BeginTransaction()

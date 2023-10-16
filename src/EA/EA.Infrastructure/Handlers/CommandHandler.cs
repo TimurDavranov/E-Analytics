@@ -10,7 +10,6 @@ namespace EA.Infrastructure.Handlers
         Task HandleAsync(AddCategoryCommand command);
         Task HandleAsync(EditCategoryCommand command);
         Task HandleAsync(AddProductCommand command);
-        Task HandleAsync(EditProductCommand command);
     }
 
     public class CommandHandler : ICommandHandler
@@ -25,6 +24,7 @@ namespace EA.Infrastructure.Handlers
         {
             var aggregate = new CategoryAggregateRoot(command.Id, command.Translations);
 
+            
             return _eventSourcingHandler.SaveAsync(aggregate);
         }
 
@@ -52,9 +52,6 @@ namespace EA.Infrastructure.Handlers
 
         }
 
-        public Task HandleAsync(EditProductCommand command)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

@@ -6,7 +6,7 @@ namespace EA.Infrastructure.Commands.Categories
 {
     public class EditCategoryCommand : BaseCommand
     {
-        public long CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         [JsonInclude]
         public List<TranslationDto> Translations { get; set; }
     }

@@ -25,11 +25,11 @@ namespace EA.Migrator.Migrations
 
             modelBuilder.Entity("CategoryCategory", b =>
                 {
-                    b.Property<long>("ChildsId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("ChildsId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("ParentId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("ParentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ChildsId", "ParentId");
 
@@ -40,11 +40,9 @@ namespace EA.Migrator.Migrations
 
             modelBuilder.Entity("EA.Domain.Entities.Category", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -54,14 +52,65 @@ namespace EA.Migrator.Migrations
                     b.ToTable("ea_categories", "ea");
                 });
 
-            modelBuilder.Entity("EA.Domain.Primitives.Entities.EATranslation", b =>
+            modelBuilder.Entity("EA.Domain.Entities.Product", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ea_products", "ea");
+                });
+
+            modelBuilder.Entity("EA.Domain.Entities.SystemProduct", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SystemName")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ea_system_products", "ea");
+                });
+
+            modelBuilder.Entity("EA.Domain.Primitives.Entities.EACategoryTranslation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long?>("CategoryId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -84,7 +133,7 @@ namespace EA.Migrator.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ea_translations", "ea");
+                    b.ToTable("ea_category_translations", "ea");
                 });
 
             modelBuilder.Entity("CategoryCategory", b =>
@@ -102,7 +151,25 @@ namespace EA.Migrator.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EA.Domain.Primitives.Entities.EATranslation", b =>
+            modelBuilder.Entity("EA.Domain.Entities.Product", b =>
+                {
+                    b.HasOne("EA.Domain.Entities.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("EA.Domain.Entities.SystemProduct", b =>
+                {
+                    b.HasOne("EA.Domain.Entities.Product", "Product")
+                        .WithMany("SystemProducts")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("EA.Domain.Primitives.Entities.EACategoryTranslation", b =>
                 {
                     b.HasOne("EA.Domain.Entities.Category", null)
                         .WithMany("Translations")
@@ -111,7 +178,14 @@ namespace EA.Migrator.Migrations
 
             modelBuilder.Entity("EA.Domain.Entities.Category", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("EA.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("SystemProducts");
                 });
 #pragma warning restore 612, 618
         }

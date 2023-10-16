@@ -29,7 +29,7 @@ public class CategoryAggregateRoot : AggregateRootSimple
         _active = true;
     }
 
-    public void EditCategory(long categoryId, List<TranslationDto> translations)
+    public void EditCategory(Guid categoryId, List<TranslationDto> translations)
     {
         RaiseEvent(new EditCategoryEvent()
         {
