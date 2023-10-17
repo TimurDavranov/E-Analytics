@@ -21,7 +21,7 @@ public class EventStoreRepository : IEventStoreRepository
         var mongoClient = new MongoClient(config.Value.ConnectionString);
         var mongoDatabase = mongoClient.GetDatabase(config.Value.Database);
 
-        _eventStoreCollection = mongoDatabase.GetCollection<EventModel>(config.Value.Collection); ;
+        _eventStoreCollection = mongoDatabase.GetCollection<EventModel>(config.Value.Collection);
     }
 
     public Task<List<EventModel>> FindAllAsync()

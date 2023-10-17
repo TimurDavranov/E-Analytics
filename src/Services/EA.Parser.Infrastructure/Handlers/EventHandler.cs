@@ -43,7 +43,7 @@ namespace EA.Parser.Infrastructure.Handlers
             if (@event.CategoryId == Guid.Empty)
                 throw new InvalidDataException("Incorrect category Id is sended!");
 
-            var category = await _categoryRepository.GetAsync(s => s.Id == @event.CategoryId, i => i.Include(s => s.Translations));
+            var category = _categoryRepository.Get(s => s.Id == @event.CategoryId, i => i.Include(s => s.Translations));
 
             if (category is null)
                 throw new ArgumentNullException($"Category with this ID: {@event.CategoryId} not found!");
@@ -74,7 +74,7 @@ namespace EA.Parser.Infrastructure.Handlers
                 }
             });
 
-            await _categoryRepository.Attach(category);
+            _categoryRepository.Update(category);
         }
 
         public async Task On(AddProductEvent @event)
