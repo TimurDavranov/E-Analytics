@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using EAnalytics.Common.Commands;
+using EAnalytics.Common.Enums;
 
 namespace EA.Infrastructure.Commands.Products;
 
@@ -14,8 +15,11 @@ public class AddProductCommand : BaseCommand
     
     [JsonInclude]
     public decimal Price { get; set; }
+    
+    [JsonInclude]
+    public string Url { get; set; }
 
     [JsonInclude] 
-    public string ServiceName { get; set; }
+    public SystemName SystemName { get; set; }
 
 }

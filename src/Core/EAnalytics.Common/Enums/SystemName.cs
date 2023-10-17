@@ -2,5 +2,5 @@
 
 public enum SystemName
 {
-    OL
+    OL = 1
 }

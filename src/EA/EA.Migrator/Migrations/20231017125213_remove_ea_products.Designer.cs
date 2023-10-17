@@ -4,6 +4,7 @@ using EA.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EA.Migrator.Migrations
 {
     [DbContext(typeof(EADbContext))]
-    partial class EADbContextModelSnapshot : ModelSnapshot
+    [Migration("20231017125213_remove_ea_products")]
+    partial class remove_ea_products
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,56 +53,6 @@ namespace EA.Migrator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ea_categories", "ea");
-                });
-
-            modelBuilder.Entity("EA.Domain.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ea_products", "ea");
-                });
-
-            modelBuilder.Entity("EA.Domain.Entities.SystemProduct", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SystemName")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ea_system_products", "ea");
                 });
 
             modelBuilder.Entity("EA.Domain.Primitives.Entities.EACategoryTranslation", b =>
@@ -150,28 +103,6 @@ namespace EA.Migrator.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EA.Domain.Entities.Product", b =>
-                {
-                    b.HasOne("EA.Domain.Entities.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("EA.Domain.Entities.SystemProduct", b =>
-                {
-                    b.HasOne("EA.Domain.Entities.Product", "Product")
-                        .WithMany("SystemProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("EA.Domain.Primitives.Entities.EACategoryTranslation", b =>
                 {
                     b.HasOne("EA.Domain.Entities.Category", null)
@@ -181,14 +112,7 @@ namespace EA.Migrator.Migrations
 
             modelBuilder.Entity("EA.Domain.Entities.Category", b =>
                 {
-                    b.Navigation("Products");
-
                     b.Navigation("Translations");
-                });
-
-            modelBuilder.Entity("EA.Domain.Entities.Product", b =>
-                {
-                    b.Navigation("SystemProducts");
                 });
 #pragma warning restore 612, 618
         }

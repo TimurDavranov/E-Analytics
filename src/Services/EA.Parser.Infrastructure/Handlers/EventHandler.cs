@@ -16,10 +16,12 @@ namespace EA.Parser.Infrastructure.Handlers
     public class EventHandler : IEventHandler
     {
         private readonly IRepository<Category, EADbContext> _categoryRepository;
+        private readonly IRepository<Product, EADbContext> _productRepository;
 
-        public EventHandler(IRepository<Category, EADbContext> categoryRepository)
+        public EventHandler(IRepository<Category, EADbContext> categoryRepository, IRepository<Product, EADbContext> productRepository)
         {
             _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
         }
 
         public async Task On(AddCategoryEvent @event)
@@ -85,7 +87,25 @@ namespace EA.Parser.Infrastructure.Handlers
             if (@event.ProductSystemId == Guid.Empty)
                 throw new InvalidDataException("Incorrect System Product Id is sended!");
 
+            var product = new Product
+            {
+                Id = @event.ProductId,
+                CategoryId = @event.Id,
+                SystemProducts = new List<SystemProduct> 
+                {
+                    new SystemProduct
+                    {
+                        Id = @event.ProductSystemId,
+                        Name = @event.Name,
+                        Price = @event.Price,
+                        SystemName = @event.SystemName,
+                        Url = @event.Url
+                    }
+                },
 
+            };
+
+            await _productRepository.CreateAsync(product);
 
 
         }
