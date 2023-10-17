@@ -70,6 +70,7 @@ namespace EA.Infrastructure
         {
             BsonClassMap.RegisterClassMap<AddCategoryEvent>();
             BsonClassMap.RegisterClassMap<AddProductEvent>();
+            BsonClassMap.RegisterClassMap<EditCategoryEvent>();
             return service;
         }
     }
