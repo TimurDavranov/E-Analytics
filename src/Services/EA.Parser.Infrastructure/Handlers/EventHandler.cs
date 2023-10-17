@@ -68,7 +68,7 @@ namespace EA.Parser.Infrastructure.Handlers
 
             category.Translations.ForEach(c =>
             {
-                if (@event.Translations.Any(s => s.LanguageCode == c.LanguageCode))
+                if (@event.Translations.Any(s => s.LanguageCode != c.LanguageCode))
                 {
                     c.IsDeleted = true;
                 }
