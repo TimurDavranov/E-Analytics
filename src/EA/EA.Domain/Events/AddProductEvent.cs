@@ -1,3 +1,4 @@
+using EAnalytics.Common.Enums;
 using EAnalytics.Common.Events;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,9 @@ namespace EA.Domain.Events
         
         public decimal Price { get; set; }
         
-        public string ServiceName { get; set; }
+        public string Url { get; set; }
+
+        public SystemName SystemName { get; set; }
         
         
     }

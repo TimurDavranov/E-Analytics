@@ -46,7 +46,7 @@ namespace EA.Infrastructure.Handlers
             if (aggregate is null)
                 throw new ArgumentNullException($"Aggregate with this ID: {command.Id} not found!");
             
-            aggregate.AddProduct(command.Name,command.ServiceName, command.Price);
+            aggregate.AddProduct(command.Name,command.SystemName, command.Price, command.Url);
 
             await _eventSourcingHandler.SaveAsync(aggregate);
 

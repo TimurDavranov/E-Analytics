@@ -2,6 +2,7 @@ using EA.Domain.Events;
 using EA.Domain.Primitives;
 using EAnalytics.Common.Aggregates;
 using EAnalytics.Common.Dtos;
+using EAnalytics.Common.Enums;
 
 namespace EA.Application.Aggregates;
 
@@ -45,7 +46,7 @@ public class CategoryAggregateRoot : AggregateRootSimple
         _active = true;
     }
 
-    public void AddProduct(string name, string serviceName, decimal price)
+    public void AddProduct(string name, SystemName systemName, decimal price, string url)
     {
         RaiseEvent(new AddProductEvent()
         {
@@ -54,7 +55,8 @@ public class CategoryAggregateRoot : AggregateRootSimple
             ProductSystemId = Guid.NewGuid(),
             Name = name,
             Price = price,
-            ServiceName = serviceName,
+            SystemName = systemName,
+            Url = url
             
         });
     }

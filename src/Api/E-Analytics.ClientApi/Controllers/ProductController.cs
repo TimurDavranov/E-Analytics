@@ -19,9 +19,15 @@ namespace Controllers
         
         
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromRoute]Guid id, [FromBody] AddProductCommand command)
+        public async Task<IActionResult> AddProduct(Guid id, [FromBody] AddProductCommand command)
         {
-            command.Id = id;
+			if (id == Guid.Empty)
+			{
+				throw new Exception("Guid parameter is wrong!");
+			}
+
+			command.Id = id;
+            
             
             await _commandDispatcher.SendAsync(command);
             return Ok();
