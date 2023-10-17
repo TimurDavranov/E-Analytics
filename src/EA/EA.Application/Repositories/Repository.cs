@@ -25,12 +25,33 @@ public class Repository<T, D> : IRepository<T, D> where T : class where D : DbCo
         if (expression is null)
             throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
 
+        var quert = _db.AsQueryable();
+
         if (include is not null)
         {
-            return include(_db).FirstOrDefaultAsync(expression);
+            quert = include(_db);
         }
 
-        return _db.FirstOrDefaultAsync(expression);
+        return quert.FirstOrDefaultAsync(expression);
+    }
+
+    public T Get(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    {
+        using var context = _contextFactory.CreateContext();
+
+        var _db = context.Set<T>();
+
+        if (expression is null)
+            throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
+
+        var quert = _db.AsQueryable();
+
+        if (include is not null)
+        {
+            quert = include(_db);
+        }
+
+        return quert.FirstOrDefault(expression);
     }
 
     public IQueryable<T> GetQueryable()
@@ -70,20 +91,20 @@ public class Repository<T, D> : IRepository<T, D> where T : class where D : DbCo
         return context.SaveChangesAsync();
     }
 
-    public Task Update(T model)
+    public void Update(T model)
     {
         using var context = _contextFactory.CreateContext();
         var _db = context.Set<T>();
         _db.Update(model);
-        return context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
-    public Task Attach(T model)
+    public void Attach(T model)
     {
         using var context = _contextFactory.CreateContext();
         var _db = context.Set<T>();
         _db.Attach(model);
-        return context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
 

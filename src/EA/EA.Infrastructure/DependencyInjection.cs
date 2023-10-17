@@ -69,6 +69,7 @@ namespace EA.Infrastructure
         private static IServiceCollection AddBsonMap(this IServiceCollection service)
         {
             BsonClassMap.RegisterClassMap<AddCategoryEvent>();
+            BsonClassMap.RegisterClassMap<EditCategoryEvent>();
             return service;
         }
     }
