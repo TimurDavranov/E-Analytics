@@ -1,16 +1,16 @@
-﻿using EA.Application.Aggregates;
-using EA.Application.Repositories;
+﻿using EA.Application;
+using EA.Application.Aggregates;
 using EA.Domain;
-using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Events;
 using EA.Infrastructure.Commands.Categories;
 using EA.Infrastructure.Commands.Products;
-using EA.Infrastructure.Dispatchers;
 using EA.Infrastructure.Handlers;
-using EA.Infrastructure.Stores;
 using EAnalytics.Common.Commands;
+using EAnalytics.Common.Dispatchers;
 using EAnalytics.Common.Factories;
+using EAnalytics.Common.Handlers;
 using EAnalytics.Common.Helpers.RabbitAgent;
+using EAnalytics.Common.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,20 +22,13 @@ namespace EA.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services) =>
             services
-                .AddBsonMap()
                 .AddDatabases()
-                .AddRepositories()
+                .AddApplication()
                 .AddServices()
                 .AddHandlers();
 
-        private static IServiceCollection AddRepositories(this IServiceCollection services) =>
-            services
-            .AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-
         private static IServiceCollection AddServices(this IServiceCollection services) =>
             services
-                .AddScoped<IEventStore, EventStore>()
-                .AddScoped<IEventSourcingHandler<CategoryAggregateRoot>, EventSourcingHandler<CategoryAggregateRoot>>()
                 .AddScoped<ICommandHandler, CommandHandler>();
 
         private static IServiceCollection AddHandlers(this IServiceCollection services)
@@ -60,18 +53,8 @@ namespace EA.Infrastructure
             services
                 .AddDbContext<IEADbContext, EADbContext>(dbOptions, ServiceLifetime.Scoped);
             services.AddSingleton(new DatabaseContextFactory<EADbContext>(dbOptions));
-            services
-                .AddSingleton<IRabbitMessageProducer, RabbitMessageProducer>();
 
             return services;
-        }
-
-        private static IServiceCollection AddBsonMap(this IServiceCollection service)
-        {
-            BsonClassMap.RegisterClassMap<AddCategoryEvent>();
-            BsonClassMap.RegisterClassMap<AddProductEvent>();
-            BsonClassMap.RegisterClassMap<EditCategoryEvent>();
-            return service;
         }
     }
 }

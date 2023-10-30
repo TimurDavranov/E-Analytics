@@ -1,7 +1,7 @@
 using EA.Application.Aggregates;
-using EA.Domain.Events;
 using EA.Infrastructure.Commands.Categories;
 using EA.Infrastructure.Commands.Products;
+using EAnalytics.Common.Handlers;
 
 namespace EA.Infrastructure.Handlers
 {
@@ -24,7 +24,7 @@ namespace EA.Infrastructure.Handlers
         {
             var aggregate = new CategoryAggregateRoot(command.Id, command.Translations);
 
-            
+
             return _eventSourcingHandler.SaveAsync(aggregate);
         }
 
@@ -42,16 +42,16 @@ namespace EA.Infrastructure.Handlers
         public async Task HandleAsync(AddProductCommand command)
         {
             var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
-            
+
             if (aggregate is null)
                 throw new ArgumentNullException($"Aggregate with this ID: {command.Id} not found!");
-            
-            aggregate.AddProduct(command.Name,command.SystemName, command.Price, command.Url);
+
+            aggregate.AddProduct(command.Name, command.SystemName, command.Price, command.Url);
 
             await _eventSourcingHandler.SaveAsync(aggregate);
 
         }
 
-        
+
     }
 }

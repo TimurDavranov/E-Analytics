@@ -29,11 +29,17 @@ namespace OL.Migrator.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("Enabled")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<long?>("ParrentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SystemId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -73,41 +79,11 @@ namespace OL.Migrator.Migrations
                     b.ToTable("ol_translations", "ol");
                 });
 
-            modelBuilder.Entity("OLCategoryOLCategory", b =>
-                {
-                    b.Property<Guid>("ChildsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ParrentsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ChildsId", "ParrentsId");
-
-                    b.HasIndex("ParrentsId");
-
-                    b.ToTable("OLCategoryOLCategory", "ol");
-                });
-
             modelBuilder.Entity("OL.Domain.Primitives.Entities.OLTranslation", b =>
                 {
                     b.HasOne("OL.Domain.Entities.OLCategory", null)
                         .WithMany("Translations")
                         .HasForeignKey("OLCategoryId");
-                });
-
-            modelBuilder.Entity("OLCategoryOLCategory", b =>
-                {
-                    b.HasOne("OL.Domain.Entities.OLCategory", null)
-                        .WithMany()
-                        .HasForeignKey("ChildsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OL.Domain.Entities.OLCategory", null)
-                        .WithMany()
-                        .HasForeignKey("ParrentsId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("OL.Domain.Entities.OLCategory", b =>

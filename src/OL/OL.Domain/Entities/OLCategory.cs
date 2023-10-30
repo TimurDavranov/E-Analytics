@@ -7,8 +7,8 @@ namespace OL.Domain.Entities;
 [Table("ol_categories")]
 public class OLCategory : BaseEntity<Guid>
 {
-    public bool IsActive { get; set; }
-    public virtual List<OLCategory> Parrents { get; set; }
-    public virtual List<OLCategory> Childs { get; set; }
+    public bool Enabled { get; set; }
+    public long SystemId { get; set; }
+    public long? ParrentId { get;set; }
     public virtual List<OLTranslation> Translations { get; set; }
 }
