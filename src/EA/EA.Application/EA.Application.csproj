@@ -12,8 +12,4 @@
   <ItemGroup>
     <ProjectReference Include="..\EA.Domain\EA.Domain.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extentions\RabbitAgent\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
 </Project>
