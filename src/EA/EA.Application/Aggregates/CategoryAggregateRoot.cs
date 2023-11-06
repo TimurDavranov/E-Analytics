@@ -11,11 +11,12 @@ public class CategoryAggregateRoot : AggregateRootSimple
     private bool _active;
     public bool Active { get => _active; set => _active = value; }
 
-    public CategoryAggregateRoot()
+    public CategoryAggregateRoot(Guid id)
     {
+        
     }
 
-    public CategoryAggregateRoot(Guid Id, List<TranslationDto> translations)
+    public CategoryAggregateRoot(Guid Id, List<TranslationDto> translations, Guid parent)
     {
         RaiseEvent(new AddCategoryEvent()
         {

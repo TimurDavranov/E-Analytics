@@ -20,12 +20,22 @@ namespace EA.Infrastructure.Handlers
             _eventSourcingHandler = eventSourcingHandler;
         }
 
-        public Task HandleAsync(AddCategoryCommand command)
+        public async Task HandleAsync(AddCategoryCommand command)
         {
-            var aggregate = new CategoryAggregateRoot(command.Id, command.Translations);
+            CategoryAggregateRoot parentAggregate = null;
+            
+            if (command.Parent != Guid.Empty)
+            {
+                parentAggregate = await _eventSourcingHandler.GetByIdAsync(command.Parent);
+            }
+
+            if (parentAggregate != null)
+            {
+                var aggregate = new CategoryAggregateRoot(command.Id, command.Translations, parentAggregate.Id);
 
 
-            return _eventSourcingHandler.SaveAsync(aggregate);
+                await _eventSourcingHandler.SaveAsync(aggregate);
+            }
         }
 
         public async Task HandleAsync(EditCategoryCommand command)
