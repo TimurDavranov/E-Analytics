@@ -5,9 +5,11 @@ namespace EA.Parser.Worker.HostedServices
     public class EventHostedService : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
-        public EventHostedService(IServiceProvider serviceProvider)
+        private readonly ILogger<EventHostedService> _logger;
+        public EventHostedService(IServiceProvider serviceProvider, ILogger<EventHostedService> logger)
         {
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -21,6 +23,7 @@ namespace EA.Parser.Worker.HostedServices
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            _logger.LogWarning("EA event consumer is stoped");
             return Task.CompletedTask;
         }
     }

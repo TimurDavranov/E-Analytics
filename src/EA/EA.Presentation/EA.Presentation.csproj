@@ -10,8 +10,4 @@
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EA.Application\EA.Application.csproj" />
-  </ItemGroup>
-
 </Project>

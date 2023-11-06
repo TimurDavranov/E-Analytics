@@ -1,8 +1,8 @@
-using EA.Domain.Abstraction.Repositories;
 using EA.Domain.Entities;
 using EA.Domain.Events;
 using EA.Domain.Primitives.Entities;
 using EA.Infrastructure;
+using EAnalytics.Common.Abstractions.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace EA.Parser.Infrastructure.Handlers
@@ -24,7 +24,7 @@ namespace EA.Parser.Infrastructure.Handlers
             _productRepository = productRepository;
         }
 
-        public async Task On(AddCategoryEvent @event)
+        public Task On(AddCategoryEvent @event)
         {
             var category = new Category()
             {
@@ -37,10 +37,10 @@ namespace EA.Parser.Infrastructure.Handlers
                 }).ToList()
             };
 
-            await _categoryRepository.CreateAsync(category);
+            return _categoryRepository.CreateAsync(category);
         }
 
-        public async Task On(EditCategoryEvent @event)
+        public Task On(EditCategoryEvent @event)
         {
             if (@event.CategoryId == Guid.Empty)
                 throw new InvalidDataException("Incorrect category Id is sended!");
@@ -77,9 +77,11 @@ namespace EA.Parser.Infrastructure.Handlers
             });
 
             _categoryRepository.Update(category);
+
+            return Task.CompletedTask;
         }
 
-        public async Task On(AddProductEvent @event)
+        public Task On(AddProductEvent @event)
         {
             if (@event.ProductId == Guid.Empty)
                 throw new InvalidDataException("Incorrect Product Id is sended!");
@@ -91,7 +93,7 @@ namespace EA.Parser.Infrastructure.Handlers
             {
                 Id = @event.ProductId,
                 CategoryId = @event.Id,
-                SystemProducts = new List<SystemProduct> 
+                SystemProducts = new List<SystemProduct>
                 {
                     new SystemProduct
                     {
