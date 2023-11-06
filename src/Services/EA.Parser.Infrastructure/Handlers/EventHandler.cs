@@ -107,7 +107,7 @@ namespace EA.Parser.Infrastructure.Handlers
 
             };
 
-            await _productRepository.CreateAsync(product);
+            return _productRepository.CreateAsync(product);
         }
     }
 }
