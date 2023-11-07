@@ -15,6 +15,7 @@ namespace EA.Infrastructure.Handlers
     public class CommandHandler : ICommandHandler
     {
         private readonly IEventSourcingHandler<CategoryAggregateRoot> _eventSourcingHandler;
+
         public CommandHandler(IEventSourcingHandler<CategoryAggregateRoot> eventSourcingHandler)
         {
             _eventSourcingHandler = eventSourcingHandler;
@@ -23,19 +24,16 @@ namespace EA.Infrastructure.Handlers
         public async Task HandleAsync(AddCategoryCommand command)
         {
             CategoryAggregateRoot parentAggregate = null;
-            
+
             if (command.Parent != Guid.Empty)
             {
                 parentAggregate = await _eventSourcingHandler.GetByIdAsync(command.Parent);
             }
 
-            if (parentAggregate != null)
-            {
-                var aggregate = new CategoryAggregateRoot(command.Id, command.Translations, parentAggregate.Id);
+            var aggregate = new CategoryAggregateRoot(command.Id, command.Translations,
+                parentAggregate != null ? parentAggregate.Id : Guid.Empty);
 
-
-                await _eventSourcingHandler.SaveAsync(aggregate);
-            }
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
         public async Task HandleAsync(EditCategoryCommand command)
@@ -59,9 +57,6 @@ namespace EA.Infrastructure.Handlers
             aggregate.AddProduct(command.Name, command.SystemName, command.Price, command.Url);
 
             await _eventSourcingHandler.SaveAsync(aggregate);
-
         }
-
-
     }
 }

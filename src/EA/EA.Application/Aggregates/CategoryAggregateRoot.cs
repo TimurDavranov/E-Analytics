@@ -11,7 +11,7 @@ public class CategoryAggregateRoot : AggregateRootSimple
     private bool _active;
     public bool Active { get => _active; set => _active = value; }
 
-    public CategoryAggregateRoot(Guid id)
+    public CategoryAggregateRoot()
     {
         
     }
@@ -21,7 +21,8 @@ public class CategoryAggregateRoot : AggregateRootSimple
         RaiseEvent(new AddCategoryEvent()
         {
             Id = Id,
-            Translations = translations
+            Translations = translations,
+            Parent = parent
         });
     }
 

@@ -24,7 +24,9 @@ public class CategoryTests
             {
                 new() {LanguageCode = "uz", Description = "uz", Title = name1},
                 new() {LanguageCode = "ru", Description = "ru", Title = name2},
-            }
+                
+            },
+            Guid.Empty
         );
 
     }
