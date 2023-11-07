@@ -27,6 +27,17 @@ namespace EA.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("ea");
+
+            modelBuilder.Entity<CategoryRelation>()
+                .HasOne(c => c.Category)
+                .WithMany(c => c.Relations)
+                .HasForeignKey(c => c.CategoryId);
+
+            modelBuilder.Entity<CategoryRelation>()
+                .HasOne(c => c.Parent)
+                .WithMany(c => c.Parents)
+                .HasForeignKey(c => c.ParentId);
+
         }
     }
 }

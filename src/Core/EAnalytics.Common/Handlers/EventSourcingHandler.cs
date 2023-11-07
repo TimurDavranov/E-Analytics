@@ -9,6 +9,7 @@ namespace EAnalytics.Common.Handlers
     {
         Task SaveAsync(AggregateRootSimple aggregate);
         Task<TAggregateModel> GetByIdAsync(Guid aggregateId);
+        Task<bool> IsExist(Guid aggregateId);
         Task RepublishEventsAsync(string exchangeKey, string routeKey, string queueKey);
     }
 
@@ -34,6 +35,12 @@ namespace EAnalytics.Common.Handlers
             ((TAggregateModel)aggregate).Version = events.Select(x => x.Version).Max();
 
             return (TAggregateModel)aggregate;
+        }
+
+        public async Task<bool> IsExist(Guid aggregateId)
+        {
+            var aggregate = await GetByIdAsync(aggregateId);
+            return aggregate.Id != Guid.Empty;
         }
 
         public async Task RepublishEventsAsync(string exchangeKey, string routeKey, string queueKey)
