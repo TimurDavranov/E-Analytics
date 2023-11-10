@@ -8,5 +8,8 @@ namespace EA.Infrastructure.Commands.Categories
     {
         [JsonInclude]
         public List<TranslationDto> Translations { get; set; }
+
+        [JsonInclude] 
+        public Guid Parent { get; set; }
     }
 }

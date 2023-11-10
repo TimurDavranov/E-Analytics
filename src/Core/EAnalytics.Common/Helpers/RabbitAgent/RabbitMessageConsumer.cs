@@ -80,7 +80,7 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
             {
                 Channel.ExchangeDeclare(exchangeKey, ExchangeType.Direct);
 
-                var queueName = Channel.QueueDeclare(queueKey, false, false, true).QueueName;
+                var queueName = Channel.QueueDeclare(queueKey, true, false, true).QueueName;
 
                 Channel.QueueBind(queueName, exchangeKey, routeKey);
 

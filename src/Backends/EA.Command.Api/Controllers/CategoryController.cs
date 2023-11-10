@@ -18,10 +18,13 @@ namespace EA.Command.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory([FromBody] AddCategoryCommand command)
         {
+            
             var categoryCommand = new AddCategoryCommand()
             {
                 Id = Guid.NewGuid(),
-                Translations = command.Translations
+                Translations = command.Translations,
+                Parent = command.Parent 
+                
             };
             await _commandDispatcher.SendAsync(categoryCommand);
             return Ok();

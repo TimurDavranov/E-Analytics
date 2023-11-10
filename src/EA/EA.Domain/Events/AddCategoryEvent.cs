@@ -10,5 +10,6 @@ namespace EA.Domain.Events
         }
 
         public List<TranslationDto> Translations { get; set; }
+        public Guid Parent { get; set; }
     }
 }

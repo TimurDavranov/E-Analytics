@@ -26,6 +26,12 @@ namespace EA.Parser.Infrastructure.Handlers
 
         public Task On(AddCategoryEvent @event)
         {
+            Guid parent = Guid.Empty;
+            if (@event.Parent != Guid.Empty)
+            {
+                parent = @event.Parent;
+            }
+
             var category = new Category()
             {
                 Id = @event.Id,
@@ -34,8 +40,12 @@ namespace EA.Parser.Infrastructure.Handlers
                     LanguageCode = s.LanguageCode.Code,
                     Description = s.Description,
                     Title = s.Title
-                }).ToList()
+                }).ToList(),
+                
             };
+
+            if (parent != null)
+                category.Relations = new List<CategoryRelation>() {  new CategoryRelation() { CategoryId = category.Id, ParentId = parent }};
 
             return _categoryRepository.CreateAsync(category);
         }

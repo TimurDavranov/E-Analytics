@@ -13,14 +13,16 @@ public class CategoryAggregateRoot : AggregateRootSimple
 
     public CategoryAggregateRoot()
     {
+        
     }
 
-    public CategoryAggregateRoot(Guid Id, List<TranslationDto> translations)
+    public CategoryAggregateRoot(Guid Id, List<TranslationDto> translations, Guid parent)
     {
         RaiseEvent(new AddCategoryEvent()
         {
             Id = Id,
-            Translations = translations
+            Translations = translations,
+            Parent = parent
         });
     }
 
