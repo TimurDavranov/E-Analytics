@@ -22,8 +22,8 @@ public class CategoryTests
         _categoryRoot = new CategoryAggregateRoot(id, new 
             List<TranslationDto>()
             {
-                new() {LanguageCode = "uz", Description = "uz", Title = name1},
-                new() {LanguageCode = "ru", Description = "ru", Title = name2},
+                new() {LanguageCode = new EAnalytics.Common.LanguageCode("uz"), Description = "uz", Title = name1},
+                new() {LanguageCode = new EAnalytics.Common.LanguageCode("ru"), Description = "ru", Title = name2},
                 
             },
             Guid.Empty

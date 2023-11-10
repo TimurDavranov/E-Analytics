@@ -12,6 +12,7 @@ public interface IRepository<T, D> where T : class where D : DbContext
 
     abstract Task<T> CreateAsync(T model);
     abstract void Update(T model);
+    abstract Task UpdateAsync(T model);
     abstract void Attach(T model);
     abstract Task Delete(T model);
     abstract Task Delete(Expression<Func<T, bool>> expression);

@@ -15,4 +15,7 @@ public record LanguageCode
 
         this.Code = code.ToLowerInvariant();
     }
+
+    public bool Equal(string code)
+        => Code.Equals(code);
 }

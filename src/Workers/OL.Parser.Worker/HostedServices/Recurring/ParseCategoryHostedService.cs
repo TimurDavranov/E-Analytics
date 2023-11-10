@@ -9,6 +9,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
     {
         private readonly IServiceProvider _provider;
         private readonly ILogger<ParseCategoryHostedService> _logger;
+        private PeriodicTimer? _timer;
 
         public ParseCategoryHostedService(IServiceProvider provider, ILogger<ParseCategoryHostedService> logger)
         {
@@ -18,7 +19,8 @@ namespace OL.Parser.Worker.HostedServices.Recurring
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            _timer = new PeriodicTimer(TimeSpan.FromHours(12));
+            do
             {
                 _logger.LogInformation("OL system category parsing is started at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                 var scope = _provider.CreateScope();
@@ -32,9 +34,10 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                     categories?.Data?.Categories is not null &&
                     categories.Data.Categories.Any())
                 {
-                    categories.Data.Categories.ToList().ForEach(category =>
+
+                    foreach (var category in categories.Data.Categories)
                     {
-                        getwayService.AddOLCategoryCommand(new AddOLCategoryCommand
+                        await getwayService.AddOLCategoryCommand(new AddOLCategoryCommand
                         {
                             ParentId = category.ParentId,
                             SystemId = category.Id,
@@ -67,7 +70,9 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                 }
                             }
                         });
-                    });
+
+                        await Task.Delay(10000);
+                    }
 
                     _logger.LogInformation("OL system category parsing is end at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                 }
@@ -79,8 +84,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                 {
                     _logger.LogError("OL system category parsing is finished with error message: {message}, at {date}", categories?.Message ?? "Error message not parsed", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                 }
-                await Task.Delay(DateTime.Now.AddHours(12).Millisecond);
-            }
+            } while (await _timer.WaitForNextTickAsync(cancellationToken));
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

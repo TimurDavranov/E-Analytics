@@ -1,4 +1,6 @@
-﻿using EAnalytics.Common.Abstractions.Repositories;
+﻿using EAnalytics.Common;
+using EAnalytics.Common.Abstractions.Repositories;
+using Microsoft.EntityFrameworkCore;
 using OL.Domain;
 using OL.Domain.Entities;
 using OL.Domain.Primitives.Entities;
@@ -28,6 +30,35 @@ namespace OL.Parser.Infrastructure.Handlers
 
             if (@event.ParentId is 0)
                 throw new InvalidDataException("Incorrect Parrent Id is sended!");
+
+            var category = _categoryRepository.Get(s => s.SystemId == s.SystemId, i => i.Include(s => s.Translations));
+
+            if (category is not null)
+            {
+                category.ParrentId = @event.ParentId;
+                category.SystemId = @event.SystemId;
+                foreach (var lang in SupportedLanguageCodes.Codes)
+                {
+                    if (category.Translations.Any(s => s.LanguageCode == lang) && @event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    {
+                        category.Translations.FirstOrDefault(s => s.LanguageCode == lang)!.Title = @event.Translations.FirstOrDefault(s => s.LanguageCode.Code == lang)!.Title;
+                    }
+                    else if (category.Translations.Any(s => s.LanguageCode == lang) && !@event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    {
+                        category.Translations.FirstOrDefault(s => s.LanguageCode == lang)!.IsDeleted = true;
+                    }
+                    else if (!category.Translations.Any(s => s.LanguageCode == lang) && @event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    {
+                        category.Translations.Add(new OLTranslation
+                        {
+                            LanguageCode = @event.Translations.FirstOrDefault(s => s.LanguageCode.Equal(lang))!.LanguageCode.Code,
+                            Title = @event.Translations.FirstOrDefault(s => s.LanguageCode.Equal(lang))!.Title,
+                            Description = string.Empty
+                        });
+                    }
+                }
+                return _categoryRepository.UpdateAsync(category);
+            }
 
             return _categoryRepository.CreateAsync(new OLCategory
             {

@@ -20,7 +20,7 @@ namespace OL.Parser.Worker.Services
 
         public Task AddOLCategoryCommand(AddOLCategoryCommand command)
         {
-            return Post<string>($"{command}/category/HandleCreate", command);
+            return Post<string>($"{commandUrl}/category/HandleCreate", command);
         }
     }
 }
