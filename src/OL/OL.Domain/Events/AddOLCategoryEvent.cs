@@ -1,4 +1,5 @@
-﻿using EAnalytics.Common.Events;
+﻿using EAnalytics.Common.Dtos;
+using EAnalytics.Common.Events;
 
 namespace OL.Domain;
 
@@ -8,10 +9,7 @@ public class AddOLCategoryEvent : BaseEvent
     {
     }
 
-    public long SystemId { get; set; }
-    public long? ParentId { get; set; }
-    public string NameRu { get; set; }
-    public string NameUz { get; set; }
-    public string NameOz { get; set; }
-    public string NameEn { get; set; }
+    public long SystemId { get; init; }
+    public long? ParentId { get; init; }
+    public IReadOnlyList<TranslationDto> Translations { get; init; }
 }

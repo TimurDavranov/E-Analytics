@@ -15,14 +15,14 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> HandleCreate(AddOLCategoryCommand command)
+    public async Task<IActionResult> HandleCreate([FromBody] AddOLCategoryCommand command)
     {
         await _commandDispatcher.SendAsync(command);
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> HandleEnable(EnableOLCategoryCommand command)
+    public async Task<IActionResult> HandleEnable([FromBody] EnableOLCategoryCommand command)
     {
         await _commandDispatcher.SendAsync(command);
         return Ok();
