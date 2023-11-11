@@ -97,6 +97,14 @@ public class Repository<T, D> : IRepository<T, D> where T : class where D : DbCo
         context.SaveChanges();
     }
 
+    public Task UpdateAsync(T model)
+    {
+        using var context = _contextFactory.CreateContext();
+        var _db = context.Set<T>();
+        _db.Update(model);
+        return context.SaveChangesAsync();
+    }
+
     public void Attach(T model)
     {
         using var context = _contextFactory.CreateContext();

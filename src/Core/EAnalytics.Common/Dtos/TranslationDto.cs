@@ -10,6 +10,6 @@ namespace EAnalytics.Common.Dtos
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string LanguageCode { get; set; }
+        public LanguageCode LanguageCode { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace OL.Infrastructure.Handlers
 
         public Task HandleAsync(AddOLCategoryCommand command)
         {
-            var aggregate = new OLCategoryAggregateRoot(command.Id, command.NameEn, command.NameOz, command.NameRu, command.NameOz, command.SystemId, command.ParentId);
+            var aggregate = new OLCategoryAggregateRoot(command.Id, command.SystemId, command.ParentId, command.Translations.ToList());
 
             return _eventSourcingHandler.SaveAsync(aggregate);
         }

@@ -1,4 +1,5 @@
 ﻿using EAnalytics.Common.Aggregates;
+using EAnalytics.Common.Dtos;
 using OL.Domain;
 
 namespace OL.Application.Aggregates.Category;
@@ -12,17 +13,14 @@ public partial class OLCategoryAggregateRoot : AggregateRootSimple
     {
     }
 
-    public OLCategoryAggregateRoot(Guid id, string NameEn, string NameOz, string NameRu, string NameUz, long SystemId, long? ParentId)
+    public OLCategoryAggregateRoot(Guid id, long SystemId, long? ParentId, IReadOnlyList<TranslationDto> translations)
     {
         RaiseEvent(new AddOLCategoryEvent()
         {
             Id = id,
-            NameEn = NameEn,
-            NameOz = NameOz,
-            NameRu = NameRu,
-            NameUz = NameUz,
             SystemId = SystemId,
-            ParentId = ParentId
+            ParentId = ParentId,
+            Translations = translations
         });
     }
 

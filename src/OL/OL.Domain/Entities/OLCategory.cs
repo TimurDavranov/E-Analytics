@@ -9,6 +9,6 @@ public class OLCategory : BaseEntity<Guid>
 {
     public bool Enabled { get; set; }
     public long SystemId { get; set; }
-    public long? ParrentId { get;set; }
-    public virtual List<OLTranslation> Translations { get; set; }
+    public long? ParrentId { get; set; }
+    public virtual IList<OLTranslation> Translations { get; set; }
 }
