@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EA\EA.Infrastructure\EA.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\EA\EA.Infrastructure\EA.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
