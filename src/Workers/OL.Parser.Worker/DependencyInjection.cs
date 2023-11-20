@@ -25,7 +25,8 @@ namespace OL.Parser.Worker
         {
             return services
                 .AddHostedService<EventHostedService>()
-                .AddHostedService<ParseCategoryHostedService>();
+                //.AddHostedService<ParseCategoryHostedService>()
+                ;
         }
     }
 }

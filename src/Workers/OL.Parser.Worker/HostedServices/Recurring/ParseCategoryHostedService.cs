@@ -71,8 +71,8 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                             }
                         });
 
-                        await Task.Delay(10000);
                     }
+                    await Task.Delay(10000);
 
                     _logger.LogInformation("OL system category parsing is end at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                 }
