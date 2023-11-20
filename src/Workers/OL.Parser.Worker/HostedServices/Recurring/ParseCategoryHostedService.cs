@@ -25,7 +25,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                 _logger.LogInformation("OL system category parsing is started at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                 var scope = _provider.CreateScope();
                 var olSystemService = scope.ServiceProvider.GetRequiredService<OLSystemService>();
-                var getwayService = scope.ServiceProvider.GetRequiredService<WebApiGetwayService>();
+                var categoryCommandService = scope.ServiceProvider.GetRequiredService<CategoryCommandService>();
 
                 var categories = await olSystemService.GetCategories();
 
@@ -37,7 +37,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
 
                     foreach (var category in categories.Data.Categories)
                     {
-                        await getwayService.AddOLCategoryCommand(new AddOLCategoryCommand
+                        await categoryCommandService.AddOLCategoryCommand(new AddOLCategoryCommand
                         {
                             ParentId = category.ParentId,
                             SystemId = category.Id,

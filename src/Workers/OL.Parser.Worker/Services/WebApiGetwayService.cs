@@ -12,15 +12,8 @@ namespace OL.Parser.Worker.Services
 {
     public class WebApiGetwayService : CustomHttpClient
     {
-        private const string commandUrl = "command";
-        private const string queryUrl = "query";
         public WebApiGetwayService(IOptions<AppConfig> options, IHttpClientFactory factory) : base(options.Value.WebApiGatewayUrl, factory)
         {
-        }
-
-        public Task AddOLCategoryCommand(AddOLCategoryCommand command)
-        {
-            return Post<string>($"{commandUrl}/category/HandleCreate", command);
         }
     }
 }
