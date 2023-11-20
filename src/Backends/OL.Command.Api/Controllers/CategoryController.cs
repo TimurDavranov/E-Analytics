@@ -15,7 +15,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> HandleCreate([FromBody] AddOLCategoryCommand command)
+    public async Task<IActionResult> Create([FromBody] AddOLCategoryCommand command)
     {
         command.Id = Guid.NewGuid();
         await _commandDispatcher.SendAsync(command);
