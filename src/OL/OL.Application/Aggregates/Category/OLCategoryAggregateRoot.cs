@@ -29,4 +29,36 @@ public partial class OLCategoryAggregateRoot : AggregateRootSimple
         _id = @event.Id;
         _active = true;
     }
+
+    public void EnableCategory(Guid id, bool enable)
+    {
+        RaiseEvent(new EnableOLCategoryEvent()
+        {
+            Id = id,
+            Enable = enable
+        });
+    }
+
+    public void Apply(EnableOLCategoryEvent @event)
+    {
+        _id = @event.Id;
+        _active = true;
+    }
+
+    public void UpdateCategory(Guid id, long systemId, long? parentId, IReadOnlyList<TranslationDto> translations)
+    {
+        RaiseEvent(new UpdateOLCategoryEvent
+        {
+            Id = id,
+            ParentId = parentId,
+            SystemId = systemId,
+            Translations = translations
+        });
+    }
+
+    public void Apply(UpdateOLCategoryEvent @event)
+    {
+        _id = @event.Id;
+        _active = true;
+    }
 }

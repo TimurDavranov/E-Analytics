@@ -1,7 +1,7 @@
 using EAnalytics.Common.Configurations;
 using EAnalytics.Common;
 using OL.Infrastructure;
-
+Console.Title = System.Reflection.Assembly.GetExecutingAssembly().FullName ?? string.Empty;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();

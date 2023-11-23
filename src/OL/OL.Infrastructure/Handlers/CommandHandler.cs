@@ -8,6 +8,7 @@ namespace OL.Infrastructure.Handlers
     public interface ICommandHandler
     {
         Task HandleAsync(AddOLCategoryCommand command);
+        Task HandleAsync(UpdateOLCategoryCommand command);
         Task HandleAsync(EnableOLCategoryCommand command);
     }
 
@@ -25,6 +26,18 @@ namespace OL.Infrastructure.Handlers
             var aggregate = new OLCategoryAggregateRoot(command.Id, command.SystemId, command.ParentId, command.Translations.ToList());
 
             return _eventSourcingHandler.SaveAsync(aggregate);
+        }
+
+        public async Task HandleAsync(UpdateOLCategoryCommand command)
+        {
+            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+
+            if (aggregate is null)
+                throw new ArgumentNullException($"Aggregate with this ID: {command.Id} not found!");
+
+            aggregate.UpdateCategory(command.Id, command.SystemId, command.ParentId, command.Translations.AsReadOnly());
+
+            await _eventSourcingHandler.SaveAsync(aggregate);
         }
 
         public async Task HandleAsync(EnableOLCategoryCommand command)

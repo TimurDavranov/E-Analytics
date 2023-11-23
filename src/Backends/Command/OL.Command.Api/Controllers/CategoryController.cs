@@ -23,6 +23,16 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    public async Task<IActionResult> Update([FromBody] UpdateOLCategoryCommand command)
+    {
+        if (command.Id == Guid.Empty)
+            throw new ArgumentNullException("Category Id is null or empty!");
+
+        await _commandDispatcher.SendAsync(command);
+        return Ok();
+    }
+
+    [HttpPost]
     public async Task<IActionResult> HandleEnable([FromBody] EnableOLCategoryCommand command)
     {
         await _commandDispatcher.SendAsync(command);

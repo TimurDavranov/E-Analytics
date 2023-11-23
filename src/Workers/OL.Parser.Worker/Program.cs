@@ -1,7 +1,7 @@
 using EAnalytics.Common;
 using EAnalytics.Common.Configurations;
 using OL.Parser.Worker;
-
+Console.Title = System.Reflection.Assembly.GetExecutingAssembly().FullName ?? string.Empty;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((builder, services) =>
     {

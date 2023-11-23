@@ -22,5 +22,10 @@ namespace OL.Parser.Worker.Services
         {
             return Post<string>($"{controller}/create", command);
         }
+
+        public Task UpdateOLCategoryCommand(UpdateOLCategoryCommand command)
+        {
+            return Post<string>($"{controller}/update", command);
+        }
     }
 }

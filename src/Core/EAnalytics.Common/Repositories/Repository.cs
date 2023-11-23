@@ -16,137 +16,167 @@ public class Repository<T, D> : IRepository<T, D> where T : class where D : DbCo
 
     public Task<T> GetAsync(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
-        using var context = _contextFactory.CreateContext();
-
-        var _db = context.Set<T>();
-
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
-
-        var quert = _db.AsQueryable();
-
-        if (include is not null)
+        using (var context = _contextFactory.CreateContext())
         {
-            quert = include(_db);
-        }
 
-        return quert.FirstOrDefaultAsync(expression);
+            var _db = context.Set<T>();
+
+            if (expression is null)
+                throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
+
+            var query = _db.AsQueryable();
+
+            if (include is not null)
+            {
+                query = include(_db);
+            }
+
+            return query.AsNoTracking().FirstOrDefaultAsync(expression);
+        }
     }
 
     public T Get(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
     {
-        using var context = _contextFactory.CreateContext();
-
-        var _db = context.Set<T>();
-
-        if (expression is null)
-            throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
-
-        var quert = _db.AsQueryable();
-
-        if (include is not null)
+        using (var context = _contextFactory.CreateContext())
         {
-            quert = include(_db);
-        }
 
-        return quert.FirstOrDefault(expression);
+            var _db = context.Set<T>();
+
+            if (expression is null)
+                throw new ArgumentNullException(nameof(expression), "Expression can't be empty!");
+
+            var query = _db.AsQueryable();
+
+            if (include is not null)
+            {
+                query = include(_db);
+            }
+
+            return query.AsNoTracking().FirstOrDefault(expression);
+        }
     }
 
     public IQueryable<T> GetQueryable()
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        return _db.AsQueryable();
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            return _db.AsQueryable();
+        }
     }
 
     public async Task<T> CreateAsync(T model)
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        var entry = await _db.AddAsync(model);
-        await context.SaveChangesAsync();
-        return entry.Entity;
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            var entry = await _db.AddAsync(model);
+            await context.SaveChangesAsync();
+            return entry.Entity;
+        }
     }
 
     public async Task Delete(Expression<Func<T, bool>> expression)
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        var entity = await _db.FirstOrDefaultAsync(expression);
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            var entity = await _db.FirstOrDefaultAsync(expression);
 
-        if (entity is null) throw new ArgumentNullException(nameof(T), $"Data with this condition not found!");
+            if (entity is null) throw new ArgumentNullException(nameof(T), $"Data with this condition not found!");
 
-        _db.Remove(entity);
+            _db.Remove(entity);
 
-        await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
+        }
     }
 
     public Task Delete(T model)
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        _db.Remove(model);
-        return context.SaveChangesAsync();
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            _db.Remove(model);
+            return context.SaveChangesAsync();
+        }
     }
 
     public void Update(T model)
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        _db.Update(model);
-        context.SaveChanges();
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            _db.Update(model);
+            context.SaveChanges();
+        }
     }
 
     public Task UpdateAsync(T model)
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        _db.Update(model);
-        return context.SaveChangesAsync();
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            _db.Update(model);
+            return context.SaveChangesAsync();
+        }
     }
 
     public void Attach(T model)
     {
-        using var context = _contextFactory.CreateContext();
-        var _db = context.Set<T>();
-        _db.Attach(model);
-        context.SaveChanges();
+        using (var context = _contextFactory.CreateContext())
+        {
+            var _db = context.Set<T>();
+            _db.Attach(model);
+            context.SaveChanges();
+        }
     }
 
 
     public void BeginTransaction()
     {
-        using var context = _contextFactory.CreateContext();
-        context.Database.BeginTransaction();
+        using (var context = _contextFactory.CreateContext())
+        {
+            context.Database.BeginTransaction();
+        }
     }
 
     public Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        using var context = _contextFactory.CreateContext();
-        return context.Database.BeginTransactionAsync(cancellationToken);
+        using (var context = _contextFactory.CreateContext())
+        {
+            return context.Database.BeginTransactionAsync(cancellationToken);
+        }
     }
 
     public void RollbackTransaction()
     {
-        using var context = _contextFactory.CreateContext();
-        context.Database.RollbackTransaction();
+        using (var context = _contextFactory.CreateContext())
+        {
+            context.Database.RollbackTransaction();
+        }
     }
 
     public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        using var context = _contextFactory.CreateContext();
-        return context.Database.RollbackTransactionAsync(cancellationToken);
+        using (var context = _contextFactory.CreateContext())
+        {
+            return context.Database.RollbackTransactionAsync(cancellationToken);
+        }
     }
 
     public void CommitTransaction()
     {
-        using var context = _contextFactory.CreateContext();
-        context.Database.CommitTransaction();
+        using (var context = _contextFactory.CreateContext())
+        {
+            context.Database.CommitTransaction();
+        }
     }
 
     public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
-        using var context = _contextFactory.CreateContext();
-        return context.Database.CommitTransactionAsync(cancellationToken);
+        using (var context = _contextFactory.CreateContext())
+        {
+            return context.Database.CommitTransactionAsync(cancellationToken);
+        }
     }
 }

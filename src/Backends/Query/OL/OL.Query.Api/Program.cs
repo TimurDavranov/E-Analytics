@@ -1,12 +1,21 @@
+using EAnalytics.Common.Configurations;
+using OL.Query.Api.Infrastructure;
+using EAnalytics.Common;
+Console.Title = System.Reflection.Assembly.GetExecutingAssembly().FullName ?? string.Empty;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services
+    .AddOptions<AppConfig>(builder, nameof(AppConfig));
+builder.Services
+    .AddOptions<DataBaseConfiguration>(builder, nameof(DataBaseConfiguration));
+
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 

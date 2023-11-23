@@ -2,7 +2,7 @@ using EA.Parser.Infrastructure;
 using EA.Parser.Worker.HostedServices;
 using EAnalytics.Common;
 using EAnalytics.Common.Configurations;
-
+Console.Title = System.Reflection.Assembly.GetExecutingAssembly().FullName ?? string.Empty;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((builder, services) =>
     {

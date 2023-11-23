@@ -15,4 +15,7 @@ public sealed class CategoryQueryService : CustomHttpClient
 
     public Task<CategoryResponse?> GetBySystemId(CategoryBySystemIdRequest request) =>
         Post<CategoryResponse?>($"{controller}/GetBySystemId", request);
+
+    public Task<CategoryResponse?> GetByName(CategoryByNameRequest request) =>
+        Post<CategoryResponse?>($"{controller}/GetByName", request);
 }

@@ -11,22 +11,23 @@ namespace OL.Parser.Worker
         {
             return services
                 .AddInfrastructure()
-                .AddServices();
+                .AddServices()
+                .AddHostedServices();
         }
 
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             return services
                 .AddScoped<OLSystemService>()
-                .AddScoped<CategoryCommandService>();
+                .AddScoped<CategoryCommandService>()
+                .AddScoped<CategoryQueryService>();
         }
 
         private static IServiceCollection AddHostedServices(this IServiceCollection services)
         {
             return services
                 .AddHostedService<EventHostedService>()
-                //.AddHostedService<ParseCategoryHostedService>()
-                ;
+                .AddHostedService<ParseCategoryHostedService>();
         }
     }
 }

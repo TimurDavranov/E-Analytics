@@ -18,7 +18,7 @@ namespace EAnalytics.Common.Dispatchers
 
         public Task SendAsync(BaseCommand command)
         {
-            if (_handlers.TryGetValue(command.GetType(), out Func<BaseCommand, Task> handler))
+            if (_handlers.TryGetValue(command.GetType(), out var handler))
             {
                 return handler(command);
             }

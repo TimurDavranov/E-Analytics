@@ -31,7 +31,30 @@ namespace OL.Parser.Infrastructure.Handlers
             if (@event.ParentId is 0)
                 throw new InvalidDataException("Incorrect Parrent Id is sended!");
 
-            var category = _categoryRepository.Get(s => s.SystemId == s.SystemId, i => i.Include(s => s.Translations));
+            return _categoryRepository.CreateAsync(new OLCategory
+            {
+                Id = @event.Id,
+                Translations = @event.Translations.Select(s => new OLTranslation
+                {
+                    Title = s.Title,
+                    Description = s.Description,
+                    LanguageCode = s.LanguageCode.Code
+                }).ToList(),
+                Enabled = true,
+                SystemId = @event.SystemId,
+                ParrentId = @event.ParentId
+            });
+        }
+
+        public Task On(UpdateOLCategoryEvent @event)
+        {
+            if (@event.SystemId is 0)
+                throw new InvalidDataException("Incorrect System Id is sended!");
+
+            if (@event.ParentId is 0)
+                throw new InvalidDataException("Incorrect Parrent Id is sended!");
+
+            var category = _categoryRepository.Get(s => s.SystemId == s.SystemId || s.Equals(@event.Translations), i => i.Include(s => s.Translations));
 
             if (category is not null)
             {
@@ -60,19 +83,7 @@ namespace OL.Parser.Infrastructure.Handlers
                 return _categoryRepository.UpdateAsync(category);
             }
 
-            return _categoryRepository.CreateAsync(new OLCategory
-            {
-                Id = @event.Id,
-                Translations = @event.Translations.Select(s => new OLTranslation
-                {
-                    Title = s.Title,
-                    Description = s.Description,
-                    LanguageCode = s.LanguageCode.Code
-                }).ToList(),
-                Enabled = true,
-                SystemId = @event.SystemId,
-                ParrentId = @event.ParentId
-            });
+            return Task.CompletedTask;
         }
 
         public Task On(EnableOLCategoryEvent @event)

@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OL\OL.Infrastructure\OL.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\OL\OL.Infrastructure\OL.Infrastructure.csproj" />
+    <ProjectReference Include="..\OL.Query.Api.Infrastructure\OL.Query.Api.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

@@ -37,13 +37,9 @@ public static class DependencyInjectio
         var commandHandler = services.BuildServiceProvider().GetRequiredService<ICommandHandler>();
         var commandDispatcher = new CommandDispatcher();
         commandDispatcher.RegisterHandler<AddOLCategoryCommand>(commandHandler.HandleAsync);
+        commandDispatcher.RegisterHandler<UpdateOLCategoryCommand>(commandHandler.HandleAsync);
         commandDispatcher.RegisterHandler<EnableOLCategoryCommand>(commandHandler.HandleAsync);
         services.AddSingleton<ICommandDispatcher>(_ => commandDispatcher);
-
-        //var queryHandler = services.BuildServiceProvider().GetRequiredService<IQueryHandler>();
-        //var queryDispatcher = new QueryDispatcher();
-        //queryDispatcher.RegisterHandler<CategoryResponse, CategoryByIdRequest>(queryHandler.HandleAsync);
-
         return services;
     }
 

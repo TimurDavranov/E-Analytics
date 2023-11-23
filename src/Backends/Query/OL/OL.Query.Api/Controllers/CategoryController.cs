@@ -15,9 +15,23 @@ namespace OL.Query.Api.Controllers
             _dispatcher = dispatcher;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<CategoryResponse>> GetById([FromBody] CategoryByIdRequest request)
+        {
+            return Ok(await _dispatcher.SendAsync(request));
+        }
+
+        [HttpPost]
         public async Task<ActionResult<CategoryResponse>> GetBySystemId([FromBody] CategoryBySystemIdRequest request)
         {
             return Ok(await _dispatcher.SendAsync(request));
         }
+
+        [HttpPost]
+        public async Task<ActionResult<CategoryResponse?>> GetByName([FromBody] CategoryByNameRequest request)
+        {
+            return Ok(await _dispatcher.SendAsync(request));
+        }
+
     }
 }
