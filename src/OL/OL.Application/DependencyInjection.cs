@@ -1,4 +1,3 @@
-using EA.Application.Repositories;
 using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Handlers;
 using EAnalytics.Common.Helpers.RabbitAgent;

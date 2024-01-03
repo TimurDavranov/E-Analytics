@@ -1,4 +1,5 @@
-﻿using EAnalytics.Common.Queries;
+﻿using EAnalytics.Common.Primitives;
+using EAnalytics.Common.Queries;
 using Microsoft.AspNetCore.Mvc;
 using OL.Infrastructure.Models.Requests.Category;
 using OL.Infrastructure.Models.Responses.Category;
@@ -7,30 +8,24 @@ namespace OL.Query.Api.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController(IQueryDispatcher dispatcher) : BaseApiController
     {
-        private readonly IQueryDispatcher _dispatcher;
-        public CategoryController(IQueryDispatcher dispatcher)
+        [HttpPost]
+        public async Task<IActionResult> GetById([FromBody] CategoryByIdRequest request)
         {
-            _dispatcher = dispatcher;
+            return Ok(await dispatcher.SendAsync(request));
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryResponse>> GetById([FromBody] CategoryByIdRequest request)
+        public async Task<IActionResult> GetBySystemId([FromBody] CategoryBySystemIdRequest request)
         {
-            return Ok(await _dispatcher.SendAsync(request));
+            return Ok(await dispatcher.SendAsync(request));
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryResponse>> GetBySystemId([FromBody] CategoryBySystemIdRequest request)
+        public async Task<IActionResult> GetByName([FromBody] CategoryByNameRequest request)
         {
-            return Ok(await _dispatcher.SendAsync(request));
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<CategoryResponse?>> GetByName([FromBody] CategoryByNameRequest request)
-        {
-            return Ok(await _dispatcher.SendAsync(request));
+            return Ok(await dispatcher.SendAsync(request));
         }
 
     }

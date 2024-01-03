@@ -4,7 +4,7 @@ using EAnalytics.Common.Dtos;
 
 namespace OL.Infrastructure.Commands.Categories
 {
-    public class AddOLCategoryCommand : BaseCommand
+    public class AddOlCategoryCommand : BaseCommand
     {
         public long SystemId { get; set; }
         public long? ParentId { get; set; }

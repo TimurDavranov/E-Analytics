@@ -1,5 +1,4 @@
-﻿using EA.Application.Repositories;
-using EA.Domain.Events;
+﻿using EA.Domain.Events;
 using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Handlers;
 using EAnalytics.Common.Helpers.RabbitAgent;

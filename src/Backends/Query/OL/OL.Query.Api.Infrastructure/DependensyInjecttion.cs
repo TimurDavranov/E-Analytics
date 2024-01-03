@@ -1,8 +1,8 @@
-﻿using EA.Application.Repositories;
-using EAnalytics.Common.Abstractions.Repositories;
+﻿using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Dispatchers;
 using EAnalytics.Common.Factories;
 using EAnalytics.Common.Queries;
+using EAnalytics.Common.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

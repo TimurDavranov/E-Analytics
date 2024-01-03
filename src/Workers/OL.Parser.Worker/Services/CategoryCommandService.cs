@@ -18,12 +18,12 @@ namespace OL.Parser.Worker.Services
         {
         }
 
-        public Task AddOLCategoryCommand(AddOLCategoryCommand command)
+        public Task AddOlCategoryCommand(AddOlCategoryCommand command)
         {
             return Post<string>($"{controller}/create", command);
         }
 
-        public Task UpdateOLCategoryCommand(UpdateOLCategoryCommand command)
+        public Task UpdateOlCategoryCommand(UpdateOlCategoryCommand command)
         {
             return Post<string>($"{controller}/update", command);
         }

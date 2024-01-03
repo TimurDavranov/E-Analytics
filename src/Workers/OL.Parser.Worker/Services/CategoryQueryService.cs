@@ -6,16 +6,14 @@ using OL.Infrastructure.Models.Responses.Category;
 
 namespace OL.Parser.Worker.Services;
 
-public sealed class CategoryQueryService : CustomHttpClient
+public sealed class CategoryQueryService(IOptions<AppConfig> config, IHttpClientFactory factory)
+    : InternalHttpClient(config.Value.OLQueryUrl, factory)
 {
     private const string controller = "Category";
-    public CategoryQueryService(IOptions<AppConfig> config, IHttpClientFactory factory) : base(config.Value.OLQueryUrl, factory)
-    {
-    }
 
     public Task<CategoryResponse?> GetBySystemId(CategoryBySystemIdRequest request) =>
-        Post<CategoryResponse?>($"{controller}/GetBySystemId", request);
+        Post<CategoryResponse>($"{controller}/GetBySystemId", request);
 
     public Task<CategoryResponse?> GetByName(CategoryByNameRequest request) =>
-        Post<CategoryResponse?>($"{controller}/GetByName", request);
+        Post<CategoryResponse>($"{controller}/GetByName", request);
 }

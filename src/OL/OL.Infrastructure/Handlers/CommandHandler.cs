@@ -7,8 +7,8 @@ namespace OL.Infrastructure.Handlers
 {
     public interface ICommandHandler
     {
-        Task HandleAsync(AddOLCategoryCommand command);
-        Task HandleAsync(UpdateOLCategoryCommand command);
+        Task HandleAsync(AddOlCategoryCommand command);
+        Task HandleAsync(UpdateOlCategoryCommand command);
         Task HandleAsync(EnableOLCategoryCommand command);
     }
 
@@ -21,14 +21,14 @@ namespace OL.Infrastructure.Handlers
             _eventSourcingHandler = eventSourcingHandler;
         }
 
-        public Task HandleAsync(AddOLCategoryCommand command)
+        public Task HandleAsync(AddOlCategoryCommand command)
         {
             var aggregate = new OLCategoryAggregateRoot(command.Id, command.SystemId, command.ParentId, command.Translations.ToList());
 
             return _eventSourcingHandler.SaveAsync(aggregate);
         }
 
-        public async Task HandleAsync(UpdateOLCategoryCommand command)
+        public async Task HandleAsync(UpdateOlCategoryCommand command)
         {
             var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
 

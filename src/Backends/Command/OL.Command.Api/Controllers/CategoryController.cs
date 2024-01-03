@@ -15,7 +15,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] AddOLCategoryCommand command)
+    public async Task<IActionResult> Create([FromBody] AddOlCategoryCommand command)
     {
         command.Id = Guid.NewGuid();
         await _commandDispatcher.SendAsync(command);
@@ -23,7 +23,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update([FromBody] UpdateOLCategoryCommand command)
+    public async Task<IActionResult> Update([FromBody] UpdateOlCategoryCommand command)
     {
         if (command.Id == Guid.Empty)
             throw new ArgumentNullException("Category Id is null or empty!");

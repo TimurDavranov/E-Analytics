@@ -53,27 +53,27 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                 {
                                     Translations = new List<TranslationDto>
                                 {
-                                    new TranslationDto
+                                    new()
                                     {
-                                        LanguageCode = new LanguageCode("uz"),
+                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                                         Description = string.Empty,
                                         Title = category.NameOz
                                     },
-                                    new TranslationDto
+                                    new()
                                     {
-                                        LanguageCode = new LanguageCode("ru"),
+                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
                                         Description = string.Empty,
                                         Title = category.NameRu
                                     },
-                                    new TranslationDto
+                                    new()
                                     {
-                                        LanguageCode = new LanguageCode("en"),
+                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
                                         Description = string.Empty,
                                         Title = category.NameEn
                                     },
-                                    new TranslationDto
+                                    new()
                                     {
-                                        LanguageCode = new LanguageCode("uz-cyrl"),
+                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
                                         Description = string.Empty,
                                         Title = category.NameUz
                                     }
@@ -81,88 +81,88 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                 });
 
                             if (existedCategory is null)
-                                await categoryCommandService.AddOLCategoryCommand(new AddOLCategoryCommand
+                                await categoryCommandService.AddOlCategoryCommand(new AddOlCategoryCommand
                                 {
-                                    ParentId = category.ParentId,
                                     SystemId = category.Id,
                                     SystemImageUrl = category.MainImage,
                                     Translations = new List<TranslationDto>
-                                {
-                                    new TranslationDto
                                     {
-                                        LanguageCode = new LanguageCode("uz"),
-                                        Description = string.Empty,
-                                        Title = category.NameOz
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameOz
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                                            Description = string.Empty,
+                                            Title = category.NameRu
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameEn
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                            Description = string.Empty,
+                                            Title = category.NameUz
+                                        }
                                     },
-                                    new TranslationDto
-                                    {
-                                        LanguageCode = new LanguageCode("ru"),
-                                        Description = string.Empty,
-                                        Title = category.NameRu
-                                    },
-                                    new TranslationDto
-                                    {
-                                        LanguageCode = new LanguageCode("en"),
-                                        Description = string.Empty,
-                                        Title = category.NameEn
-                                    },
-                                    new TranslationDto
-                                    {
-                                        LanguageCode = new LanguageCode("uz-cyrl"),
-                                        Description = string.Empty,
-                                        Title = category.NameUz
-                                    }
-                                }
+                                    ParentId = category.ParentId
                                 });
                             else if (MatchCategories(existedCategory, category))
-                                await categoryCommandService.UpdateOLCategoryCommand(new UpdateOLCategoryCommand
+                                await categoryCommandService.UpdateOlCategoryCommand(new UpdateOlCategoryCommand
                                 {
                                     Id = existedCategory.Id,
                                     ParentId = category.ParentId,
                                     SystemId = category.Id,
                                     SystemImageUrl = category.MainImage,
                                     Translations = new List<TranslationDto>
-                                {
-                                    new TranslationDto
                                     {
-                                        LanguageCode = new LanguageCode("uz"),
-                                        Description = string.Empty,
-                                        Title = category.NameOz
-                                    },
-                                    new TranslationDto
-                                    {
-                                        LanguageCode = new LanguageCode("ru"),
-                                        Description = string.Empty,
-                                        Title = category.NameRu
-                                    },
-                                    new TranslationDto
-                                    {
-                                        LanguageCode = new LanguageCode("en"),
-                                        Description = string.Empty,
-                                        Title = category.NameEn
-                                    },
-                                    new TranslationDto
-                                    {
-                                        LanguageCode = new LanguageCode("uz-cyrl"),
-                                        Description = string.Empty,
-                                        Title = category.NameUz
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameOz
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                                            Description = string.Empty,
+                                            Title = category.NameRu
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameEn
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                            Description = string.Empty,
+                                            Title = category.NameUz
+                                        }
                                     }
-                                }
                                 });
 
                         }
 
-                        _logger.LogInformation("OL system category parsing is end at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        _logger.LogInformation("OL system category parsing is end at: {Date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
                     else if (categories?.Data?.Categories is null || !categories.Data.Categories.Any())
                     {
-                        _logger.LogError("OL system categries is empty. Time: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        _logger.LogError("OL system categries is empty. Time: {Date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
                     else
                     {
-                        _logger.LogError("OL system category parsing is finished with error message: {message}, at {date}", categories?.Message ?? "Error message not parsed", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        _logger.LogError("OL system category parsing is finished with error message: {Message}, at {Date}", categories?.Message ?? "Error message not parsed", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
-                    await Task.Delay(10000);
+                    await Task.Delay(10000, cancellationToken);
                 }
             }, cancellationToken);
         }
@@ -177,27 +177,27 @@ namespace OL.Parser.Worker.HostedServices.Recurring
 
             return MatchTranslations(finded.Translations, new List<TranslationDto>
             {
-                new TranslationDto
+                new()
                 {
-                    LanguageCode = new LanguageCode("uz"),
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                     Description = string.Empty,
                     Title = getted.NameOz
                 },
-                new TranslationDto
+                new()
                 {
-                    LanguageCode = new LanguageCode("ru"),
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
                     Description = string.Empty,
                     Title = getted.NameRu
                 },
-                new TranslationDto
+                new()
                 {
-                    LanguageCode = new LanguageCode("en"),
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                     Description = string.Empty,
                     Title = getted.NameEn
                 },
-                new TranslationDto
+                new()
                 {
-                    LanguageCode = new LanguageCode("uz-cyrl"),
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
                     Description = string.Empty,
                     Title = getted.NameUz
                 }
@@ -220,7 +220,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogWarning("Job with name: {jobName} is stoped", nameof(ParseCategoryHostedService));
+            _logger.LogWarning("Job with name: {JobName} is stoped", nameof(ParseCategoryHostedService));
             return Task.CompletedTask;
         }
     }

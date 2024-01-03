@@ -1,6 +1,7 @@
 ﻿using EAnalytics.Common;
 using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Dtos;
+using Microsoft.EntityFrameworkCore;
 using OL.Domain.Entities;
 using OL.Infrastructure;
 using OL.Infrastructure.Models.Requests.Category;
@@ -42,7 +43,7 @@ namespace OL.Query.Api.Infrastructure.Handlers
 
         public async Task<CategoryResponse> HandleAsync(CategoryBySystemIdRequest request)
         {
-            var model = await _repository.GetAsync(s => s.SystemId == request.SystemId);
+            var model = await _repository.GetAsync(s => s.SystemId == request.SystemId, i => i.Include(s=>s.Translations));
 
             if (model is null)
                 return null;
