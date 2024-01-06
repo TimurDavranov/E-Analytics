@@ -18,7 +18,6 @@ namespace OL.Query.Api.Infrastructure.Handlers
     {
         Task<CategoryResponse> HandleAsync(CategoryByIdRequest request);
         Task<CategoryResponse> HandleAsync(CategoryBySystemIdRequest request);
-        Task<CategoryResponse> HandleAsync(CategoryByNameRequest request);
         Task<GetAllResponse<CategoryIdsResponse>> HandleAsync(GetAllRequest request);
         
         Task<ProductResponse> HandleAsync(ProductBySystemIdRequest request);
@@ -50,32 +49,6 @@ namespace OL.Query.Api.Infrastructure.Handlers
             var model = await repository.GetAsync(s => s.SystemId == request.SystemId,
                 i => i.Include(s => s.Translations));
 
-            if (model is null)
-                return null;
-
-            return new CategoryResponse(model.Id, model.SystemId, model.ParrentId,
-                model.Translations.Select(s => new TranslationDto
-                {
-                    Description = s.Description,
-                    LanguageCode = new LanguageCode(s.LanguageCode)
-                }).ToList().AsReadOnly()
-            );
-        }
-
-        public async Task<CategoryResponse> HandleAsync(CategoryByNameRequest request)
-        {
-            var translations = request.Translations.Select(a =>
-                new ValueTuple<string, string, string>(a.LanguageCode.Code, a.Title, a.Description)).ToArray();
-            
-            await using var context = repository.CreateContext.Invoke();
-            
-            var model = await context.Categories
-                .Where(s =>
-                    s.Translations
-                        .Select(a => new ValueTuple<string, string, string>(a.LanguageCode, a.Title, a.Description))
-                        .Any(a => translations.Contains(a)))
-                .Include(i => i.Translations)
-                .FirstOrDefaultAsync();
             if (model is null)
                 return null;
 

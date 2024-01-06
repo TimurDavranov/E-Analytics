@@ -30,8 +30,7 @@ namespace OL.Parser.Worker
             return services
                 .AddHostedService<EventHostedService>()
                 .AddHostedService<ParseProductHostedService>()
-                // .AddHostedService<ParseCategoryHostedService>()
-                ;
+                .AddHostedService<ParseCategoryHostedService>();
         }
     }
 }

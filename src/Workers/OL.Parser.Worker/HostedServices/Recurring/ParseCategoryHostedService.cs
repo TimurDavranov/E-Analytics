@@ -40,38 +40,6 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                             });
 
                             if (existedCategory is null)
-                                existedCategory = await categoryQueryService.GetByName(new CategoryByNameRequest
-                                {
-                                    Translations = new List<TranslationDto>
-                                    {
-                                        new()
-                                        {
-                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
-                                            Description = string.Empty,
-                                            Title = category.NameOz
-                                        },
-                                        new()
-                                        {
-                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
-                                            Description = string.Empty,
-                                            Title = category.NameRu
-                                        },
-                                        new()
-                                        {
-                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
-                                            Description = string.Empty,
-                                            Title = category.NameEn
-                                        },
-                                        new()
-                                        {
-                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
-                                            Description = string.Empty,
-                                            Title = category.NameUz
-                                        }
-                                    }
-                                });
-
-                            if (existedCategory is null)
                                 await categoryCommandService.AddOlCategoryCommand(new AddOlCategoryCommand
                                 {
                                     SystemId = category.Id,

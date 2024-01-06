@@ -55,7 +55,6 @@ public static class DependensyInjecttion
         var queryDispatcher = new QueryDispatcher();
         queryDispatcher.RegisterHandler<CategoryByIdRequest, CategoryResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<CategoryBySystemIdRequest, CategoryResponse>(queryHandler.HandleAsync);
-        queryDispatcher.RegisterHandler<CategoryByNameRequest, CategoryResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<GetAllRequest, GetAllResponse<CategoryIdsResponse>>(queryHandler.HandleAsync);
         
         queryDispatcher.RegisterHandler<ProductBySystemIdRequest, ProductResponse>(queryHandler.HandleAsync);
