@@ -32,6 +32,8 @@ public class EventJsonConverter : JsonConverter<BaseEvent>
             nameof(AddOLCategoryEvent) => JsonSerializer.Deserialize<AddOLCategoryEvent>(json, options),
             nameof(EnableOLCategoryEvent) => JsonSerializer.Deserialize<EnableOLCategoryEvent>(json, options),
             nameof(UpdateOLCategoryEvent) => JsonSerializer.Deserialize<UpdateOLCategoryEvent>(json, options),
+            nameof(AddOLProductEvent) => JsonSerializer.Deserialize<AddOLProductEvent>(json, options),
+            nameof(UpdateOlProductEvent) => JsonSerializer.Deserialize<UpdateOlProductEvent>(json, options),
             _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
         };
     }

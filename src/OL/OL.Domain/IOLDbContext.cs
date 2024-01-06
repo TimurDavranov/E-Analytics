@@ -13,6 +13,7 @@ namespace OL.Domain
 
         DbSet<OLTranslation> Translations { get; set; }
         DbSet<OLCategory> Categories { get; set; }
+        DbSet<OLProduct> Products { get; set; }
 
         ChangeTracker ChangeTracker { get; }
     }

@@ -9,7 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using OL.Domain;
 using OL.Infrastructure;
 using OL.Infrastructure.Models.Requests.Category;
+using OL.Infrastructure.Models.Requests.Product;
 using OL.Infrastructure.Models.Responses.Category;
+using OL.Infrastructure.Models.Responses.Product;
 using OL.Query.Api.Infrastructure.Handlers;
 
 namespace OL.Query.Api.Infrastructure;
@@ -54,6 +56,10 @@ public static class DependensyInjecttion
         queryDispatcher.RegisterHandler<CategoryByIdRequest, CategoryResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<CategoryBySystemIdRequest, CategoryResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<CategoryByNameRequest, CategoryResponse>(queryHandler.HandleAsync);
+        queryDispatcher.RegisterHandler<GetAllRequest, GetAllResponse<CategoryIdsResponse>>(queryHandler.HandleAsync);
+        
+        queryDispatcher.RegisterHandler<ProductBySystemIdRequest, ProductResponse>(queryHandler.HandleAsync);
+        
         services.AddSingleton<IQueryDispatcher>(_ => queryDispatcher);
         return services;
     }

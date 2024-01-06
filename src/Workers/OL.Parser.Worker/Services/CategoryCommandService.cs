@@ -10,22 +10,19 @@ using System.Threading.Tasks;
 
 namespace OL.Parser.Worker.Services
 {
-    public sealed class CategoryCommandService : CustomHttpClient
+    public sealed class CategoryCommandService(IOptions<AppConfig> config, IHttpClientFactory factory)
+        : CustomHttpClient(config.Value.OLCommandUrl, factory)
     {
         private const string controller = "category";
 
-        public CategoryCommandService(IOptions<AppConfig> config, IHttpClientFactory factory) : base(config.Value.OLCommandUrl, factory)
-        {
-        }
-
         public Task AddOlCategoryCommand(AddOlCategoryCommand command)
         {
-            return Post<string>($"{controller}/create", command);
+            return PostNoResult($"{controller}/create", command);
         }
 
         public Task UpdateOlCategoryCommand(UpdateOlCategoryCommand command)
         {
-            return Post<string>($"{controller}/update", command);
+            return PostNoResult($"{controller}/update", command);
         }
     }
 }

@@ -12,8 +12,13 @@ public class OLSystemService : CustomHttpClient
         _config = options.Value;
     }
 
-    public Task<OLSystemRoot<OLSystemData<OLSystemCategory>>?> GetCategories()
+    public Task<OLSystemRoot<OLSystemCategoryData<OLSystemCategory>>?> GetCategories()
     {
-        return Get<OLSystemRoot<OLSystemData<OLSystemCategory>>>($"{_config.OLGetCategoriesUrl}");
+        return Get<OLSystemRoot<OLSystemCategoryData<OLSystemCategory>>>($"{_config.OLGetCategoriesUrl}");
+    }
+
+    public Task<OLSystemRoot<OLSystemProductData>?> GetProducts(long categoryId, int page = 1)
+    {
+        return Get<OLSystemRoot<OLSystemProductData>>($"{_config.OLGetProductsUrl(categoryId, page)}");
     }
 }

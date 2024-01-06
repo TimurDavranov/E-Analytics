@@ -20,14 +20,18 @@ namespace OL.Parser.Worker
             return services
                 .AddScoped<OLSystemService>()
                 .AddScoped<CategoryCommandService>()
-                .AddScoped<CategoryQueryService>();
+                .AddScoped<ProductCommandService>()
+                .AddScoped<CategoryQueryService>()
+                .AddScoped<ProductQueryService>();
         }
 
         private static IServiceCollection AddHostedServices(this IServiceCollection services)
         {
             return services
                 .AddHostedService<EventHostedService>()
-                .AddHostedService<ParseCategoryHostedService>();
+                .AddHostedService<ParseProductHostedService>()
+                // .AddHostedService<ParseCategoryHostedService>()
+                ;
         }
     }
 }

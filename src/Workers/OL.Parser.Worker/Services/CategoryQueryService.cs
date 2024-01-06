@@ -1,5 +1,8 @@
 ﻿using EAnalytics.Common.Abstractions;
 using EAnalytics.Common.Configurations;
+using EAnalytics.Common.Primitives;
+using EAnalytics.Common.Primitives.DTOs;
+using EAnalytics.Common.Queries;
 using Microsoft.Extensions.Options;
 using OL.Infrastructure.Models.Requests.Category;
 using OL.Infrastructure.Models.Responses.Category;
@@ -16,4 +19,7 @@ public sealed class CategoryQueryService(IOptions<AppConfig> config, IHttpClient
 
     public Task<CategoryResponse?> GetByName(CategoryByNameRequest request) =>
         Post<CategoryResponse>($"{controller}/GetByName", request);
+
+    public Task<GetAllResponse<CategoryIdsResponse>?> GetAllIds() =>
+        Get<GetAllResponse<CategoryIdsResponse>>($"{controller}/GetAllIds");
 }

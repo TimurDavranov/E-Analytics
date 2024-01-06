@@ -12,5 +12,5 @@ public class AppConfig
     public string ExchangeKey { get; init; }
     public string RouteKey { get; init; }
     public string QueueKey { get; init; }
-    public string OLGetProductsUrl(long categoryId) => OLProductsUrl + categoryId;
+    public string OLGetProductsUrl(long categoryId, int page = 1) => $"{OLProductsUrl}{categoryId}&page={page}";
 }

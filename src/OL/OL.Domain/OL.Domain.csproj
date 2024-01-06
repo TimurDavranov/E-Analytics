@@ -2,9 +2,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\EAnalytics.Common\EAnalytics.Common.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dtos\Responces\" />
-  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

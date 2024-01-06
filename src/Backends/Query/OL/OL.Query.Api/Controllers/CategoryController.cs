@@ -6,8 +6,6 @@ using OL.Infrastructure.Models.Responses.Category;
 
 namespace OL.Query.Api.Controllers
 {
-    [Route("[controller]/[action]")]
-    [ApiController]
     public class CategoryController(IQueryDispatcher dispatcher) : BaseApiController
     {
         [HttpPost]
@@ -26,6 +24,12 @@ namespace OL.Query.Api.Controllers
         public async Task<IActionResult> GetByName([FromBody] CategoryByNameRequest request)
         {
             return Ok(await dispatcher.SendAsync(request));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllIds()
+        {
+            return Ok(await dispatcher.SendAsync(new GetAllRequest()));
         }
 
     }

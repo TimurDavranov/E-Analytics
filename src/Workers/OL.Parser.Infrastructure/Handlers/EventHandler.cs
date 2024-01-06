@@ -11,17 +11,18 @@ namespace OL.Parser.Infrastructure.Handlers
     public interface IEventHandler
     {
         Task On(AddOLCategoryEvent @event);
+        Task On(UpdateOLCategoryEvent @event);
         Task On(EnableOLCategoryEvent @event);
+        
+        Task On(AddOLProductEvent @event);
+        Task On(UpdateOlProductEvent @event);
     }
 
-    public class EventHandler : IEventHandler
+    public class EventHandler(
+        IRepository<OLCategory, OLDbContext> categoryRepository,
+        IRepository<OLProduct, OLDbContext> productRepository)
+        : IEventHandler
     {
-        private readonly IRepository<OLCategory, OLDbContext> _categoryRepository;
-
-        public EventHandler(IRepository<OLCategory, OLDbContext> categoryRepository)
-        {
-            _categoryRepository = categoryRepository;
-        }
 
         public Task On(AddOLCategoryEvent @event)
         {
@@ -31,7 +32,7 @@ namespace OL.Parser.Infrastructure.Handlers
             if (@event.ParentId is 0)
                 throw new InvalidDataException("Incorrect Parrent Id is sended!");
 
-            return _categoryRepository.CreateAsync(new OLCategory
+            return categoryRepository.CreateAsync(new OLCategory
             {
                 Id = @event.Id,
                 Translations = @event.Translations.Select(s => new OLTranslation
@@ -54,7 +55,7 @@ namespace OL.Parser.Infrastructure.Handlers
             if (@event.ParentId is 0)
                 throw new InvalidDataException("Incorrect Parrent Id is sended!");
 
-            var category = _categoryRepository.Get(s => s.SystemId == s.SystemId || s.Equals(@event.Translations), i => i.Include(s => s.Translations));
+            var category = categoryRepository.Get(s => s.SystemId == @event.SystemId, i => i.Include(s => s.Translations));
 
             if (category is not null)
             {
@@ -80,7 +81,7 @@ namespace OL.Parser.Infrastructure.Handlers
                         });
                     }
                 }
-                return _categoryRepository.UpdateAsync(category);
+                return categoryRepository.UpdateAsync(category);
             }
 
             return Task.CompletedTask;
@@ -90,5 +91,57 @@ namespace OL.Parser.Infrastructure.Handlers
         {
             throw new NotImplementedException();
         }
+
+        public Task On(AddOLProductEvent @event)
+        {
+            if (@event.SystemId is 0)
+                throw new InvalidDataException("Incorrect System Id is sended!");
+
+            return productRepository.CreateAsync(new OLProduct()
+            {
+                Id = @event.Id,
+                Translations = @event.Translations.Select(s => new OLTranslation
+                {
+                    Title = s.Title,
+                    Description = s.Description,
+                    LanguageCode = s.LanguageCode.Code
+                }).ToList(),
+                SystemId = @event.SystemId,
+            });
+        }
+
+        public Task On(UpdateOlProductEvent @event)
+        {
+            var category = productRepository.Get(s => s.Id == @event.Id, i => i.Include(s => s.Translations));
+
+            if (category is not null)
+            {
+                foreach (var lang in SupportedLanguageCodes.Codes)
+                {
+                    if (category.Translations.Any(s => s.LanguageCode == lang) && @event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    {
+                        category.Translations.FirstOrDefault(s => s.LanguageCode == lang)!.Title = @event.Translations.FirstOrDefault(s => s.LanguageCode.Code == lang)!.Title;
+                    }
+                    else if (category.Translations.Any(s => s.LanguageCode == lang) && !@event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    {
+                        category.Translations.FirstOrDefault(s => s.LanguageCode == lang)!.IsDeleted = true;
+                    }
+                    else if (category.Translations.All(s => s.LanguageCode != lang) && @event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    {
+                        category.Translations.Add(new OLTranslation
+                        {
+                            LanguageCode = @event.Translations.FirstOrDefault(s => s.LanguageCode.Equal(lang))!.LanguageCode.Code,
+                            Title = @event.Translations.FirstOrDefault(s => s.LanguageCode.Equal(lang))!.Title,
+                            Description = string.Empty
+                        });
+                    }
+                }
+                return productRepository.UpdateAsync(category);
+            }
+
+            return Task.CompletedTask;
+        }
+        
+        
     }
 }

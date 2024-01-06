@@ -1,11 +1,16 @@
 ﻿using EAnalytics.Common;
 using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Dtos;
+using EAnalytics.Common.Queries;
 using Microsoft.EntityFrameworkCore;
 using OL.Domain.Entities;
+using OL.Domain.Mappers;
+using OL.Domain.Primitives.Entities;
 using OL.Infrastructure;
 using OL.Infrastructure.Models.Requests.Category;
+using OL.Infrastructure.Models.Requests.Product;
 using OL.Infrastructure.Models.Responses.Category;
+using OL.Infrastructure.Models.Responses.Product;
 
 namespace OL.Query.Api.Infrastructure.Handlers
 {
@@ -14,20 +19,19 @@ namespace OL.Query.Api.Infrastructure.Handlers
         Task<CategoryResponse> HandleAsync(CategoryByIdRequest request);
         Task<CategoryResponse> HandleAsync(CategoryBySystemIdRequest request);
         Task<CategoryResponse> HandleAsync(CategoryByNameRequest request);
+        Task<GetAllResponse<CategoryIdsResponse>> HandleAsync(GetAllRequest request);
+        
+        Task<ProductResponse> HandleAsync(ProductBySystemIdRequest request);
     }
 
-    public sealed class QueryHandler : IQueryHandler
+    public sealed class QueryHandler(
+        IRepository<OLCategory, OLDbContext> repository,
+        IRepository<OLProduct, OLDbContext> productRepository)
+        : IQueryHandler
     {
-        private readonly IRepository<OLCategory, OLDbContext> _repository;
-
-        public QueryHandler(IRepository<OLCategory, OLDbContext> repository)
-        {
-            _repository = repository;
-        }
-
         public async Task<CategoryResponse> HandleAsync(CategoryByIdRequest request)
         {
-            var model = await _repository.GetAsync(s => s.Id == request.Id);
+            var model = await repository.GetAsync(s => s.Id == request.Id);
 
             if (model is null)
                 return null;
@@ -43,7 +47,8 @@ namespace OL.Query.Api.Infrastructure.Handlers
 
         public async Task<CategoryResponse> HandleAsync(CategoryBySystemIdRequest request)
         {
-            var model = await _repository.GetAsync(s => s.SystemId == request.SystemId, i => i.Include(s=>s.Translations));
+            var model = await repository.GetAsync(s => s.SystemId == request.SystemId,
+                i => i.Include(s => s.Translations));
 
             if (model is null)
                 return null;
@@ -59,8 +64,18 @@ namespace OL.Query.Api.Infrastructure.Handlers
 
         public async Task<CategoryResponse> HandleAsync(CategoryByNameRequest request)
         {
-            var model = await _repository.GetAsync(expression: s => s.Equals(request.Translations));
-
+            var translations = request.Translations.Select(a =>
+                new ValueTuple<string, string, string>(a.LanguageCode.Code, a.Title, a.Description)).ToArray();
+            
+            await using var context = repository.CreateContext.Invoke();
+            
+            var model = await context.Categories
+                .Where(s =>
+                    s.Translations
+                        .Select(a => new ValueTuple<string, string, string>(a.LanguageCode, a.Title, a.Description))
+                        .Any(a => translations.Contains(a)))
+                .Include(i => i.Translations)
+                .FirstOrDefaultAsync();
             if (model is null)
                 return null;
 
@@ -71,6 +86,32 @@ namespace OL.Query.Api.Infrastructure.Handlers
                     LanguageCode = new LanguageCode(s.LanguageCode)
                 }).ToList().AsReadOnly()
             );
+        }
+
+        public async Task<GetAllResponse<CategoryIdsResponse>> HandleAsync(GetAllRequest request)
+        {
+            return new GetAllResponse<CategoryIdsResponse>()
+            {
+                Data = await repository.GetAllAsync(expression: null, include: null, s =>
+                    new CategoryIdsResponse
+                    {
+                        Id = s.Id,
+                        SystemId = s.SystemId
+                    })
+            };
+        }
+
+        public async Task<ProductResponse> HandleAsync(ProductBySystemIdRequest request)
+        {
+            var model = await productRepository.GetAsync(s => s.SystemId == request.SystemId);
+            if (model is null)
+                return null;
+
+            return new ProductResponse()
+            {
+                SystemId = model.SystemId,
+                Id = model.Id
+            };
         }
     }
 }

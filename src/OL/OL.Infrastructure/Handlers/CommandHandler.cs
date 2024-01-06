@@ -1,7 +1,10 @@
+using EAnalytics.Common.Exceptions;
 using EAnalytics.Common.Handlers;
 using OL.Application.Aggregates.Category;
+using OL.Application.Aggregates.Product;
 using OL.Domain;
 using OL.Infrastructure.Commands.Categories;
+using OL.Infrastructure.Commands.Product;
 
 namespace OL.Infrastructure.Handlers
 {
@@ -10,46 +13,58 @@ namespace OL.Infrastructure.Handlers
         Task HandleAsync(AddOlCategoryCommand command);
         Task HandleAsync(UpdateOlCategoryCommand command);
         Task HandleAsync(EnableOLCategoryCommand command);
+        
+        Task HandleAsync(AddOlProductCommand command);
+        Task HandleAsync(UpdateOlProductCommand command);
     }
 
-    public class CommandHandler : ICommandHandler
+    public class CommandHandler(IEventSourcingHandler<OLCategoryAggregateRoot> categoryEventSourcingHandler, IEventSourcingHandler<OLProductAggregateRoot> productEventSourcingHandler)
+        : ICommandHandler
     {
-        private readonly IEventSourcingHandler<OLCategoryAggregateRoot> _eventSourcingHandler;
-
-        public CommandHandler(IEventSourcingHandler<OLCategoryAggregateRoot> eventSourcingHandler)
-        {
-            _eventSourcingHandler = eventSourcingHandler;
-        }
-
         public Task HandleAsync(AddOlCategoryCommand command)
         {
             var aggregate = new OLCategoryAggregateRoot(command.Id, command.SystemId, command.ParentId, command.Translations.ToList());
 
-            return _eventSourcingHandler.SaveAsync(aggregate);
+            return categoryEventSourcingHandler.SaveAsync(aggregate);
         }
 
         public async Task HandleAsync(UpdateOlCategoryCommand command)
         {
-            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+            var aggregate = await categoryEventSourcingHandler.GetByIdAsync(command.Id);
 
             if (aggregate is null)
-                throw new ArgumentNullException($"Aggregate with this ID: {command.Id} not found!");
+                throw new AggregateNotFoundException($"Aggregate with this ID: {command.Id} not found!");
 
             aggregate.UpdateCategory(command.Id, command.SystemId, command.ParentId, command.Translations.AsReadOnly());
 
-            await _eventSourcingHandler.SaveAsync(aggregate);
+            await categoryEventSourcingHandler.SaveAsync(aggregate);
         }
 
         public async Task HandleAsync(EnableOLCategoryCommand command)
         {
-            var aggregate = await _eventSourcingHandler.GetByIdAsync(command.Id);
+            var aggregate = await categoryEventSourcingHandler.GetByIdAsync(command.Id);
 
             if (aggregate is null)
-                throw new ArgumentNullException($"Aggregate with this ID: {command.Id} not found!");
+                throw new AggregateNotFoundException($"Aggregate with this ID: {command.Id} not found!");
 
             aggregate.EnableCategory(command.Id, command.Enabled);
 
-            await _eventSourcingHandler.SaveAsync(aggregate);
+            await categoryEventSourcingHandler.SaveAsync(aggregate);
+        }
+
+        public Task HandleAsync(AddOlProductCommand command)
+        {
+            var aggregate = new OLProductAggregateRoot(command.Id, command.SystemId, command.Translations.AsReadOnly());
+            return categoryEventSourcingHandler.SaveAsync(aggregate);
+        }
+
+        public async Task HandleAsync(UpdateOlProductCommand command)
+        {
+            var aggregate = await productEventSourcingHandler.GetByIdAsync(command.Id);
+            if (aggregate is null)
+                throw new AggregateNotFoundException($"Aggregate with this ID: {command.Id} not found!");
+            
+            aggregate.UpdateCategory(command.Id, command.Translations.AsReadOnly());
         }
     }
 }

@@ -62,6 +62,12 @@ namespace EAnalytics.Common.Abstractions
 
             return response;
         }
+        
+        private static async Task CheckResponse(HttpResponseMessage message)
+        {
+            if (!message.IsSuccessStatusCode)
+                throw new HttpRequestException(message.ReasonPhrase);
+        }
 
         protected virtual async Task<T?> Post<T>(string route, object body, string? token = null) where T : class
         {
@@ -70,6 +76,15 @@ namespace EAnalytics.Common.Abstractions
             var content = new StringContent(serialized, Encoding.UTF8, jsonResponseKey);
             var request = await client.PostAsync(route, content);
             return await ConvertResponse<T>(request);
+        }
+        
+        protected virtual async Task PostNoResult(string route, object body, string? token = null)
+        {
+            var client = CreateHttpClient(token);
+            var serialized = JsonSerializer.Serialize(body);
+            var content = new StringContent(serialized, Encoding.UTF8, jsonResponseKey);
+            var request = await client.PostAsync(route, content);
+            await CheckResponse(request);
         }
 
         protected virtual async Task<T?> Get<T>(string route, string? token = null) where T : class

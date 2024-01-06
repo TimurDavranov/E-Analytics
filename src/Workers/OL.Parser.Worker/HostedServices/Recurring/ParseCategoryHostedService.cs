@@ -9,26 +9,18 @@ using OL.Parser.Worker.Services;
 
 namespace OL.Parser.Worker.HostedServices.Recurring
 {
-    public class ParseCategoryHostedService : IHostedService
+    public class ParseCategoryHostedService(IServiceProvider provider, ILogger<ParseCategoryHostedService> logger)
+        : IHostedService, IDisposable
     {
-        private readonly IServiceProvider _provider;
-        private readonly ILogger<ParseCategoryHostedService> _logger;
-        private PeriodicTimer? _timer;
-
-        public ParseCategoryHostedService(IServiceProvider provider, ILogger<ParseCategoryHostedService> logger)
-        {
-            _provider = provider;
-            _logger = logger;
-        }
-
         public Task StartAsync(CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(async () =>
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    _logger.LogInformation("OL system category parsing is started at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
-                    var scope = _provider.CreateScope();
+                    logger.LogInformation("OL system category parsing is started at: {Date}",
+                        DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                    var scope = provider.CreateScope();
                     var olSystemService = scope.ServiceProvider.GetRequiredService<OLSystemService>();
                     var categoryCommandService = scope.ServiceProvider.GetRequiredService<CategoryCommandService>();
                     var categoryQueryService = scope.ServiceProvider.GetRequiredService<CategoryQueryService>();
@@ -40,7 +32,6 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                         categories?.Data?.Categories is not null &&
                         categories.Data.Categories.Any())
                     {
-
                         foreach (var category in categories.Data.Categories)
                         {
                             var existedCategory = await categoryQueryService.GetBySystemId(new CategoryBySystemIdRequest
@@ -52,32 +43,32 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                 existedCategory = await categoryQueryService.GetByName(new CategoryByNameRequest
                                 {
                                     Translations = new List<TranslationDto>
-                                {
-                                    new()
                                     {
-                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
-                                        Description = string.Empty,
-                                        Title = category.NameOz
-                                    },
-                                    new()
-                                    {
-                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
-                                        Description = string.Empty,
-                                        Title = category.NameRu
-                                    },
-                                    new()
-                                    {
-                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
-                                        Description = string.Empty,
-                                        Title = category.NameEn
-                                    },
-                                    new()
-                                    {
-                                        LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
-                                        Description = string.Empty,
-                                        Title = category.NameUz
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameOz
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                                            Description = string.Empty,
+                                            Title = category.NameRu
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
+                                            Description = string.Empty,
+                                            Title = category.NameEn
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                            Description = string.Empty,
+                                            Title = category.NameUz
+                                        }
                                     }
-                                }
                                 });
 
                             if (existedCategory is null)
@@ -149,22 +140,33 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                         }
                                     }
                                 });
-
                         }
 
-                        _logger.LogInformation("OL system category parsing is end at: {Date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        logger.LogInformation("OL system category parsing is end at: {Date}",
+                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
                     else if (categories?.Data?.Categories is null || !categories.Data.Categories.Any())
                     {
-                        _logger.LogError("OL system categries is empty. Time: {Date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        logger.LogError("OL system categries is empty. Time: {Date}",
+                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
                     else
                     {
-                        _logger.LogError("OL system category parsing is finished with error message: {Message}, at {Date}", categories?.Message ?? "Error message not parsed", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        logger.LogError(
+                            "OL system category parsing is finished with error message: {Message}, at {Date}",
+                            categories?.Message ?? "Error message not parsed",
+                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
-                    await Task.Delay(10000, cancellationToken);
+
+                    await Task.Delay(TimeSpan.FromHours(12), cancellationToken);
                 }
             }, cancellationToken);
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogWarning("Job with name: {JobName} is stopped", nameof(ParseCategoryHostedService));
+            return Task.CompletedTask;
         }
 
         private bool MatchCategories(CategoryResponse finded, OLSystemCategory getted)
@@ -211,17 +213,16 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                 if (!finded.Any(s => s.LanguageCode.Equal(item.LanguageCode.Code)))
                     return false;
 
-                if (!finded.FirstOrDefault(s => s.LanguageCode.Equal(item.LanguageCode.Code))!.Title.Equals(item.Title, StringComparison.InvariantCultureIgnoreCase))
+                if (!finded.FirstOrDefault(s => s.LanguageCode.Equal(item.LanguageCode.Code))!.Title.Equals(item.Title,
+                        StringComparison.InvariantCultureIgnoreCase))
                     return false;
             }
 
             return true;
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public void Dispose()
         {
-            _logger.LogWarning("Job with name: {JobName} is stoped", nameof(ParseCategoryHostedService));
-            return Task.CompletedTask;
         }
     }
 }

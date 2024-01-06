@@ -22,6 +22,7 @@ namespace OL.Infrastructure
 
         public DbSet<OLTranslation> Translations { get; set; }
         public DbSet<OLCategory> Categories { get; set; }
+        public DbSet<OLProduct> Products { get; set; }
 
         public Task SaveChangesAsync(bool acceptAllChangesOnSuccess = true, CancellationToken cancellationToken = default)
         {

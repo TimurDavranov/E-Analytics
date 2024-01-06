@@ -3,6 +3,7 @@ using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Factories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EAnalytics.Common.Repositories;
 
@@ -25,7 +26,44 @@ public class Repository<T, D>(DatabaseContextFactory<D> contextFactory) : IRepos
             query = include(db);
         }
 
-        return await query.AsNoTracking().FirstOrDefaultAsync(expression);
+        return await query.AsNoTracking().Where(expression).FirstOrDefaultAsync();
+    }
+    
+    public async Task<IReadOnlyList<TResult>> GetAllAsync<TResult>(Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Expression<Func<T, TResult>>? select = null)
+    {
+        await using var context = contextFactory.CreateContext();
+        var db = context.Set<T>();
+
+
+        var query = db.AsQueryable();
+
+        if (include is not null)
+            query = include(db);
+
+        if (expression is not null)
+            query = query.Where(expression);
+
+        if (select is null)
+            throw new ArgumentNullException("Select expression is empty!");
+        
+        return (await query.AsNoTracking().Select(select).ToListAsync()).AsReadOnly();
+    }
+    
+    public async Task<IReadOnlyList<T>> GetAllAsync(Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null)
+    {
+        await using var context = contextFactory.CreateContext();
+        var db = context.Set<T>();
+
+
+        var query = db.AsQueryable();
+
+        if (include is not null)
+            query = include(db);
+
+        if (expression is not null)
+            query = query.Where(expression);
+
+        return (await query.AsNoTracking().ToListAsync()).AsReadOnly();
     }
 
     public T? Get(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null)
@@ -53,6 +91,8 @@ public class Repository<T, D>(DatabaseContextFactory<D> contextFactory) : IRepos
         var db = context.Set<T>();
         return db.AsQueryable();
     }
+
+    public Func<D> CreateContext => contextFactory.CreateContext;
 
     public async Task<T> CreateAsync(T model)
     {
