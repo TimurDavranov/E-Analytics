@@ -24,6 +24,12 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                 var categories = await categoryQueryService.GetAllIds();
                 if (categories?.Data is not null && categories.Data.Any())
                 {
+                    var parallelOption = new ParallelOptions()
+                    {
+                        CancellationToken = cancellationToken,
+                        MaxDegreeOfParallelism = 5
+                    };
+                    
                     foreach (var category in categories.Data)
                     {
                         var products = await olSystemService.GetProducts(category.SystemId);
@@ -33,78 +39,92 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                                  page <= products.Data.Paginator.LastPage;
                                  page++)
                             {
-                                foreach (var product in products.Data.Products)
-                                {
-                                    var existed = await productQueryService.GetBySystemId(new ProductBySystemIdRequest()
-                                        { SystemId = product.Id });
+                                var source = products.Data.Products.DistinctBy(s => s.Id).ToArray();
+                                await Parallel.ForEachAsync(source, parallelOption,
+                                    async (product, token) =>
+                                    {
+                                        var existed = await productQueryService.GetBySystemId(
+                                            new ProductBySystemIdRequest()
+                                                { SystemId = product.Id });
 
-                                    if (existed is null)
-                                        await productCommandService.AddOlProductCommand(new AddOlProductCommand()
-                                        {
-                                            Translations = new List<TranslationDto>()
-                                            {
-                                                new()
+                                        if (existed is null)
+                                            await productCommandService.AddOlProductCommand(
+                                                new AddOlProductCommand()
                                                 {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
-                                                    Description = product.ShortDescriptionOz,
-                                                    Title = product.NameOz
-                                                },
-                                                new()
+                                                    Translations = new List<TranslationDto>()
+                                                    {
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.UZ),
+                                                            Description = product.ShortDescriptionOz,
+                                                            Title = product.NameOz ?? string.Empty
+                                                        },
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                                            Description = product.ShortDescriptionUz,
+                                                            Title = product.NameUz ?? string.Empty
+                                                        },
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.RU),
+                                                            Description = product.ShortDescriptionRu,
+                                                            Title = product.NameRu ?? string.Empty
+                                                        },
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.EN),
+                                                            Description = string.Empty,
+                                                            Title = product.NameEn ?? string.Empty
+                                                        }
+                                                    },
+                                                    SystemId = product.Id,
+                                                    SystemImageUrl = product.Images.ToArray()
+                                                });
+                                        else if(false)
+                                            await productCommandService.UpdateOlProductCommand(
+                                                new UpdateOlProductCommand()
                                                 {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
-                                                    Description = product.ShortDescriptionUz,
-                                                    Title = product.NameUz
-                                                },
-                                                new()
-                                                {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
-                                                    Description = product.ShortDescriptionRu,
-                                                    Title = product.NameRu
-                                                },
-                                                new()
-                                                {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
-                                                    Description = string.Empty,
-                                                    Title = product.NameEn
-                                                }
-                                            },
-                                            SystemId = product.Id,
-                                            SystemImageUrl = product.Images.ToArray()
-                                        });
-                                    else await productCommandService.UpdateOlProductCommand(new UpdateOlProductCommand()
-                                        {
-                                            Id = existed.Id,
-                                            Translations = new List<TranslationDto>()
-                                            {
-                                                new()
-                                                {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
-                                                    Description = product.ShortDescriptionOz,
-                                                    Title = product.NameOz
-                                                },
-                                                new()
-                                                {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
-                                                    Description = product.ShortDescriptionUz,
-                                                    Title = product.NameUz
-                                                },
-                                                new()
-                                                {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
-                                                    Description = product.ShortDescriptionRu,
-                                                    Title = product.NameRu
-                                                },
-                                                new()
-                                                {
-                                                    LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
-                                                    Description = string.Empty,
-                                                    Title = product.NameEn
-                                                }
-                                            },
-                                            SystemId = product.Id,
-                                            SystemImageUrl = product.Images.ToArray()
-                                        });
-                                }
+                                                    Id = existed.Id,
+                                                    Translations = new List<TranslationDto>()
+                                                    {
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.UZ),
+                                                            Description = product.ShortDescriptionOz,
+                                                            Title = product.NameOz ?? string.Empty
+                                                        },
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                                            Description = product.ShortDescriptionUz,
+                                                            Title = product.NameUz ?? string.Empty
+                                                        },
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.RU),
+                                                            Description = product.ShortDescriptionRu,
+                                                            Title = product.NameRu ?? string.Empty
+                                                        },
+                                                        new()
+                                                        {
+                                                            LanguageCode =
+                                                                new LanguageCode(SupportedLanguageCodes.EN),
+                                                            Description = string.Empty,
+                                                            Title = product.NameEn ?? string.Empty
+                                                        }
+                                                    },
+                                                    SystemId = product.Id,
+                                                    SystemImageUrl = product.Images.ToArray()
+                                                });
+                                    });
 
                                 products = await olSystemService.GetProducts(category.SystemId, page);
                             }

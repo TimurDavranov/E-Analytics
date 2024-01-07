@@ -28,9 +28,9 @@ namespace OL.Parser.Worker
         private static IServiceCollection AddHostedServices(this IServiceCollection services)
         {
             return services
-                .AddHostedService<EventHostedService>()
                 .AddHostedService<ParseProductHostedService>()
-                .AddHostedService<ParseCategoryHostedService>();
+                // .AddHostedService<ParseCategoryHostedService>()
+                .AddHostedService<EventHostedService>();
         }
     }
 }

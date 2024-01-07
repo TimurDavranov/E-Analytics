@@ -8,6 +8,7 @@ namespace Controllers;
 [Route("[controller]/[action]")]
 public class ProductController(ICommandDispatcher commandDispatcher) : ControllerBase
 {
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] AddOlProductCommand command)
     {
         command.Id = Guid.NewGuid();
@@ -15,6 +16,7 @@ public class ProductController(ICommandDispatcher commandDispatcher) : Controlle
         return Ok();
     }
 
+    [HttpPost]
     public async Task<IActionResult> Update([FromBody] UpdateOlProductCommand command)
     {
         if (command.Id == Guid.Empty)

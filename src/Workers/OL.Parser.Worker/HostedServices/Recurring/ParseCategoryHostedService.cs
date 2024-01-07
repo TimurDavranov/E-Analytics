@@ -32,7 +32,14 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                         categories?.Data?.Categories is not null &&
                         categories.Data.Categories.Any())
                     {
-                        foreach (var category in categories.Data.Categories)
+                        var splitedCategories = SplitByChilds(categories.Data.Categories.ToList()).DistinctBy(s => s.Id)
+                            .ToArray().AsReadOnly();
+                        var parallelOption = new ParallelOptions()
+                        {
+                            CancellationToken = cancellationToken,
+                            MaxDegreeOfParallelism = 5
+                        };
+                        await Parallel.ForEachAsync(splitedCategories, parallelOption, async (category, token) =>
                         {
                             var existedCategory = await categoryQueryService.GetBySystemId(new CategoryBySystemIdRequest
                             {
@@ -50,25 +57,25 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                                             Description = string.Empty,
-                                            Title = category.NameOz
+                                            Title = category.NameOz ?? string.Empty
                                         },
                                         new()
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
                                             Description = string.Empty,
-                                            Title = category.NameRu
+                                            Title = category.NameRu ?? string.Empty
                                         },
                                         new()
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                                             Description = string.Empty,
-                                            Title = category.NameEn
+                                            Title = category.NameEn ?? string.Empty
                                         },
                                         new()
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
                                             Description = string.Empty,
-                                            Title = category.NameUz
+                                            Title = category.NameUz ?? string.Empty
                                         }
                                     },
                                     ParentId = category.ParentId
@@ -86,32 +93,31 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                                             Description = string.Empty,
-                                            Title = category.NameOz
+                                            Title = category.NameOz ?? string.Empty
                                         },
                                         new()
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
                                             Description = string.Empty,
-                                            Title = category.NameRu
+                                            Title = category.NameRu ?? string.Empty
                                         },
                                         new()
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
                                             Description = string.Empty,
-                                            Title = category.NameEn
+                                            Title = category.NameEn ?? string.Empty
                                         },
                                         new()
                                         {
                                             LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
                                             Description = string.Empty,
-                                            Title = category.NameUz
+                                            Title = category.NameUz ?? string.Empty
                                         }
                                     }
                                 });
-                        }
-
-                        logger.LogInformation("OL system category parsing is end at: {Date}",
-                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                            logger.LogInformation("OL system category parsing is end at: {Date}",
+                                DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                        });
                     }
                     else if (categories?.Data?.Categories is null || !categories.Data.Categories.Any())
                     {
@@ -135,6 +141,19 @@ namespace OL.Parser.Worker.HostedServices.Recurring
         {
             logger.LogWarning("Job with name: {JobName} is stopped", nameof(ParseCategoryHostedService));
             return Task.CompletedTask;
+        }
+
+        private IList<OLSystemCategory> SplitByChilds(IList<OLSystemCategory> categories)
+        {
+            var result = new List<OLSystemCategory>();
+            categories.ToList().ForEach(category =>
+            {
+                if (category?.Children is not null && category.Children.Any())
+                    result.AddRange(SplitByChilds(category.Children.ToList()));
+                
+                result.Add(category);
+            });
+            return result;
         }
 
         private bool MatchCategories(CategoryResponse finded, OLSystemCategory getted)
