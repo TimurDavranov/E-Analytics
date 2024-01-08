@@ -14,10 +14,11 @@ namespace OL.Parser.Worker.HostedServices.Recurring
     {
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(async () =>
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    await Task.Delay(3000);
                     logger.LogInformation("OL system category parsing is started at: {Date}",
                         DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     var scope = provider.CreateScope();
@@ -115,9 +116,9 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                         }
                                     }
                                 });
-                            logger.LogInformation("OL system category parsing is end at: {Date}",
-                                DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                         });
+                        logger.LogInformation("OL system category parsing is end at: {Date}",
+                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                     }
                     else if (categories?.Data?.Categories is null || !categories.Data.Categories.Any())
                     {
@@ -135,6 +136,8 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                     await Task.Delay(TimeSpan.FromHours(12), cancellationToken);
                 }
             }, cancellationToken);
+
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -150,7 +153,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
             {
                 if (category?.Children is not null && category.Children.Any())
                     result.AddRange(SplitByChilds(category.Children.ToList()));
-                
+
                 result.Add(category);
             });
             return result;

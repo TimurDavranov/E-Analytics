@@ -78,7 +78,7 @@ namespace OL.Query.Api.Infrastructure.Handlers
 
         public async Task<ProductResponse> HandleAsync(ProductBySystemIdRequest request)
         {
-            var model = await productRepository.GetAsync(s => s.SystemId == request.SystemId);
+            var model = await productRepository.GetAsync(s => s.SystemId == request.SystemId, i => i.Include(s=>s.Translations));
             if (model is null)
                 return null;
 
