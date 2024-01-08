@@ -87,9 +87,11 @@ namespace OL.Parser.Infrastructure.Handlers
             return Task.CompletedTask;
         }
 
-        public Task On(EnableOLCategoryEvent @event)
+        public async Task On(EnableOLCategoryEvent @event)
         {
-            throw new NotImplementedException();
+            var category = await categoryRepository.GetAsync(s => s.Id == @event.Id);
+            category.Enabled = @event.Enable;
+            await categoryRepository.UpdateAsync(category);
         }
 
         public Task On(AddOLProductEvent @event)
@@ -107,6 +109,9 @@ namespace OL.Parser.Infrastructure.Handlers
                     LanguageCode = s.LanguageCode.Code
                 }).ToList(),
                 SystemId = @event.SystemId,
+                Price = @event.Price,
+                InstalmentMaxMouth = @event.InstalmentMaxMouth,
+                InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment
             });
         }
 
@@ -136,6 +141,10 @@ namespace OL.Parser.Infrastructure.Handlers
                         });
                     }
                 }
+
+                category.Price = @event.Price;
+                category.InstalmentMaxMouth = @event.InstalmentMaxMouth;
+                category.InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment;
                 return productRepository.UpdateAsync(category);
             }
 

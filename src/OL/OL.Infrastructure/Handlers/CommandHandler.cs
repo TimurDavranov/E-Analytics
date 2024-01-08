@@ -54,7 +54,7 @@ namespace OL.Infrastructure.Handlers
 
         public Task HandleAsync(AddOlProductCommand command)
         {
-            var aggregate = new OLProductAggregateRoot(command.Id, command.SystemId, command.Translations.AsReadOnly());
+            var aggregate = new OLProductAggregateRoot(command.Id, command.SystemId, command.Price, command.InstalmentMaxMouth, command.InstalmentMonthlyRepayment, command.Translations.AsReadOnly());
             return categoryEventSourcingHandler.SaveAsync(aggregate);
         }
 
@@ -64,7 +64,7 @@ namespace OL.Infrastructure.Handlers
             if (aggregate is null)
                 throw new AggregateNotFoundException($"Aggregate with this ID: {command.Id} not found!");
             
-            aggregate.UpdateCategory(command.Id, command.Translations.AsReadOnly());
+            aggregate.UpdateCategory(command.Id, command.Price, command.InstalmentMaxMouth, command.InstalmentMonthlyRepayment, command.Translations.AsReadOnly());
         }
     }
 }

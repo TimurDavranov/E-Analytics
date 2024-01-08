@@ -37,7 +37,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                         var parallelOption = new ParallelOptions()
                         {
                             CancellationToken = cancellationToken,
-                            MaxDegreeOfParallelism = 5
+                            MaxDegreeOfParallelism = 1
                         };
                         await Parallel.ForEachAsync(splitedCategories, parallelOption, async (category, token) =>
                         {
@@ -80,7 +80,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                     },
                                     ParentId = category.ParentId
                                 });
-                            else if (MatchCategories(existedCategory, category))
+                            else if (!MatchCategories(existedCategory, category))
                                 await categoryCommandService.UpdateOlCategoryCommand(new UpdateOlCategoryCommand
                                 {
                                     Id = existedCategory.Id,
@@ -180,7 +180,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                 },
                 new()
                 {
-                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
                     Description = string.Empty,
                     Title = getted.NameEn
                 },
@@ -200,8 +200,8 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                 if (!finded.Any(s => s.LanguageCode.Equal(item.LanguageCode.Code)))
                     return false;
 
-                if (!finded.FirstOrDefault(s => s.LanguageCode.Equal(item.LanguageCode.Code))!.Title.Equals(item.Title,
-                        StringComparison.InvariantCultureIgnoreCase))
+                if (!finded.FirstOrDefault(s => s.LanguageCode.Code == item.LanguageCode.Code)?.Title.Equals(item.Title,
+                        StringComparison.InvariantCultureIgnoreCase) ?? false)
                     return false;
             }
 

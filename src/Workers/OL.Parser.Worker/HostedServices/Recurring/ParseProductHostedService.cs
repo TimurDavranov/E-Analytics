@@ -1,7 +1,11 @@
-﻿using EAnalytics.Common;
+﻿using System.Globalization;
+using EAnalytics.Common;
 using EAnalytics.Common.Dtos;
+using OL.Domain.Dtos.Responces;
+using OL.Domain.Mappers;
 using OL.Infrastructure.Commands.Product;
 using OL.Infrastructure.Models.Requests.Product;
+using OL.Infrastructure.Models.Responses.Product;
 using OL.Parser.Worker.Services;
 
 namespace OL.Parser.Worker.HostedServices.Recurring;
@@ -29,11 +33,12 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                         CancellationToken = cancellationToken,
                         MaxDegreeOfParallelism = 5
                     };
-                    
+
                     foreach (var category in categories.Data)
                     {
                         var products = await olSystemService.GetProducts(category.SystemId);
-                        if (products?.Data is not null && products.Status.ToLowerInvariant() is "ok" && products.Data.Products.Any())
+                        if (products?.Data is not null && products.Status.ToLowerInvariant() is "ok" &&
+                            products.Data.Products.Any())
                         {
                             for (var page = products.Data.Paginator.CurrentPage + 1;
                                  page <= products.Data.Paginator.LastPage;
@@ -47,6 +52,11 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                                             new ProductBySystemIdRequest()
                                                 { SystemId = product.Id });
 
+                                        int? instalmentMaxMouth = null;
+                                        if (int.TryParse(product.Plan?.MaxPeriod, NumberStyles.None,
+                                                CultureInfo.InvariantCulture, out var value))
+                                            instalmentMaxMouth = value;
+                                        
                                         if (existed is null)
                                             await productCommandService.AddOlProductCommand(
                                                 new AddOlProductCommand()
@@ -83,9 +93,13 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                                                         }
                                                     },
                                                     SystemId = product.Id,
-                                                    SystemImageUrl = product.Images.ToArray()
+                                                    SystemImageUrl = product.Images.ToArray(),
+                                                    Price = product.DiscountPrice,
+                                                    InstalmentMaxMouth = instalmentMaxMouth ?? 0,
+                                                    InstalmentMonthlyRepayment = product.MonthlyRepayment,
+                                                    SystemCategoryId = category.SystemId
                                                 });
-                                        else if(false)
+                                        else if (MatchProduct(existed, product, instalmentMaxMouth))
                                             await productCommandService.UpdateOlProductCommand(
                                                 new UpdateOlProductCommand()
                                                 {
@@ -122,7 +136,11 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                                                         }
                                                     },
                                                     SystemId = product.Id,
-                                                    SystemImageUrl = product.Images.ToArray()
+                                                    SystemImageUrl = product.Images.ToArray(),
+                                                    Price = product.DiscountPrice,
+                                                    InstalmentMaxMouth = instalmentMaxMouth ?? 0,
+                                                    InstalmentMonthlyRepayment = product.MonthlyRepayment,
+                                                    SystemCategoryId = category.SystemId
                                                 });
                                     });
 
@@ -135,6 +153,63 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                 await Task.Delay(TimeSpan.FromHours(12), cancellationToken);
             }
         }, cancellationToken);
+    }
+
+    public bool MatchProduct(ProductResponse oldProduct, OLSystemProduct newProduct, int? instalmentMaxMouth = null)
+    {
+        if (oldProduct.Price != newProduct.DiscountPrice)
+            return false;
+        if (oldProduct.InstalmentMonthlyRepayment != newProduct.MonthlyRepayment)
+            return false;
+
+        if (!instalmentMaxMouth.HasValue)
+            return MatchTranslations(oldProduct.Translations.AsReadOnly(), new []
+            {
+                new TranslationDto()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                    Description = newProduct.ShortDescriptionOz,
+                    Title = newProduct.NameOz
+                },
+                new TranslationDto()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                    Description = newProduct.ShortDescriptionRu,
+                    Title = newProduct.NameRu
+                },
+                new TranslationDto()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
+                    Description = string.Empty,
+                    Title = newProduct.NameEn
+                },
+                new TranslationDto()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                    Description = newProduct.ShortDescriptionUz,
+                    Title = newProduct.NameUz
+                }
+            });
+        
+        if (oldProduct.InstalmentMaxMouth != instalmentMaxMouth)
+            return false;
+        
+        return true;
+    }
+    
+    private bool MatchTranslations(IReadOnlyList<TranslationDto> finded, IReadOnlyList<TranslationDto> getted)
+    {
+        foreach (var item in getted)
+        {
+            if (!finded.Any(s => s.LanguageCode.Equal(item.LanguageCode.Code)))
+                return false;
+
+            if (!finded.FirstOrDefault(s => s.LanguageCode.Code == item.LanguageCode.Code)?.Title.Equals(item.Title,
+                    StringComparison.InvariantCultureIgnoreCase) ?? false)
+                return false;
+        }
+
+        return true;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

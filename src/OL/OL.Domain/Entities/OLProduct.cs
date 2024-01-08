@@ -7,6 +7,9 @@ namespace OL.Domain.Entities;
 public class OLProduct : BaseEntity<Guid>
 {
     public long SystemId { get; set; }
+    public decimal Price { get; set; }
+    public int InstalmentMaxMouth { get; set; }
+    public decimal InstalmentMonthlyRepayment { get; set; }
     public virtual IList<OLTranslation> Translations { get; set; }
     
     public override bool Equals(object translations)

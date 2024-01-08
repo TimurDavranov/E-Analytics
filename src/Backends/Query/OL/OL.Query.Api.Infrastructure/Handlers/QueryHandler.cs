@@ -39,7 +39,8 @@ namespace OL.Query.Api.Infrastructure.Handlers
                 model.Translations.Select(s => new TranslationDto
                 {
                     Description = s.Description,
-                    LanguageCode = new LanguageCode(s.LanguageCode)
+                    LanguageCode = new LanguageCode(s.LanguageCode),
+                    Title = s.Title
                 }).ToList().AsReadOnly()
             );
         }
@@ -56,7 +57,8 @@ namespace OL.Query.Api.Infrastructure.Handlers
                 model.Translations.Select(s => new TranslationDto
                 {
                     Description = s.Description,
-                    LanguageCode = new LanguageCode(s.LanguageCode)
+                    LanguageCode = new LanguageCode(s.LanguageCode),
+                    Title = s.Title
                 }).ToList().AsReadOnly()
             );
         }
@@ -83,7 +85,11 @@ namespace OL.Query.Api.Infrastructure.Handlers
             return new ProductResponse()
             {
                 SystemId = model.SystemId,
-                Id = model.Id
+                Id = model.Id,
+                Price = model.Price,
+                InstalmentMaxMouth = model.InstalmentMaxMouth,
+                InstalmentMonthlyRepayment = model.InstalmentMonthlyRepayment,
+                Translations = model.Translations.Select(TranslationMapper.ToModel).ToArray()
             };
         }
     }

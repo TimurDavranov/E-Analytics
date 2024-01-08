@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OL.Infrastructure;
 
@@ -11,9 +12,11 @@ using OL.Infrastructure;
 namespace OL.Migrator.Migrations
 {
     [DbContext(typeof(OLDbContext))]
-    partial class OLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240107142938_change_ol_product")]
+    partial class change_ol_product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
