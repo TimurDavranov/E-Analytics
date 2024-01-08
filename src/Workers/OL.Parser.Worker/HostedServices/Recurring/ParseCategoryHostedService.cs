@@ -37,7 +37,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                         var parallelOption = new ParallelOptions()
                         {
                             CancellationToken = cancellationToken,
-                            MaxDegreeOfParallelism = 1
+                            MaxDegreeOfParallelism = 5
                         };
                         await Parallel.ForEachAsync(splitedCategories, parallelOption, async (category, token) =>
                         {
@@ -67,7 +67,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                         },
                                         new()
                                         {
-                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
                                             Description = string.Empty,
                                             Title = category.NameEn ?? string.Empty
                                         },
@@ -103,7 +103,7 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                                         },
                                         new()
                                         {
-                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
                                             Description = string.Empty,
                                             Title = category.NameEn ?? string.Empty
                                         },

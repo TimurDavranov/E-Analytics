@@ -31,7 +31,7 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                     var parallelOption = new ParallelOptions()
                     {
                         CancellationToken = cancellationToken,
-                        MaxDegreeOfParallelism = 5
+                        MaxDegreeOfParallelism = 1
                     };
 
                     foreach (var category in categories.Data)

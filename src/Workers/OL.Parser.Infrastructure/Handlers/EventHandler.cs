@@ -71,7 +71,7 @@ namespace OL.Parser.Infrastructure.Handlers
                     {
                         category.Translations.FirstOrDefault(s => s.LanguageCode == lang)!.IsDeleted = true;
                     }
-                    else if (!category.Translations.Any(s => s.LanguageCode == lang) && @event.Translations.Any(s => s.LanguageCode.Equal(lang)))
+                    else if (category.Translations.Any(s => s.LanguageCode != lang) && @event.Translations.Any(s => s.LanguageCode.Equal(lang)))
                     {
                         category.Translations.Add(new OLTranslation
                         {
