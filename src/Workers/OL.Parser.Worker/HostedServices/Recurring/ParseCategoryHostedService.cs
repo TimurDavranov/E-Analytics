@@ -1,96 +1,215 @@
+using System.Globalization;
 using EAnalytics.Common;
 using EAnalytics.Common.Dtos;
+using OL.Domain.Dtos.Responces;
 using OL.Infrastructure.Commands.Categories;
+using OL.Infrastructure.Models.Requests.Category;
+using OL.Infrastructure.Models.Responses.Category;
 using OL.Parser.Worker.Services;
 
 namespace OL.Parser.Worker.HostedServices.Recurring
 {
-    public class ParseCategoryHostedService : IHostedService
+    public class ParseCategoryHostedService(IServiceProvider provider, ILogger<ParseCategoryHostedService> logger)
+        : IHostedService, IDisposable
     {
-        private readonly IServiceProvider _provider;
-        private readonly ILogger<ParseCategoryHostedService> _logger;
-        private PeriodicTimer? _timer;
-
-        public ParseCategoryHostedService(IServiceProvider provider, ILogger<ParseCategoryHostedService> logger)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            _provider = provider;
-            _logger = logger;
-        }
-
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            _timer = new PeriodicTimer(TimeSpan.FromHours(12));
-            do
+            return Task.Factory.StartNew(async () =>
             {
-                _logger.LogInformation("OL system category parsing is started at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
-                var scope = _provider.CreateScope();
-                var olSystemService = scope.ServiceProvider.GetRequiredService<OLSystemService>();
-                var categoryCommandService = scope.ServiceProvider.GetRequiredService<CategoryCommandService>();
-
-                var categories = await olSystemService.GetCategories();
-
-                if (categories is not null &&
-                    categories.Status.ToLowerInvariant() is "ok" &&
-                    categories?.Data?.Categories is not null &&
-                    categories.Data.Categories.Any())
+                while (!cancellationToken.IsCancellationRequested)
                 {
+                    logger.LogInformation("OL system category parsing is started at: {Date}",
+                        DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                    var scope = provider.CreateScope();
+                    var olSystemService = scope.ServiceProvider.GetRequiredService<OLSystemService>();
+                    var categoryCommandService = scope.ServiceProvider.GetRequiredService<CategoryCommandService>();
+                    var categoryQueryService = scope.ServiceProvider.GetRequiredService<CategoryQueryService>();
 
-                    foreach (var category in categories.Data.Categories)
+                    var categories = await olSystemService.GetCategories();
+
+                    if (categories is not null &&
+                        categories.Status.ToLowerInvariant() is "ok" &&
+                        categories?.Data?.Categories is not null &&
+                        categories.Data.Categories.Any())
                     {
-                        await categoryCommandService.AddOLCategoryCommand(new AddOLCategoryCommand
+                        var splitedCategories = SplitByChilds(categories.Data.Categories.ToList()).DistinctBy(s => s.Id)
+                            .ToArray().AsReadOnly();
+                        var parallelOption = new ParallelOptions()
                         {
-                            ParentId = category.ParentId,
-                            SystemId = category.Id,
-                            SystemImageUrl = category.MainImage,
-                            Translations = new List<TranslationDto>
+                            CancellationToken = cancellationToken,
+                            MaxDegreeOfParallelism = 5
+                        };
+                        await Parallel.ForEachAsync(splitedCategories, parallelOption, async (category, token) =>
+                        {
+                            var existedCategory = await categoryQueryService.GetBySystemId(new CategoryBySystemIdRequest
                             {
-                                new TranslationDto
+                                SystemId = category.Id
+                            });
+
+                            if (existedCategory is null)
+                                await categoryCommandService.AddOlCategoryCommand(new AddOlCategoryCommand
                                 {
-                                    LanguageCode = new LanguageCode("uz"),
-                                    Description = string.Empty,
-                                    Title = category.NameOz
-                                },
-                                new TranslationDto
+                                    SystemId = category.Id,
+                                    SystemImageUrl = category.MainImage,
+                                    Translations = new List<TranslationDto>
+                                    {
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameOz ?? string.Empty
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                                            Description = string.Empty,
+                                            Title = category.NameRu ?? string.Empty
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
+                                            Description = string.Empty,
+                                            Title = category.NameEn ?? string.Empty
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                            Description = string.Empty,
+                                            Title = category.NameUz ?? string.Empty
+                                        }
+                                    },
+                                    ParentId = category.ParentId
+                                });
+                            else if (!MatchCategories(existedCategory, category))
+                                await categoryCommandService.UpdateOlCategoryCommand(new UpdateOlCategoryCommand
                                 {
-                                    LanguageCode = new LanguageCode("ru"),
-                                    Description = string.Empty,
-                                    Title = category.NameRu
-                                },
-                                new TranslationDto
-                                {
-                                    LanguageCode = new LanguageCode("en"),
-                                    Description = string.Empty,
-                                    Title = category.NameEn
-                                },
-                                new TranslationDto
-                                {
-                                    LanguageCode = new LanguageCode("uz-cyrl"),
-                                    Description = string.Empty,
-                                    Title = category.NameUz
-                                }
-                            }
+                                    Id = existedCategory.Id,
+                                    ParentId = category.ParentId,
+                                    SystemId = category.Id,
+                                    SystemImageUrl = category.MainImage,
+                                    Translations = new List<TranslationDto>
+                                    {
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                                            Description = string.Empty,
+                                            Title = category.NameOz ?? string.Empty
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                                            Description = string.Empty,
+                                            Title = category.NameRu ?? string.Empty
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
+                                            Description = string.Empty,
+                                            Title = category.NameEn ?? string.Empty
+                                        },
+                                        new()
+                                        {
+                                            LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                                            Description = string.Empty,
+                                            Title = category.NameUz ?? string.Empty
+                                        }
+                                    }
+                                });
+                            logger.LogInformation("OL system category parsing is end at: {Date}",
+                                DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
                         });
-
                     }
-                    await Task.Delay(10000);
+                    else if (categories?.Data?.Categories is null || !categories.Data.Categories.Any())
+                    {
+                        logger.LogError("OL system categries is empty. Time: {Date}",
+                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                    }
+                    else
+                    {
+                        logger.LogError(
+                            "OL system category parsing is finished with error message: {Message}, at {Date}",
+                            categories?.Message ?? "Error message not parsed",
+                            DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                    }
 
-                    _logger.LogInformation("OL system category parsing is end at: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+                    await Task.Delay(TimeSpan.FromHours(12), cancellationToken);
                 }
-                else if (categories?.Data?.Categories is null || !categories.Data.Categories.Any())
-                {
-                    _logger.LogError("OL system categries is empty. Time: {date}", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
-                }
-                else
-                {
-                    _logger.LogError("OL system category parsing is finished with error message: {message}, at {date}", categories?.Message ?? "Error message not parsed", DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
-                }
-            } while (await _timer.WaitForNextTickAsync(cancellationToken));
+            }, cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogWarning("Job with name: {jobName} is stoped", nameof(ParseCategoryHostedService));
+            logger.LogWarning("Job with name: {JobName} is stopped", nameof(ParseCategoryHostedService));
             return Task.CompletedTask;
+        }
+
+        private IList<OLSystemCategory> SplitByChilds(IList<OLSystemCategory> categories)
+        {
+            var result = new List<OLSystemCategory>();
+            categories.ToList().ForEach(category =>
+            {
+                if (category?.Children is not null && category.Children.Any())
+                    result.AddRange(SplitByChilds(category.Children.ToList()));
+                
+                result.Add(category);
+            });
+            return result;
+        }
+
+        private bool MatchCategories(CategoryResponse finded, OLSystemCategory getted)
+        {
+            if (finded.SystemId != getted.Id)
+                return false;
+
+            if (finded.ParentId != getted.ParentId)
+                return false;
+
+            return MatchTranslations(finded.Translations, new List<TranslationDto>
+            {
+                new()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ),
+                    Description = string.Empty,
+                    Title = getted.NameOz
+                },
+                new()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.RU),
+                    Description = string.Empty,
+                    Title = getted.NameRu
+                },
+                new()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.EN),
+                    Description = string.Empty,
+                    Title = getted.NameEn
+                },
+                new()
+                {
+                    LanguageCode = new LanguageCode(SupportedLanguageCodes.UZ_CYRL),
+                    Description = string.Empty,
+                    Title = getted.NameUz
+                }
+            });
+        }
+
+        private bool MatchTranslations(IReadOnlyList<TranslationDto> finded, IReadOnlyList<TranslationDto> getted)
+        {
+            foreach (var item in getted)
+            {
+                if (!finded.Any(s => s.LanguageCode.Equal(item.LanguageCode.Code)))
+                    return false;
+
+                if (!finded.FirstOrDefault(s => s.LanguageCode.Code == item.LanguageCode.Code)?.Title.Equals(item.Title,
+                        StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

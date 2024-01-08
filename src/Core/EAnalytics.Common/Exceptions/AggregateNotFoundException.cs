@@ -1,9 +1,4 @@
 namespace EAnalytics.Common.Exceptions
 {
-    public class AggregateNotFoundException : Exception
-    {
-        public AggregateNotFoundException(string message) : base(message)
-        {
-        }
-    }
+    public class AggregateNotFoundException(string message) : Exception(message);
 }

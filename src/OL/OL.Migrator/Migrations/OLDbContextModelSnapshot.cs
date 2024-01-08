@@ -18,7 +18,7 @@ namespace OL.Migrator.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("ol")
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -46,6 +46,32 @@ namespace OL.Migrator.Migrations
                     b.ToTable("ol_categories", "ol");
                 });
 
+            modelBuilder.Entity("OL.Domain.Entities.OLProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("InstalmentMaxMouth")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("InstalmentMonthlyRepayment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("SystemId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products", "ol");
+                });
+
             modelBuilder.Entity("OL.Domain.Primitives.Entities.OLTranslation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -61,10 +87,12 @@ namespace OL.Migrator.Migrations
 
                     b.Property<string>("LanguageCode")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("OLCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OLProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
@@ -76,6 +104,8 @@ namespace OL.Migrator.Migrations
 
                     b.HasIndex("OLCategoryId");
 
+                    b.HasIndex("OLProductId");
+
                     b.ToTable("ol_translations", "ol");
                 });
 
@@ -84,9 +114,18 @@ namespace OL.Migrator.Migrations
                     b.HasOne("OL.Domain.Entities.OLCategory", null)
                         .WithMany("Translations")
                         .HasForeignKey("OLCategoryId");
+
+                    b.HasOne("OL.Domain.Entities.OLProduct", null)
+                        .WithMany("Translations")
+                        .HasForeignKey("OLProductId");
                 });
 
             modelBuilder.Entity("OL.Domain.Entities.OLCategory", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("OL.Domain.Entities.OLProduct", b =>
                 {
                     b.Navigation("Translations");
                 });

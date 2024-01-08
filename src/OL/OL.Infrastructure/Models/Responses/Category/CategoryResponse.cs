@@ -1,10 +1,20 @@
 ﻿using EAnalytics.Common.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using EAnalytics.Common.Queries;
 
 namespace OL.Infrastructure.Models.Responses.Category;
 
-public record CategoryResponse(Guid Id, long SystemId, long? ParentId, IReadOnlyList<TranslationDto> Translations);
+public class CategoryResponse : BaseQueryResponse
+{
+    public CategoryResponse(Guid Id, long SystemId, long? ParentId, IReadOnlyList<TranslationDto> Translations)
+    {
+        this.Id = Id;
+        this.SystemId = SystemId;
+        this.ParentId = ParentId;
+        this.Translations = Translations;
+    }
+
+    public Guid Id { get; init; }
+    public long SystemId { get; init; }
+    public long? ParentId { get; init; }
+    public IReadOnlyList<TranslationDto> Translations { get; init; }
+}

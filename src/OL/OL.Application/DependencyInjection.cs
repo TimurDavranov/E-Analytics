@@ -1,4 +1,3 @@
-using EA.Application.Repositories;
 using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Handlers;
 using EAnalytics.Common.Helpers.RabbitAgent;
@@ -15,7 +14,9 @@ namespace OL.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddRepositories();
+            services
+                .AddRepositories()
+                .AddBsonMap();
             return services;
         }
 
@@ -35,7 +36,10 @@ namespace OL.Application
         private static IServiceCollection AddBsonMap(this IServiceCollection services)
         {
             BsonClassMap.RegisterClassMap<AddOLCategoryEvent>();
+            BsonClassMap.RegisterClassMap<AddOLProductEvent>();
             BsonClassMap.RegisterClassMap<EnableOLCategoryEvent>();
+            BsonClassMap.RegisterClassMap<UpdateOLCategoryEvent>();
+            BsonClassMap.RegisterClassMap<UpdateOlProductEvent>();
             return services;
         }
     }

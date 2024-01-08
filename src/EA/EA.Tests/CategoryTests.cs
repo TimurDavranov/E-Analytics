@@ -1,6 +1,7 @@
 using AutoFixture;
 using EA.Application.Aggregates;
 using EA.Domain.Events;
+using EAnalytics.Common;
 using EAnalytics.Common.Dtos;
 using Shouldly;
 using Xunit;
@@ -22,8 +23,8 @@ public class CategoryTests
         _categoryRoot = new CategoryAggregateRoot(id, new 
             List<TranslationDto>()
             {
-                new() {LanguageCode = new EAnalytics.Common.LanguageCode("uz"), Description = "uz", Title = name1},
-                new() {LanguageCode = new EAnalytics.Common.LanguageCode("ru"), Description = "ru", Title = name2},
+                new() {LanguageCode = new EAnalytics.Common.LanguageCode(SupportedLanguageCodes.UZ), Description = SupportedLanguageCodes.UZ, Title = name1},
+                new() {LanguageCode = new EAnalytics.Common.LanguageCode(SupportedLanguageCodes.RU), Description = SupportedLanguageCodes.RU, Title = name2},
                 
             },
             Guid.Empty

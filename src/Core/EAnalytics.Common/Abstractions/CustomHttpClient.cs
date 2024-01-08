@@ -54,7 +54,7 @@ namespace EAnalytics.Common.Abstractions
             return client;
         }
 
-        private static async Task<T?> ConvertResponse<T>(HttpResponseMessage message)
+        private static async Task<T?> ConvertResponse<T>(HttpResponseMessage message) where T : class
         {
             if (!message.IsSuccessStatusCode)
                 throw new HttpRequestException(message.ReasonPhrase);
@@ -62,14 +62,29 @@ namespace EAnalytics.Common.Abstractions
 
             return response;
         }
+        
+        private static async Task CheckResponse(HttpResponseMessage message)
+        {
+            if (!message.IsSuccessStatusCode)
+                throw new HttpRequestException(message.ReasonPhrase);
+        }
 
-        protected virtual async Task<T?> Post<T>(string route, object body, string? token = null)
+        protected virtual async Task<T?> Post<T>(string route, object body, string? token = null) where T : class
         {
             var client = CreateHttpClient(token);
             var serialized = JsonSerializer.Serialize(body);
             var content = new StringContent(serialized, Encoding.UTF8, jsonResponseKey);
             var request = await client.PostAsync(route, content);
             return await ConvertResponse<T>(request);
+        }
+        
+        protected virtual async Task PostNoResult(string route, object body, string? token = null)
+        {
+            var client = CreateHttpClient(token);
+            var serialized = JsonSerializer.Serialize(body);
+            var content = new StringContent(serialized, Encoding.UTF8, jsonResponseKey);
+            var request = await client.PostAsync(route, content);
+            await CheckResponse(request);
         }
 
         protected virtual async Task<T?> Get<T>(string route, string? token = null) where T : class

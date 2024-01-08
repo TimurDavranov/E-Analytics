@@ -1,18 +1,22 @@
 ﻿using EAnalytics.Common.Abstractions;
 using EAnalytics.Common.Configurations;
+using EAnalytics.Common.Primitives;
+using EAnalytics.Common.Primitives.DTOs;
+using EAnalytics.Common.Queries;
 using Microsoft.Extensions.Options;
 using OL.Infrastructure.Models.Requests.Category;
 using OL.Infrastructure.Models.Responses.Category;
 
 namespace OL.Parser.Worker.Services;
 
-public sealed class CategoryQueryService : CustomHttpClient
+public sealed class CategoryQueryService(IOptions<AppConfig> config, IHttpClientFactory factory)
+    : InternalHttpClient(config.Value.OLQueryUrl, factory)
 {
     private const string controller = "Category";
-    public CategoryQueryService(IOptions<AppConfig> config, IHttpClientFactory factory) : base(config.Value.OLQueryUrl, factory)
-    {
-    }
 
     public Task<CategoryResponse?> GetBySystemId(CategoryBySystemIdRequest request) =>
-        Post<CategoryResponse?>($"{controller}/GetBySystemId", request);
+        Post<CategoryResponse>($"{controller}/GetBySystemId", request);
+
+    public Task<GetAllResponse<CategoryIdsResponse>?> GetAllIds() =>
+        Get<GetAllResponse<CategoryIdsResponse>>($"{controller}/GetAllIds");
 }

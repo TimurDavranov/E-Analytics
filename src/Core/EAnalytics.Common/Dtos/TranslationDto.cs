@@ -6,7 +6,7 @@ using EAnalytics.Common.Primitives.DTOs;
 
 namespace EAnalytics.Common.Dtos
 {
-    public class TranslationDto : BaseDto<long>
+    public class TranslationDto : BaseDto<Guid>
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

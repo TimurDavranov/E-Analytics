@@ -14,7 +14,7 @@ namespace Web.ApiGateway.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> HandleCreate([FromBody] AddOLCategoryCommand command)
+        public async Task<IActionResult> HandleCreate([FromBody] AddOlCategoryCommand command)
         {
             await _categoryService.AddOLCategoryCommand(command);
             return Ok();

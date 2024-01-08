@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OL.Application;
 using OL.Domain;
 using OL.Infrastructure.Commands.Categories;
+using OL.Infrastructure.Commands.Product;
 using OL.Infrastructure.Handlers;
 using OL.Infrastructure.Models.Requests.Category;
 using OL.Infrastructure.Models.Responses.Category;
@@ -36,14 +37,14 @@ public static class DependencyInjectio
     {
         var commandHandler = services.BuildServiceProvider().GetRequiredService<ICommandHandler>();
         var commandDispatcher = new CommandDispatcher();
-        commandDispatcher.RegisterHandler<AddOLCategoryCommand>(commandHandler.HandleAsync);
+        commandDispatcher.RegisterHandler<AddOlCategoryCommand>(commandHandler.HandleAsync);
+        commandDispatcher.RegisterHandler<UpdateOlCategoryCommand>(commandHandler.HandleAsync);
         commandDispatcher.RegisterHandler<EnableOLCategoryCommand>(commandHandler.HandleAsync);
+        
+        commandDispatcher.RegisterHandler<AddOlProductCommand>(commandHandler.HandleAsync);
+        commandDispatcher.RegisterHandler<UpdateOlProductCommand>(commandHandler.HandleAsync);
+        
         services.AddSingleton<ICommandDispatcher>(_ => commandDispatcher);
-
-        //var queryHandler = services.BuildServiceProvider().GetRequiredService<IQueryHandler>();
-        //var queryDispatcher = new QueryDispatcher();
-        //queryDispatcher.RegisterHandler<CategoryResponse, CategoryByIdRequest>(queryHandler.HandleAsync);
-
         return services;
     }
 

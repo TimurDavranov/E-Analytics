@@ -6,6 +6,5 @@ namespace OL.Domain.Primitives.Entities
     [Table("ol_translations")]
     public class OLTranslation : Translation
     {
-
     }
 }
