@@ -29,41 +29,22 @@ public class OLSystemProduct
     [JsonPropertyName("short_description_oz")]
     public string ShortDescriptionOz { get; init; }
 
-    [JsonPropertyName("status")] public int Status { get; init; }
-
-    [JsonPropertyName("discount")] public int Discount { get; init; }
-
-    [JsonPropertyName("discount_value")] public string DiscountValue { get; init; }
-
-    [JsonPropertyName("discount_type")] public string DiscountType { get; init; }
-
-    [JsonPropertyName("discount_price")] public int DiscountPrice { get; init; }
-
     [JsonPropertyName("images")] public string[] Images { get; init; }
-
     [JsonPropertyName("total_price")] public string TotalPrice { get; init; }
 
-    [JsonPropertyName("store_id")] public int StoreId { get; init; }
-    [JsonPropertyName("monthly_repayment")] public decimal MonthlyRepayment { get; init; }
+    [JsonPropertyName("monthly_repayment")]
+    public decimal MonthlyRepayment { get; init; }
+
     [JsonPropertyName("plan")] public OLSYstemProductPlan Plan { get; init; }
 }
 
 public class OLSystemProductPaginator
 {
     [JsonPropertyName("current_page")] public int CurrentPage { get; init; }
-    [JsonPropertyName("from")] public int From { get; init; }
     [JsonPropertyName("last_page")] public int LastPage { get; init; }
-    [JsonPropertyName("per_page")] public int PerPage { get; init; }
-    [JsonPropertyName("to")] public int To { get; init; }
-    [JsonPropertyName("total")] public int Total { get; init; }
 }
 
 public class OLSYstemProductPlan
 {
-    [JsonPropertyName("margin")] public string Margin { get; init; }
-    [JsonPropertyName("initial_fee")] public string InitialFee { get; init; }
-    [JsonPropertyName("min_period")] public string MinPeriod { get; init; }
     [JsonPropertyName("max_period")] public string MaxPeriod { get; init; }
-    [JsonPropertyName("max_scoring")] public string MaxScoring { get; init; }
-    [JsonPropertyName("min_scoring")] public string MinScoring { get; init; }
 }

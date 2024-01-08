@@ -1,6 +1,8 @@
 using EAnalytics.Common.Configurations;
 using OL.Query.Api.Infrastructure;
 using EAnalytics.Common;
+using EAnalytics.Common.Helpers;
+using Serilog;
 
 Console.Title = System.Reflection.Assembly.GetExecutingAssembly().FullName ?? string.Empty;
 const string corsKey = "AllowAll";
@@ -18,7 +20,7 @@ builder.Services
     .AddOptions<DataBaseConfiguration>(builder, nameof(DataBaseConfiguration));
 builder.Services.AddCors(options => options.AddPolicy(corsKey,
     policyBuilder => policyBuilder.SetIsOriginAllowed(a => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
-
+builder.ConfigureSerilog();
 builder.Services.AddInfrastructure();
 
 var app = builder.Build();
@@ -29,7 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseSerilogRequestLogging(); 
 app.UseCors(corsKey);
 app.UseAuthorization();
 
