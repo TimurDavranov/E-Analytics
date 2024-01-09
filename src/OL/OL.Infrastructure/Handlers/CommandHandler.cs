@@ -65,6 +65,7 @@ namespace OL.Infrastructure.Handlers
                 throw new AggregateNotFoundException($"Aggregate with this ID: {command.Id} not found!");
             
             aggregate.UpdateCategory(command.Id, command.Price, command.InstalmentMaxMouth, command.InstalmentMonthlyRepayment, command.Translations.AsReadOnly());
+            await productEventSourcingHandler.SaveAsync(aggregate);
         }
     }
 }
