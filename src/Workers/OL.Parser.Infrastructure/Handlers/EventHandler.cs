@@ -47,7 +47,7 @@ namespace OL.Parser.Infrastructure.Handlers
             });
         }
 
-        public Task On(UpdateOLCategoryEvent @event)
+        public async Task On(UpdateOLCategoryEvent @event)
         {
             if (@event.SystemId is 0)
                 throw new InvalidDataException("Incorrect System Id is sended!");
@@ -55,7 +55,7 @@ namespace OL.Parser.Infrastructure.Handlers
             if (@event.ParentId is 0)
                 throw new InvalidDataException("Incorrect Parrent Id is sended!");
 
-            var category = categoryRepository.Get(s => s.SystemId == @event.SystemId, i => i.Include(s => s.Translations));
+            var category = await categoryRepository.GetAsync(s => s.SystemId == @event.SystemId, i => i.Include(s => s.Translations));
 
             if (category is not null)
             {
@@ -81,10 +81,8 @@ namespace OL.Parser.Infrastructure.Handlers
                         });
                     }
                 }
-                return categoryRepository.UpdateAsync(category);
+                await categoryRepository.UpdateAsync(category);
             }
-
-            return Task.CompletedTask;
         }
 
         public async Task On(EnableOLCategoryEvent @event)
@@ -109,15 +107,22 @@ namespace OL.Parser.Infrastructure.Handlers
                     LanguageCode = s.LanguageCode.Code
                 }).ToList(),
                 SystemId = @event.SystemId,
-                Price = @event.Price,
+                Price = new List<OLProductPriceHistory>()
+                {
+                    new OLProductPriceHistory()
+                    {
+                        Date = DateTime.Now,
+                        Price = @event.Price
+                    }
+                },
                 InstalmentMaxMouth = @event.InstalmentMaxMouth,
                 InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment
             });
         }
 
-        public Task On(UpdateOlProductEvent @event)
+        public async Task On(UpdateOlProductEvent @event)
         {
-            var category = productRepository.Get(s => s.Id == @event.Id, i => i.Include(s => s.Translations));
+            var category = await productRepository.GetAsync(s => s.Id == @event.Id, i => i.Include(s => s.Translations).Include(s=>s.Price));
 
             if (category is not null)
             {
@@ -142,15 +147,17 @@ namespace OL.Parser.Infrastructure.Handlers
                     }
                 }
 
-                category.Price = @event.Price;
+                if (category.Price.MaxBy(s => s.Date)?.Price != @event.Price)
+                    category.Price.Add(new OLProductPriceHistory()
+                    {
+                        Date = DateTime.Now,
+                        Price = @event.Price
+                    });
+                
                 category.InstalmentMaxMouth = @event.InstalmentMaxMouth;
                 category.InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment;
-                return productRepository.UpdateAsync(category);
+                await productRepository.UpdateAsync(category);
             }
-
-            return Task.CompletedTask;
         }
-        
-        
     }
 }

@@ -78,7 +78,7 @@ namespace OL.Query.Api.Infrastructure.Handlers
 
         public async Task<ProductResponse> HandleAsync(ProductBySystemIdRequest request)
         {
-            var model = await productRepository.GetAsync(s => s.SystemId == request.SystemId, i => i.Include(s=>s.Translations));
+            var model = await productRepository.GetAsync(s => s.SystemId == request.SystemId, i => i.Include(s=>s.Translations).Include(s=>s.Price));
             if (model is null)
                 return null;
 
@@ -86,7 +86,7 @@ namespace OL.Query.Api.Infrastructure.Handlers
             {
                 SystemId = model.SystemId,
                 Id = model.Id,
-                Price = model.Price,
+                Price = model.Price.MaxBy(s=>s.Date)?.Price ?? 0,
                 InstalmentMaxMouth = model.InstalmentMaxMouth,
                 InstalmentMonthlyRepayment = model.InstalmentMonthlyRepayment,
                 Translations = model.Translations.Select(TranslationMapper.ToModel).ToArray()

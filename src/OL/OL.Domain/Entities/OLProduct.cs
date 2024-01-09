@@ -1,31 +1,23 @@
-﻿using EAnalytics.Common.Dtos;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using EAnalytics.Common.Dtos;
 using EAnalytics.Common.Entities;
 using OL.Domain.Primitives.Entities;
 
 namespace OL.Domain.Entities;
 
+[Table("ol_product")]
 public class OLProduct : BaseEntity<Guid>
 {
     public long SystemId { get; set; }
-    public decimal Price { get; set; }
     public int InstalmentMaxMouth { get; set; }
     public decimal InstalmentMonthlyRepayment { get; set; }
     public virtual IList<OLTranslation> Translations { get; set; }
-    
-    public override bool Equals(object translations)
-    {
-        var model = translations as List<TranslationDto>;
+    public virtual IList<OLProductPriceHistory> Price { get; set; }
+}
 
-        if (model is null)
-            return false;
-
-        foreach (var item in model)
-        {
-            if (this.Translations.Any(s => s.LanguageCode == item.LanguageCode.Code && s.Title.Equals(item.Title, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+[Table("ol_product_price_history")]
+public class OLProductPriceHistory : BaseEntity<Guid>
+{
+    public decimal Price { get; set; }
+    public DateTime Date { get; set; } = DateTime.Now;
 }
