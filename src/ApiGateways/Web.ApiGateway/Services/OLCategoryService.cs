@@ -12,7 +12,7 @@ namespace Web.ApiGateway.Services
         {
         }
 
-        public Task AddOLCategoryCommand(AddOlCategoryCommand command)
+        public Task AddOLCategoryCommand(AddOLCategoryCommand command)
         {
             return Post<string>($"{categoryController}/HandleCreate", command);
         }
