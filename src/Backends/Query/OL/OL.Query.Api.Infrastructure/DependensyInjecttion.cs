@@ -40,7 +40,12 @@ public static class DependensyInjecttion
                 .BuildServiceProvider()
                 .GetService<IConfiguration>();
 
-        Action<DbContextOptionsBuilder> dbOptions = opt => opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
+        Action<DbContextOptionsBuilder> dbOptions = opt =>
+            opt
+                .UseSqlServer(configuration!.GetConnectionString("DefaultConnection"),
+                    o => o.EnableRetryOnFailure())
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
 
         services
             .AddDbContext<IOLDbContext, OLDbContext>(dbOptions, ServiceLifetime.Scoped);
