@@ -11,10 +11,5 @@ namespace Web.ApiGateway.Services
         public OLCategoryService(IOptions<AppConfig> options, IHttpClientFactory factory) : base(options.Value.OLCommandUrl, factory)
         {
         }
-
-        public Task AddOLCategoryCommand(AddOLCategoryCommand command)
-        {
-            return Post<string>($"{categoryController}/HandleCreate", command);
-        }
     }
 }
