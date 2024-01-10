@@ -65,49 +65,53 @@ namespace OL.Parser.Infrastructure.Handlers
                 foreach (var lang in SupportedLanguageCodes.Codes)
                 {
                     if (category.Translations.Any(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCulture)) &&
+                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase)) &&
                         @event.Translations.Any(
-                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture)))
+                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         category.Translations
-                                .FirstOrDefault(s => s.LanguageCode.Equals(lang, StringComparison.InvariantCulture))
+                                .FirstOrDefault(s =>
+                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                                 .Title =
                             @event.Translations.FirstOrDefault(s =>
-                                s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture)).Title;
+                                s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase)).Title;
 
                         category.Translations
-                                .FirstOrDefault(s => s.LanguageCode.Equals(lang, StringComparison.InvariantCulture))
+                                .FirstOrDefault(s =>
+                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                                 .Description =
                             @event.Translations.FirstOrDefault(s =>
-                                s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture)).Description;
+                                    s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
+                                .Description;
 
                         continue;
                     }
 
-                    if (!category.Translations.Any(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCulture)) &&
+                    if (category.Translations.All(s =>
+                            !s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase)) &&
                         @event.Translations.Any(
-                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture)))
+                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         var model = @event.Translations.FirstOrDefault(
-                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture));
+                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase));
                         category.Translations.Add(new OLTranslation()
                         {
                             LanguageCode = model.LanguageCode.Code,
                             Title = model.Title,
                             Description = model.Description
                         });
-                        
+
                         continue;
                     }
 
                     if (category.Translations.Any(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCulture)) &&
-                        !@event.Translations.Any(
-                            s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture)))
+                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase)) &&
+                        @event.Translations.All(
+                            s => !s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         category.Translations
-                            .FirstOrDefault(s => s.LanguageCode.Equals(lang, StringComparison.InvariantCulture))
+                            .FirstOrDefault(s =>
+                                s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                             .IsDeleted = true;
                         continue;
                     }
@@ -161,37 +165,40 @@ namespace OL.Parser.Infrastructure.Handlers
             {
                 foreach (var lang in SupportedLanguageCodes.Codes)
                 {
-                    if (product.Translations.Any(s => s.LanguageCode.Equals(lang, StringComparison.InvariantCulture) &&
-                                                       @event.Translations.Any(s =>
-                                                           s.LanguageCode.Code.Equals(lang,
-                                                               StringComparison.InvariantCulture))))
+                    if (product.Translations.Any(s =>
+                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase) &&
+                            @event.Translations.Any(s =>
+                                s.LanguageCode.Code.Equals(lang,
+                                    StringComparison.InvariantCultureIgnoreCase))))
                     {
                         product.Translations
-                                .FirstOrDefault(s => s.LanguageCode.Equals(lang, StringComparison.InvariantCulture))
+                                .FirstOrDefault(s =>
+                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                                 .Title =
                             @event.Translations
                                 .FirstOrDefault(
-                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture))
+                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                                 .Title;
 
                         product.Translations
-                                .FirstOrDefault(s => s.LanguageCode.Equals(lang, StringComparison.InvariantCulture))
+                                .FirstOrDefault(s =>
+                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                                 .Description =
                             @event.Translations
                                 .FirstOrDefault(
-                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture))
+                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
                                 .Description;
 
                         continue;
                     }
 
-                    if (!product.Translations.Any(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCulture) &&
+                    if (product.Translations.All(s =>
+                            !s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase) &&
                             @event.Translations.Any(s =>
-                                s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture))))
+                                s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))))
                     {
                         var model = @event.Translations.FirstOrDefault(s =>
-                            s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture));
+                            s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase));
                         product.Translations.Add(new OLTranslation()
                         {
                             LanguageCode = model.LanguageCode.Code,
@@ -202,12 +209,12 @@ namespace OL.Parser.Infrastructure.Handlers
                     }
 
                     if (product.Translations.Any(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCulture) &&
-                            !@event.Translations.Any(s =>
-                                s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCulture))))
+                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase) &&
+                            @event.Translations.All(s =>
+                                !s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))))
                     {
                         product.Translations.FirstOrDefault(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCulture)).IsDeleted = true;
+                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase)).IsDeleted = true;
                     }
                 }
 
