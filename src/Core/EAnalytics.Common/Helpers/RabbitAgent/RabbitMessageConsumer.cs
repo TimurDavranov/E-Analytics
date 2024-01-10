@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,47 +13,27 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
 {
     public interface IRabbitMessageConsumer
     {
-        bool IsConnected { get; set; }
-        IModel Channel { get; set; }
-        void Consume(string exchangeKey, string routeKey, string queueKey, Action<object?, BasicDeliverEventArgs> action, uint prefetchSize, ushort prefetchCount);
-        void Consume(string exchangeKey, string routeKey, string queueKey, Func<object?, BasicDeliverEventArgs, Task> action, uint prefetchSize, ushort prefetchCount);
+        bool IsConnected { get; }
+        IModel Channel { get; }
+        void Consume(string exchangeKey, string routeKey, string queueKey, Action<object?, BasicDeliverEventArgs, IModel> action, uint prefetchSize, ushort prefetchCount);
+        void Consume(string exchangeKey, string routeKey, string queueKey, Func<object?, BasicDeliverEventArgs, IModel, Task> action, uint prefetchSize, ushort prefetchCount);
     }
 
     public class RabbitMessageConsumer : IRabbitMessageConsumer, IDisposable
     {
-        public bool IsConnected { get; set; } = false;
-        public IModel Channel { get; set; }
-        private ConnectionFactory _factory;
-        private IConnection _connection;
+        public bool IsConnected { get; }
+        public IModel Channel { get; }
+        private readonly IConnection Connection;
 
-        public RabbitMessageConsumer(IOptions<RabbitMQConfiguration> config)
+        public RabbitMessageConsumer(IRabbitConnection connectionService)
         {
-            if (config.Value is null)
-                throw new ArgumentNullException(nameof(config), "RabbitMQ options is empty");
-
-            if (string.IsNullOrEmpty(config.Value.RabbitMQUrl))
-                _factory = new ConnectionFactory
-                {
-                    HostName = config.Value.RabbitMQConnection,
-                    Password = config.Value.RabbitMQPassword,
-                    UserName = config.Value.RabbitMQUser,
-                    Port = config.Value.RabbitMQPort ?? 5672,
-                    VirtualHost = config.Value.RabbitMQVirtualHost,
-                };
-            else
-                _factory = new ConnectionFactory
-                {
-                    Uri = new Uri(config.Value.RabbitMQUrl)
-                };
-
-            _connection = _factory.CreateConnection();
-            Channel = _connection.CreateModel();
-            if (_connection.IsOpen) IsConnected = true;
-            else throw new ConnectionRefusedException("Can't connect to RabbitMQ service");
+            var props = connectionService.GetProperties();
+            IsConnected = props.IsConnected;
+            Channel = props.Channel;
+            Connection = props.Connection;
         }
 
-
-        public void Consume(string exchangeKey, string routeKey, string queueKey, Action<object?, BasicDeliverEventArgs> action, uint prefetchSize, ushort prefetchCount)
+        public void Consume(string exchangeKey, string routeKey, string queueKey, Action<object?, BasicDeliverEventArgs, IModel> action, uint prefetchSize, ushort prefetchCount)
         {
             if (IsConnected)
             {
@@ -65,8 +46,7 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
                 var consumer = new EventingBasicConsumer(Channel);
                 consumer.Received += (sender, args) =>
                 {
-                    action.Invoke(sender, args);
-                    Channel.BasicAck(deliveryTag: args.DeliveryTag, multiple: true);
+                    action.Invoke(sender, args, Channel);
                 };
                 Channel.BasicQos(prefetchSize: prefetchSize, prefetchCount: prefetchCount, false);
                 Channel.BasicConsume(queueKey, false, consumer);
@@ -74,7 +54,8 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
             else throw new ConnectionRefusedException("Connection to RabbitMQ service is closed");
         }
 
-        public void Consume(string exchangeKey, string routeKey, string queueKey, Func<object?, BasicDeliverEventArgs, Task> action, uint prefetchSize, ushort prefetchCount)
+        private int counterReconnections = 1;
+        public void Consume(string exchangeKey, string routeKey, string queueKey, Func<object?, BasicDeliverEventArgs, IModel, Task> action, uint prefetchSize, ushort prefetchCount)
         {
             if (IsConnected)
             {
@@ -87,8 +68,8 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
                 var consumer = new EventingBasicConsumer(Channel);
                 consumer.Received += async (sender, args) =>
                 {
-                    await action.Invoke(sender, args);
-                    Channel.BasicAck(deliveryTag: args.DeliveryTag, multiple: true);
+                    await action.Invoke(sender, args, Channel);
+                    Channel.BasicAck(args.DeliveryTag, true);
                 };
                 Channel.BasicQos(prefetchSize: prefetchSize, prefetchCount: prefetchCount, false);
                 Channel.BasicConsume(queueName, false, consumer);
@@ -98,8 +79,6 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
 
         public void Dispose()
         {
-            if (_connection.IsOpen)
-                _connection.Close();
         }
     }
 }

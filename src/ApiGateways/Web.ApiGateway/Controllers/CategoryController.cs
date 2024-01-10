@@ -7,17 +7,8 @@ namespace Web.ApiGateway.Controllers
 {
     public class CategoryController : BaseCommandController
     {
-        private readonly OLCategoryService _categoryService;
-        public CategoryController(OLCategoryService categoryService)
+        public CategoryController()
         {
-            _categoryService = categoryService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> HandleCreate([FromBody] AddOlCategoryCommand command)
-        {
-            await _categoryService.AddOLCategoryCommand(command);
-            return Ok();
         }
     }
 }

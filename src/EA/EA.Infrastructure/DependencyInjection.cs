@@ -48,7 +48,12 @@ namespace EA.Infrastructure
                 .BuildServiceProvider()
                 .GetService<IConfiguration>();
 
-            Action<DbContextOptionsBuilder> dbOptions = opt => opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
+            Action<DbContextOptionsBuilder> dbOptions = opt =>
+                opt
+                    .UseSqlServer(configuration!.GetConnectionString("DefaultConnection"),
+                        o => o.EnableRetryOnFailure())
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors();
 
             services
                 .AddDbContext<IEADbContext, EADbContext>(dbOptions, ServiceLifetime.Scoped);

@@ -14,9 +14,19 @@ public class ProductCommandService(IOptions<AppConfig> options, IHttpClientFacto
     {
         return PostNoResult($"{controller}/create", command);
     }
+    
+    public Task AddOlProductCommand(IList<AddOlProductCommand> commands)
+    {
+        return PostNoResult($"{controller}/createrange", commands);
+    }
 
     public Task UpdateOlProductCommand(UpdateOlProductCommand command)
     {
         return PostNoResult($"{controller}/update", command);
+    }
+    
+    public Task UpdateOlProductCommand(IList<UpdateOlProductCommand> command)
+    {
+        return PostNoResult($"{controller}/updaterange", command);
     }
 }

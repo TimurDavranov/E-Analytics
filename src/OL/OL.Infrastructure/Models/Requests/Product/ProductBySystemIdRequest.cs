@@ -8,7 +8,7 @@ public class ProductBySystemIdRequest : BaseQuery
     public long SystemId { get; init; }
 }
 
-public class ProductByNameRequest : BaseQuery
+public class ProductBySystemIdsRequest : BaseQuery
 {
-    public IList<TranslationDto> Translations { get; set; }
+    public long[] SystemIds { get; init; }
 }

@@ -29,7 +29,8 @@ namespace OL.Application
                 .AddScoped<IEventStore, EventStore>()
                 .AddScoped(typeof(IEventSourcingHandler<>), typeof(EventSourcingHandler<>))
                 .AddSingleton<IRabbitMessageProducer, RabbitMessageProducer>()
-                .AddSingleton<IRabbitMessageConsumer, RabbitMessageConsumer>();
+                .AddSingleton<IRabbitMessageConsumer, RabbitMessageConsumer>()
+                .AddSingleton<IRabbitConnection, RabbitConnection>();
             return services;
         }
 

@@ -10,8 +10,8 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
 {
     public interface IRabbitMessageProducer
     {
-        bool IsConnected { get; set; }
-        IModel Channel { get; set; }
+        bool IsConnected { get; }
+        IModel Channel { get; }
 
         void Publish<T>(string exchange, string route, string queue, T message);
     }
@@ -19,35 +19,16 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
     public class RabbitMessageProducer : IRabbitMessageProducer, IDisposable
     {
 
-        public bool IsConnected { get; set; } = false;
-        public IModel Channel { get; set; }
-        private ConnectionFactory _factory;
-        private IConnection _connection;
+        public bool IsConnected { get; }
+        public IModel Channel { get; }
+        private readonly IConnection Connection;
 
-        public RabbitMessageProducer(IOptions<RabbitMQConfiguration> config)
+        public RabbitMessageProducer(IRabbitConnection connectionService)
         {
-            if (config.Value is null)
-                throw new ArgumentNullException(nameof(config), "RabbitMQ options is empty");
-
-            if (string.IsNullOrEmpty(config.Value.RabbitMQUrl))
-                _factory = new ConnectionFactory
-                {
-                    HostName = config.Value.RabbitMQConnection,
-                    Password = config.Value.RabbitMQPassword,
-                    UserName = config.Value.RabbitMQUser,
-                    Port = config.Value.RabbitMQPort ?? 5672,
-                    VirtualHost = config.Value.RabbitMQVirtualHost,
-                };
-            else
-                _factory = new ConnectionFactory
-                {
-                    Uri = new Uri(config.Value.RabbitMQUrl)
-                };
-
-            _connection = _factory.CreateConnection();
-            Channel = _connection.CreateModel();
-            if (_connection.IsOpen) IsConnected = true;
-            else throw new ConnectionRefusedException("Can't connect to RabbitMQ service");
+            var props = connectionService.GetProperties();
+            IsConnected = props.IsConnected;
+            Channel = props.Channel;
+            Connection = props.Connection;
         }
 
         public void Publish<T>(string exchange, string route, string queue, T message)
@@ -74,8 +55,6 @@ namespace EAnalytics.Common.Helpers.RabbitAgent
 
         public void Dispose()
         {
-            if (_connection.IsOpen)
-                _connection.Close();
         }
     }
 }

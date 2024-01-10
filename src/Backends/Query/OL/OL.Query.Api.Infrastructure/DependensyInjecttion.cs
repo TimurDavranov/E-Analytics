@@ -40,7 +40,12 @@ public static class DependensyInjecttion
                 .BuildServiceProvider()
                 .GetService<IConfiguration>();
 
-        Action<DbContextOptionsBuilder> dbOptions = opt => opt.UseSqlServer(configuration!.GetConnectionString("DefaultConnection"));
+        Action<DbContextOptionsBuilder> dbOptions = opt =>
+            opt
+                .UseSqlServer(configuration!.GetConnectionString("DefaultConnection"),
+                    o => o.EnableRetryOnFailure())
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
 
         services
             .AddDbContext<IOLDbContext, OLDbContext>(dbOptions, ServiceLifetime.Scoped);
@@ -55,9 +60,11 @@ public static class DependensyInjecttion
         var queryDispatcher = new QueryDispatcher();
         queryDispatcher.RegisterHandler<CategoryByIdRequest, CategoryResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<CategoryBySystemIdRequest, CategoryResponse>(queryHandler.HandleAsync);
+        queryDispatcher.RegisterHandler<CategoryBySystemIdsRequest, GetAllResponse<CategoryResponse>>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<GetAllRequest, GetAllResponse<CategoryIdsResponse>>(queryHandler.HandleAsync);
         
         queryDispatcher.RegisterHandler<ProductBySystemIdRequest, ProductResponse>(queryHandler.HandleAsync);
+        queryDispatcher.RegisterHandler<ProductBySystemIdsRequest, GetAllResponse<ProductResponse>>(queryHandler.HandleAsync);
         
         services.AddSingleton<IQueryDispatcher>(_ => queryDispatcher);
         return services;

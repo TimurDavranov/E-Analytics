@@ -1,5 +1,6 @@
 using EA.Parser.Infrastructure.Consumers;
 using EA.Parser.Infrastructure.Handlers;
+using EAnalytics.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EA.Parser.Infrastructure
@@ -18,6 +19,7 @@ namespace EA.Parser.Infrastructure
         {
             services.AddScoped<IEAConsumer, EAConsumer>();
             services.AddScoped<IEventHandler, Handlers.EventHandler>();
+            services.AddSingleton<IConcurencyControlService, ConcurencyControlService>();
             return services;
         }
     }

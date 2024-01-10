@@ -18,9 +18,11 @@ namespace OL.Query.Api.Infrastructure.Handlers
     {
         Task<CategoryResponse> HandleAsync(CategoryByIdRequest request);
         Task<CategoryResponse> HandleAsync(CategoryBySystemIdRequest request);
+        Task<GetAllResponse<CategoryResponse>> HandleAsync(CategoryBySystemIdsRequest request);
         Task<GetAllResponse<CategoryIdsResponse>> HandleAsync(GetAllRequest request);
         
         Task<ProductResponse> HandleAsync(ProductBySystemIdRequest request);
+        Task<GetAllResponse<ProductResponse>> HandleAsync(ProductBySystemIdsRequest request);
     }
 
     public sealed class QueryHandler(
@@ -63,6 +65,27 @@ namespace OL.Query.Api.Infrastructure.Handlers
             );
         }
 
+        public async Task<GetAllResponse<CategoryResponse>> HandleAsync(CategoryBySystemIdsRequest request)
+        {
+            var models = await repository.GetAllAsync(s => request.SystemIds.Contains(s.SystemId),
+                i => i.Include(s => s.Translations));
+
+            return new GetAllResponse<CategoryResponse>()
+            {
+                Data = models.Select(model => new CategoryResponse(
+                    model.Id, 
+                    model.SystemId, 
+                    model.ParrentId,
+                    model.Translations.Select(s => new TranslationDto
+                    {
+                        Description = s.Description,
+                        LanguageCode = new LanguageCode(s.LanguageCode),
+                        Title = s.Title
+                    }).ToList().AsReadOnly()
+                )).ToArray()
+            };
+        }
+
         public async Task<GetAllResponse<CategoryIdsResponse>> HandleAsync(GetAllRequest request)
         {
             return new GetAllResponse<CategoryIdsResponse>()
@@ -90,6 +113,25 @@ namespace OL.Query.Api.Infrastructure.Handlers
                 InstalmentMaxMouth = model.InstalmentMaxMouth,
                 InstalmentMonthlyRepayment = model.InstalmentMonthlyRepayment,
                 Translations = model.Translations.Select(TranslationMapper.ToModel).ToArray()
+            };
+        }
+
+        public async Task<GetAllResponse<ProductResponse>> HandleAsync(ProductBySystemIdsRequest request)
+        {
+            var models = await productRepository.GetAllAsync(s => request.SystemIds.Contains(s.SystemId), i => i.Include(s=>s.Translations).Include(s=>s.Price));
+            return new GetAllResponse<ProductResponse>()
+            {
+                Data = models
+                    .DistinctBy(s => s.Id)
+                    .Select(model => new ProductResponse()
+                    {
+                        SystemId = model.SystemId,
+                        Id = model.Id,
+                        Price = model.Price.MaxBy(s => s.Date)?.Price ?? 0,
+                        InstalmentMaxMouth = model.InstalmentMaxMouth,
+                        InstalmentMonthlyRepayment = model.InstalmentMonthlyRepayment,
+                        Translations = model.Translations.Select(TranslationMapper.ToModel).ToArray()
+                    }).ToArray()
             };
         }
     }
