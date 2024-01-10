@@ -12,4 +12,10 @@ public class ProductController(IQueryDispatcher dispatcher) : BaseApiController
     {
         return Ok(await dispatcher.SendAsync(request));
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> GetBySystemIds([FromBody] ProductBySystemIdsRequest request)
+    {
+        return Ok(await dispatcher.SendAsync(request));
+    }
 }

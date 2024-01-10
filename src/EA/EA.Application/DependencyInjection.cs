@@ -28,7 +28,8 @@ public static class DependencyInjection
             .AddScoped<IEventStore, EventStore>()
             .AddScoped(typeof(IEventSourcingHandler<>), typeof(EventSourcingHandler<>))
             .AddSingleton<IRabbitMessageProducer, RabbitMessageProducer>()
-            .AddSingleton<IRabbitMessageConsumer, RabbitMessageConsumer>();
+            .AddSingleton<IRabbitMessageConsumer, RabbitMessageConsumer>()
+            .AddSingleton<IRabbitConnection, RabbitConnection>();
 
     private static IServiceCollection AddBsonMap(this IServiceCollection services)
     {

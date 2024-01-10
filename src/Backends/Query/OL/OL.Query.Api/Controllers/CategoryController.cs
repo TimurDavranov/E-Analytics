@@ -19,6 +19,12 @@ namespace OL.Query.Api.Controllers
         {
             return Ok(await dispatcher.SendAsync(request));
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> GetBySystemIds([FromBody] CategoryBySystemIdsRequest request)
+        {
+            return Ok(await dispatcher.SendAsync(request));
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAllIds()

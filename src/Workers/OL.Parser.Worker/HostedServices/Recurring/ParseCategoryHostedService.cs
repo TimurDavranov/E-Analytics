@@ -40,12 +40,14 @@ namespace OL.Parser.Worker.HostedServices.Recurring
                             CancellationToken = cancellationToken,
                             MaxDegreeOfParallelism = 5
                         };
+                        var existedCategories = await categoryQueryService.GetBySystemIds(
+                            new CategoryBySystemIdsRequest()
+                            {
+                                SystemIds = splitedCategories.Select(s => s.Id).ToArray()
+                            });
                         await Parallel.ForEachAsync(splitedCategories, parallelOption, async (category, token) =>
                         {
-                            var existedCategory = await categoryQueryService.GetBySystemId(new CategoryBySystemIdRequest
-                            {
-                                SystemId = category.Id
-                            });
+                            var existedCategory = existedCategories.Data.FirstOrDefault(s => s.SystemId == category.Id);
 
                             if (existedCategory is null)
                                 await categoryCommandService.AddOlCategoryCommand(new AddOlCategoryCommand

@@ -31,7 +31,7 @@ namespace EA.Parser.Infrastructure.Consumers
 
         public void Consume()
         {
-            _messageConsumer.Consume(_config.ExchangeKey, _config.RouteKey, _config.QueueKey, async (sender, args) =>
+            _messageConsumer.Consume(_config.ExchangeKey, _config.RouteKey, _config.QueueKey, async (sender, args, channel) =>
             {
                 var options = new JsonSerializerOptions { Converters = { new EventJsonConverter() } };
                 var message = JsonSerializer.Deserialize<BaseEvent>(Encoding.UTF8.GetString(args.Body.ToArray()), options);

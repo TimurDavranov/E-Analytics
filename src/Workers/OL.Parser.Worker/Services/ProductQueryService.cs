@@ -1,5 +1,6 @@
 ﻿using EAnalytics.Common.Abstractions;
 using EAnalytics.Common.Configurations;
+using EAnalytics.Common.Queries;
 using Microsoft.Extensions.Options;
 using OL.Infrastructure.Models.Requests.Product;
 using OL.Infrastructure.Models.Responses.Product;
@@ -13,4 +14,7 @@ public class ProductQueryService(IOptions<AppConfig> config, IHttpClientFactory 
     
     public Task<ProductResponse?> GetBySystemId(ProductBySystemIdRequest request) =>
         Post<ProductResponse>($"{controller}/GetBySystemId", request);
+    
+    public Task<GetAllResponse<ProductResponse>> GetBySystemIds(ProductBySystemIdsRequest request) =>
+        Post<GetAllResponse<ProductResponse>>($"{controller}/GetBySystemIds", request);
 }

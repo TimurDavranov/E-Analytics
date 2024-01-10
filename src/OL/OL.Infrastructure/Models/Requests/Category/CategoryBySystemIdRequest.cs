@@ -11,3 +11,8 @@ public class CategoryBySystemIdRequest : BaseQuery
 {
     public long SystemId { get; init; }
 }
+
+public class CategoryBySystemIdsRequest : BaseQuery
+{
+    public long[] SystemIds { get; init; }
+}
