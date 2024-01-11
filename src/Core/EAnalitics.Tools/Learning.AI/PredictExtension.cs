@@ -30,7 +30,7 @@ namespace Learning.AI
         }
 
         private static int counter = 1;
-        private static IEnumerable<ProductData>? source;
+        private static List<ProductData>? source;
         private static async Task<ITransformer> LoadLearnedModel(Func<Task<List<ProductData>>> actionLoadSource)
         {
             if (counter == 10)
@@ -49,7 +49,7 @@ namespace Learning.AI
             {
                 if (source is null || !source.Any())
                     source = await actionLoadSource.Invoke();
-                TrainExtension.TrainMLProduct(_path, );
+                TrainExtension.TrainMLProduct(source, _path);
                 counter++;
                 return await LoadLearnedModel(actionLoadSource);
             }
