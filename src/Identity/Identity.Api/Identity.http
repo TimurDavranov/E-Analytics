@@ -1,0 +1,6 @@
+@Identity_HostAddress = http://localhost:10001
+
+GET {{Identity_HostAddress}}/login/
+Accept: application/json
+
+###
