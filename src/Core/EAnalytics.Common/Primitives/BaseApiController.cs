@@ -13,4 +13,10 @@ public abstract class BaseApiController : ControllerBase
 
         return base.Ok(response);
     }
+
+    protected IActionResult Error(string message)
+    {
+        var response = new BaseApiResponse<object>(null) { Message = message, Success = false };
+        return base.Ok(response);
+    }
 }
