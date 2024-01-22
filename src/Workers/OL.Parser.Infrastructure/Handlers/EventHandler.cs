@@ -152,7 +152,8 @@ namespace OL.Parser.Infrastructure.Handlers
                     }
                 },
                 InstalmentMaxMouth = @event.InstalmentMaxMouth,
-                InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment
+                InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment,
+                SystemCategoryId = [@event.SystemCategoryId],
             });
         }
 
@@ -173,20 +174,20 @@ namespace OL.Parser.Infrastructure.Handlers
                     {
                         product.Translations
                                 .FirstOrDefault(s =>
-                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
+                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))!
                                 .Title =
                             @event.Translations
                                 .FirstOrDefault(
-                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
+                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))!
                                 .Title;
 
                         product.Translations
                                 .FirstOrDefault(s =>
-                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
+                                    s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))!
                                 .Description =
                             @event.Translations
                                 .FirstOrDefault(
-                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))
+                                    s => s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))!
                                 .Description;
 
                         continue;
@@ -214,7 +215,7 @@ namespace OL.Parser.Infrastructure.Handlers
                                 !s.LanguageCode.Code.Equals(lang, StringComparison.InvariantCultureIgnoreCase))))
                     {
                         product.Translations.FirstOrDefault(s =>
-                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase)).IsDeleted = true;
+                            s.LanguageCode.Equals(lang, StringComparison.InvariantCultureIgnoreCase))!.IsDeleted = true;
                     }
                 }
 
@@ -227,6 +228,13 @@ namespace OL.Parser.Infrastructure.Handlers
 
                 product.InstalmentMaxMouth = @event.InstalmentMaxMouth;
                 product.InstalmentMonthlyRepayment = @event.InstalmentMonthlyRepayment;
+
+                if (product.SystemCategoryId is null)
+                    product.SystemCategoryId = [];
+
+                if (!product.SystemCategoryId.Any(s => s == @event.SystemCategoryId))
+                    product.SystemCategoryId = [.. product.SystemCategoryId, @event.SystemCategoryId];
+
                 await productRepository.UpdateAsync(product);
             }
         }

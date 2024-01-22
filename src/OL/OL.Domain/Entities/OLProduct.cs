@@ -11,6 +11,7 @@ public class OLProduct : BaseEntity<Guid>
     public long SystemId { get; set; }
     public int InstalmentMaxMouth { get; set; }
     public decimal InstalmentMonthlyRepayment { get; set; }
+    public long[] SystemCategoryId { get; set; }
     public virtual IList<OLTranslation> Translations { get; set; }
     public virtual IList<OLProductPriceHistory> Price { get; set; }
 }

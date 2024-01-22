@@ -13,7 +13,7 @@ public class OLProductAggregateRoot : AggregateRootSimple
     {
     }
 
-    public OLProductAggregateRoot(Guid id, long SystemId, decimal Price, int MaxMonth, decimal MonthlyRepayment, IReadOnlyList<TranslationDto> translations)
+    public OLProductAggregateRoot(Guid id, long SystemId, decimal Price, int MaxMonth, decimal MonthlyRepayment, long SystemCategoryId, IReadOnlyList<TranslationDto> translations)
     {
         RaiseEvent(new AddOLProductEvent()
         {
@@ -22,7 +22,8 @@ public class OLProductAggregateRoot : AggregateRootSimple
             Translations = translations,
             Price = Price,
             InstalmentMaxMouth = MaxMonth,
-            InstalmentMonthlyRepayment = MonthlyRepayment
+            InstalmentMonthlyRepayment = MonthlyRepayment,
+            SystemCategoryId = SystemCategoryId
         });
     }
     
@@ -32,7 +33,7 @@ public class OLProductAggregateRoot : AggregateRootSimple
         _active = true;
     }
     
-    public void UpdateCategory(Guid id, decimal Price, int MaxMonth, decimal MonthlyRepayment, IReadOnlyList<TranslationDto> translations)
+    public void UpdateCategory(Guid id, decimal Price, int MaxMonth, decimal MonthlyRepayment, long SystemCategoryId, IReadOnlyList<TranslationDto> translations)
     {
         RaiseEvent(new UpdateOlProductEvent
         {
@@ -40,7 +41,8 @@ public class OLProductAggregateRoot : AggregateRootSimple
             Translations = translations,
             Price = Price,
             InstalmentMaxMouth = MaxMonth,
-            InstalmentMonthlyRepayment = MonthlyRepayment
+            InstalmentMonthlyRepayment = MonthlyRepayment,
+            SystemCategoryId = SystemCategoryId
         });
     }
 

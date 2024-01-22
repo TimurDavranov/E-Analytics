@@ -13,27 +13,28 @@ namespace Matching.Service
     {
         public static IServiceCollection AddDI(this IServiceCollection services)
         {
-            return services;
+            return services
+                .AddDatabases();
         }
 
-        private static IServiceCollection AddDatabases(this ServiceCollection services)
+        private static IServiceCollection AddDatabases(this IServiceCollection services)
         {
             var configuration = services
                             .BuildServiceProvider()
                             .GetService<IConfiguration>();
 
-                    Action<DbContextOptionsBuilder> dbOptions = opt =>
-                        opt
-                            .UseSqlServer(configuration!.GetConnectionString("DefaultConnection"),
-                                o => o.EnableRetryOnFailure())
-                            .EnableSensitiveDataLogging()
-                            .EnableDetailedErrors();
+            Action<DbContextOptionsBuilder> dbOptions = opt =>
+                opt
+                    .UseSqlServer(configuration!.GetConnectionString("DefaultConnection"),
+                        o => o.EnableRetryOnFailure())
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors();
 
-                    services
-                        .AddDbContext<IOLDbContext, OLDbContext>(dbOptions, ServiceLifetime.Scoped);
-                    services.AddSingleton(new DatabaseContextFactory<OLDbContext>(dbOptions));
+            services
+                .AddDbContext<IOLDbContext, OLDbContext>(dbOptions, ServiceLifetime.Scoped);
+            services.AddSingleton(new DatabaseContextFactory<OLDbContext>(dbOptions));
 
-                    return services;
+            return services;
         }
     }
 }
