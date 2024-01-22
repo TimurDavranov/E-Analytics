@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\EAnalytics.Common\EAnalytics.Common.csproj" />
     <ProjectReference Include="..\Identity.Data\Identity.Data\Identity.Data.csproj" />
   </ItemGroup>
 
