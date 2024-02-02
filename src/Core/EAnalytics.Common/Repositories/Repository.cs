@@ -63,7 +63,9 @@ public class Repository<T, D>(DatabaseContextFactory<D> contextFactory) : IRepos
         if (expression is not null)
             query = query.Where(expression);
 
-        return (await query.AsNoTracking().ToListAsync()).AsReadOnly();
+        var result = await query.AsNoTracking().ToListAsync();
+
+        return result.AsReadOnly();
     }
 
     public T? Get(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null)

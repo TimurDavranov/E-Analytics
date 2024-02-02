@@ -1,6 +1,7 @@
 ﻿using EAnalytics.Common.Abstractions.Repositories;
 using EAnalytics.Common.Dispatchers;
 using EAnalytics.Common.Factories;
+using EAnalytics.Common.Handlers;
 using EAnalytics.Common.Queries;
 using EAnalytics.Common.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,8 @@ public static class DependensyInjecttion
         
         queryDispatcher.RegisterHandler<ProductBySystemIdRequest, ProductResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<ProductBySystemIdsRequest, GetAllResponse<ProductResponse>>(queryHandler.HandleAsync);
+
+        services.AddExceptionHandler<GlobalExceptionHandler>();
         
         services.AddSingleton<IQueryDispatcher>(_ => queryDispatcher);
         return services;

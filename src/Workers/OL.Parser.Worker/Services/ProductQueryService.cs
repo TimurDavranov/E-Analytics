@@ -16,5 +16,5 @@ public class ProductQueryService(IOptions<AppConfig> config, IHttpClientFactory 
         Post<ProductResponse>($"{controller}/GetBySystemId", request);
     
     public Task<GetAllResponse<ProductResponse>> GetBySystemIds(ProductBySystemIdsRequest request) =>
-        Post<GetAllResponse<ProductResponse>>($"{controller}/GetBySystemIds", request);
+        Post<GetAllResponse<ProductResponse>>($"{controller}/GetBySystemIds", request)!;
 }
