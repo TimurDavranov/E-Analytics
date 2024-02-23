@@ -3,6 +3,7 @@ using OL.Query.Api.Infrastructure;
 using EAnalytics.Common;
 using EAnalytics.Common.Helpers;
 using Serilog;
+using EAnalytics.Common.Handlers;
 
 Console.Title = System.Reflection.Assembly.GetExecutingAssembly().FullName ?? string.Empty;
 const string corsKey = "AllowAll";
@@ -31,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseSerilogRequestLogging(); 
 app.UseCors(corsKey);
 app.UseAuthorization();

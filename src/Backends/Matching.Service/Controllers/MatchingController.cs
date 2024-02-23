@@ -1,11 +1,12 @@
 using Learning.AI;
-using Learning.AI.Classes.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using OL.Domain;
 using Dapper;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using EA.Infrastructure;
+using EAnalytics.Common.Factories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.ML.Data;
+using OL.Infrastructure;
 
 namespace Matching.Service.Controllers
 {
@@ -13,41 +14,41 @@ namespace Matching.Service.Controllers
     public class MatchingController : ControllerBase
     {
         private readonly ILogger<MatchingController> _logger;
-        private readonly IOLDbContext _context;
-        private readonly IConfiguration _configuration;
-        private static Func<string, Task<List<ProductData>>> Act = async (string connectionString) =>
-        {
-            using var connection = new SqlConnection(connectionString);
-            await connection.OpenAsync();
-            var totalCount = await connection.QuerySingleAsync<long>(SqlCommandConstants.countProductItems);
-            var source = await connection.QueryAsync<ProductData>(SqlCommandConstants.learningSourceSql);
-            while(totalCount / 5 > source.Count())
-                source = await connection.QueryAsync<ProductData>(SqlCommandConstants.learningSourceSql);
+        private readonly DatabaseContextFactory<OLDbContext> _olContextFactory;
+        private readonly DatabaseContextFactory<EADbContext> _eaContextFactory;
 
-            await connection.CloseAsync();
-            return source.ToList();
-        };
-
-        public MatchingController(ILogger<MatchingController> logger, IOLDbContext context, IConfiguration configuration)
+        public MatchingController(ILogger<MatchingController> logger, DatabaseContextFactory<OLDbContext> olContextFactory, DatabaseContextFactory<EADbContext> eaContextFactory)
         {
             _logger = logger;
-            _context = context;
-            _configuration = configuration;
+            _olContextFactory = olContextFactory;
+            _eaContextFactory = eaContextFactory;
         }
-
+        
         [HttpPost]
-        public async Task<IActionResult> Predict(string title)
+        public async Task<IActionResult> StartMatching()
         {
-            await _context.Predict(new PredictRequest(title, ""), Act, _configuration);
+            await using var _olContext = _olContextFactory.CreateContext();
+            await using var _eaContext = _eaContextFactory.CreateContext(); 
+            var sourceQuery = _olContext.Products
+                .AsNoTracking()
+                .Where(s => !s.IsDeleted);
+            
             return Ok();
         }
+    }
+    
+    public class ProductData
+    {
+        [LoadColumn(0)]
+        public string ProductId { get; set; }
 
-        [HttpPost]
-        public async Task<IActionResult> Train()
-        {
-            var source = await Act.Invoke(_configuration.GetConnectionString("DefaultConnection")!);
-            var fileByte = TrainExtension.TrainMLProduct(source, "");
-            return File(fileByte, "application/zip", "collections_download.zip");
-        }
+        [LoadColumn(1)]
+        public string ProductName { get; set; }
+    }
+
+    public class ProductPrediction
+    {
+        [ColumnName("PredictedLabel")]
+        public string ProductId { get; set; }
     }
 }

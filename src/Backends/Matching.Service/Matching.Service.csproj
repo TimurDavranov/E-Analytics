@@ -14,6 +14,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\EAnalitics.Tools\Learning.AI\Learning.AI.csproj" />
+    <ProjectReference Include="..\..\EA\EA.Domain\EA.Domain.csproj" />
+    <ProjectReference Include="..\..\EA\EA.Infrastructure\EA.Infrastructure.csproj" />
     <ProjectReference Include="..\..\OL\OL.Domain\OL.Domain.csproj" />
     <ProjectReference Include="..\..\OL\OL.Infrastructure\OL.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Core\EAnalytics.Common\EAnalytics.Common.csproj" />

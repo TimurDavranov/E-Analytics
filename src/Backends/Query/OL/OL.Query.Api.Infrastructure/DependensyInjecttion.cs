@@ -44,12 +44,12 @@ public static class DependensyInjecttion
         Action<DbContextOptionsBuilder> dbOptions = opt =>
             opt
                 .UseSqlServer(configuration!.GetConnectionString("DefaultConnection"),
-                    o => o.EnableRetryOnFailure())
+                    o => o.CommandTimeout(5))
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
 
         services
-            .AddDbContext<IOLDbContext, OLDbContext>(dbOptions, ServiceLifetime.Scoped);
+            .AddDbContext<IOLDbContext, OLDbContext>(dbOptions, ServiceLifetime.Scoped, ServiceLifetime.Singleton);
         services.AddSingleton(new DatabaseContextFactory<OLDbContext>(dbOptions));
 
         return services;
@@ -67,8 +67,6 @@ public static class DependensyInjecttion
         queryDispatcher.RegisterHandler<ProductBySystemIdRequest, ProductResponse>(queryHandler.HandleAsync);
         queryDispatcher.RegisterHandler<ProductBySystemIdsRequest, GetAllResponse<ProductResponse>>(queryHandler.HandleAsync);
 
-        services.AddExceptionHandler<GlobalExceptionHandler>();
-        
         services.AddSingleton<IQueryDispatcher>(_ => queryDispatcher);
         return services;
     }
