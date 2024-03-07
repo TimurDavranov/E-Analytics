@@ -14,6 +14,8 @@ namespace EA.Infrastructure
 
         public DbSet<EACategoryTranslation> Translations { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<SystemProduct> SystemProducts { get; set; }
 
         public Task SaveChangesAsync(bool acceptAllChangesOnSuccess = true, CancellationToken cancellationToken = default)
         {

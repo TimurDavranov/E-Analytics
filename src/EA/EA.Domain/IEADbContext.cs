@@ -13,6 +13,8 @@ public interface IEADbContext
 
     DbSet<EACategoryTranslation> Translations { get; set; }
     DbSet<Category> Categories { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<SystemProduct> SystemProducts { get; set; }
 
     ChangeTracker ChangeTracker { get; }
 }

@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+    <PackageReference Include="Microsoft.ML" Version="3.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
@@ -13,7 +14,6 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\EAnalitics.Tools\Learning.AI\Learning.AI.csproj" />
     <ProjectReference Include="..\..\EA\EA.Domain\EA.Domain.csproj" />
     <ProjectReference Include="..\..\EA\EA.Infrastructure\EA.Infrastructure.csproj" />
     <ProjectReference Include="..\..\OL\OL.Domain\OL.Domain.csproj" />
