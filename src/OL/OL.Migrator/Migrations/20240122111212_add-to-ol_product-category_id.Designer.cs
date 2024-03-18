@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OL.Infrastructure;
 
@@ -11,9 +12,11 @@ using OL.Infrastructure;
 namespace OL.Migrator.Migrations
 {
     [DbContext(typeof(OLDbContext))]
-    partial class OLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240122111212_add-to-ol_product-category_id")]
+    partial class addtool_productcategory_id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

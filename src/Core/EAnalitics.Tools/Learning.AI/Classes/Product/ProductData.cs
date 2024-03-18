@@ -7,15 +7,12 @@ namespace Learning.AI.Classes.Product
         [LoadColumn(0)]
         public required string Title;
         [LoadColumn(1)]
-        public string ProductId;
+        public required string PredicateTitle;
     }
 
     public class ProductPrediction
     {
-        [ColumnName(Constants.predictedLabel)]
-        public string Title;
-
         [ColumnName(Constants.score)]
-        public float[]? Score;
+        public float Score;
     }
 }

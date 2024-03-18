@@ -18,7 +18,7 @@ public sealed class CategoryQueryService(IOptions<AppConfig> config, IHttpClient
         Post<CategoryResponse>($"{controller}/GetBySystemId", request);
     
     public Task<GetAllResponse<CategoryResponse>> GetBySystemIds(CategoryBySystemIdsRequest request) =>
-        Post<GetAllResponse<CategoryResponse>>($"{controller}/GetBySystemIds", request);
+        Post<GetAllResponse<CategoryResponse>>($"{controller}/GetBySystemIds", request)!;
 
     public Task<GetAllResponse<CategoryIdsResponse>?> GetAllIds() =>
         Get<GetAllResponse<CategoryIdsResponse>>($"{controller}/GetAllIds");

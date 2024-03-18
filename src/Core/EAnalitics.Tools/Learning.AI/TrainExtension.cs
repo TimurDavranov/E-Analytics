@@ -1,52 +1,51 @@
 using Learning.AI.Classes.Product;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using Microsoft.ML.Transforms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Learning.AI
 {
     public static class TrainExtension
     {
-        private static TransformerChain<KeyToValueMappingTransformer>? _model;
-        private static IDataView? _testData;
+        private static TransformerChain<TransformerChain<ColumnConcatenatingTransformer>>? _model;
         private static MLContext _context = new MLContext();
         private static string _path = "";
 
-        public static void TrainMLProduct(List<ProductData> source, string path)
+        public static byte[] TrainMLProduct(List<ProductData> source, string path)
         {
             _path = path;
 
             var data = _context.Data.LoadFromEnumerable(source);
 
-            var trainTestData = _context.Data.TrainTestSplit(data, 0.2);
+            var pipeline = BuildPipeline();
 
-            var trainData = trainTestData.TrainSet;
+            _model = pipeline.Retrain();
 
-            _testData = trainTestData.TestSet;
-
-            var pipeline = _context.Transforms.Text.FeaturizeText(Constants.feature, nameof(ProductData.Title))
-                .Append(_context.Transforms.Conversion.MapValueToKey(Constants.label, nameof(ProductData.ProductId))
-                .Append(_context.Transforms.Conversion.MapKeyToValue(Constants.predictedLabel, Constants.predictedLabel))
-                .Append(_context.Transforms.Conversion.MapKeyToValue(nameof(ProductData.ProductId), nameof(ProductData.ProductId))));
-
-            var trainer = _context.MulticlassClassification.Trainers.SdcaNonCalibrated();
-            var trainingPipeline = pipeline.Append(trainer).Append(_context.Transforms.Conversion.MapKeyToValue("PredictedLabel", "PredictedLabel"));
-
-            _model = trainingPipeline.Fit(trainData);
-
-            var predictions = _model!.Transform(_testData);
-
-            var metrics = _context.MulticlassClassification.Evaluate(predictions);
-
-            SaveLearnedModel();
+            return SaveLearnedModel();
         }
 
-        private static void SaveLearnedModel()
+        private static byte[] SaveLearnedModel()
         {
-            using (var fs = new FileStream(_path, FileMode.Create, FileAccess.Write, FileShare.Write))
-                _context.Model.Save(_model, null, fs);
+            using (var ms = new MemoryStream())
+            {
+                _context.Model.Save(_model, null, ms);
+                return ms.ToArray();
+            }
         }
 
+        private static EstimatorChain<TransformerChain<ColumnConcatenatingTransformer>> BuildPipeline()
+        {
+            return _context.Transforms.Conversion.MapValueToKey(Constants.label, nameof(ProductData.Title))
+                .Append(_context.Transforms.Text.FeaturizeText(Constants.titleFeaturized, nameof(ProductData.Title))
+                .Append(_context.Transforms.Text.FeaturizeText(Constants.predicateTitleFeaturized, nameof(ProductData.PredicateTitle)))
+                .Append(_context.Transforms.Concatenate(Constants.feature, Constants.titleFeaturized, Constants.predicateTitleFeaturized)));
+        }
+
+
+        private static TransformerChain<TransformerChain<ColumnConcatenatingTransformer>> Retrain(this EstimatorChain<TransformerChain<ColumnConcatenatingTransformer>> pipeline)
+        {
+            return pipeline.Fit(null);
+        }
 
     }
 }

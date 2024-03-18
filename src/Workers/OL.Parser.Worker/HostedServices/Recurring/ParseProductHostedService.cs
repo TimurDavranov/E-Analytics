@@ -35,7 +35,7 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                         var parallelOption = new ParallelOptions()
                         {
                             CancellationToken = cancellationToken,
-                            MaxDegreeOfParallelism = 5
+                            MaxDegreeOfParallelism = 1
                         };
 
                         await Parallel.ForEachAsync(categories.Data, parallelOption, async (category, token) =>
@@ -48,10 +48,11 @@ public class ParseProductHostedService(IServiceProvider provider, ILogger<ParseP
                                      page <= products.Data.Paginator.LastPage;
                                      page++)
                                 {
+                                    var systemProductIds = products.Data.Products.Select(s => s.Id).ToArray();
                                     var existedProducts = await productQueryService.GetBySystemIds(
                                         new ProductBySystemIdsRequest
                                         {
-                                            SystemIds = products.Data.Products.Select(s => s.Id).ToArray()
+                                            SystemIds = systemProductIds
                                         });
                                     var source = products.Data.Products.DistinctBy(s => s.Id).ToArray();
                                     var productsForCreate = new List<AddOlProductCommand>();
