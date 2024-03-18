@@ -48,5 +48,16 @@ namespace Matching.Service
 
             return services;
         }
+
+        private static IServiceCollection AddStorages(this IServiceCollection services)
+        {
+            var configuration = services
+                            .BuildServiceProvider()
+                            .GetService<IConfiguration>();
+            var minioConnection = new MinioConfiguration();
+            configuration.GetSection(nameof(MinioConfiguration)).Bind(minioConnection);
+
+            return services.AddMinio(minioConnection.Config);
+        }
     }
 }

@@ -21,10 +21,10 @@ namespace EAnalytics.Common.Services
 
     public class MinioService : IMinioService
     {
-        private readonly IOptions<MinioConfiguration> _minioOptions;
-        public MinioService(IOptions<MinioConfiguration> minioOptions)
+        private readonly IMinioClientFactory _minioClientFactory;
+        public MinioService(IMinioClientFactory minioClientFactory)
         {
-            _minioOptions = minioOptions;
+            _minioClientFactory = minioClientFactory;
         }
 
         public async Task<string> Upload(string bucketName, string fileName, string path, MemoryStream stream, CancellationToken cancellationToken = default, bool withOriginalName = false)
@@ -44,6 +44,7 @@ namespace EAnalytics.Common.Services
             using var client = new MinioClient()
                                     .WithEndpoint(_minioOptions.Value.Endpoint)
                                     .WithCredentials(_minioOptions.Value.AccessKey, _minioOptions.Value.SecretKey)
+                                    .WithSSL()
                                     .Build();
 
             var beArgs = new BucketExistsArgs()
